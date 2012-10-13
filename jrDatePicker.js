@@ -73,11 +73,11 @@ var jrDatePicker = function(params) {
     var close_onselect = params.close_onselect;
         close_onselect = (close_onselect == undefined) ? true : close_onselect;
 
-    var d = new Date();              
-    var months = get_month_names(locale);      // array of month names
-    var dow_name = get_dow_names(locale);      // array of day of week names
-    var mn = d.getMonth();                     // month 0 - 11
-    var yy = d.getFullYear();                  // 4-digit year
+    var date = new Date();            
+    var month_names = get_month_names(locale);      // array of month names
+    var day_names = get_dow_names(locale);      // array of day of week names
+    var mn = date.getMonth();                     // month 0 - 11
+    var yy = date.getFullYear();                  // 4-digit year
 
     var citem = {
         day: 0,
@@ -86,15 +86,16 @@ var jrDatePicker = function(params) {
         first_dow: 0, 
         total_days: 0, 
         offset: 0,
+        multi_cal: '',
 
         markup: function(unique_id) {
             var the_html = '';
             if(this.offset >= this.first_dow) { 
                 var td_id = unique_id + this.month+ '_' + this.day + '_' + this.year;
-                the_html += '<td id="' + td_id + '" class="jrdp_calendar_day1_multi">' + this.day + '</td>';
+                the_html += '<td id="' + td_id + '" class="jrdp_calendar_day1' + this.multi_cal + '">' + this.day + '</td>';
                 if(this.day >= this.total_days) { this.first_dow = 999; } 
             }
-            else { the_html += '<td class="jrdp_calendar_day2_multi">&nbsp;</td>'; }
+            else { the_html += '<td class="jrdp_calendar_day2' + this.multi_cal + '">&nbsp;</td>'; }
             this.offset++;
             if(this.offset > this.first_dow) { this.day++; }
             return(the_html);
@@ -130,13 +131,14 @@ var jrDatePicker = function(params) {
                     else { citem.month = 0; citem.year = yy +1; }
                 }
 
-                d.setDate(1);                 // set day of month to the 1st
-                d.setMonth(citem.month);         // set the month
-                d.setFullYear(citem.year);    // set to 4-digit year
+                date.setDate(1);                 // set day of month to the 1st
+                date.setMonth(citem.month);      // set the month
+                date.setFullYear(citem.year);    // set to 4-digit year
 
-                citem.offset = 1;
-                citem.first_dow = d.getDay(); // 0 - 6 (sun - sat)
-                citem.total_days = days_in_month(d.getMonth());
+                citem.offset = 0;
+                citem.first_dow = date.getDay(); // 0 - 6 (sun - sat)
+                citem.total_days = days_in_month(date.getMonth());
+                citem.multi_cal = '_multi';
 
                 calendar_html += '<td>';
                 calendar_html += '<table class="jrdp_calendar_multi" cellspacing="0" cellpadding="0">';
@@ -161,13 +163,13 @@ var jrDatePicker = function(params) {
                 calendar_html += '            <tr align="center" valign="middle">';
                 calendar_html += '            <td colspan="1" class="jrdp_calendar_month_prev_multi" align="left">';
                 calendar_html += '                <span id="' + unique_id + 'prevmonth_multi_' + i +'">&lt;</span></td>';
-                calendar_html += '            <td colspan="5" class="jrdp_calendar_month_multi">' + months[citem.month] + ' ' + citem.year + '</td>';
+                calendar_html += '            <td colspan="5" class="jrdp_calendar_month_multi">' + month_names[citem.month] + ' ' + citem.year + '</td>';
                 calendar_html += '            <td colspan="1" class="jrdp_calendar_month_next_multi" align="right">';
                 calendar_html += '                <span id="' + unique_id + 'nextmonth_multi_' + i +'">&gt</span></td>';
                 calendar_html += '            </tr>';
 
                 calendar_html += '            <tr>';
-                for(var j = 0; j < 7; j++) { calendar_html += '<td class="jrdp_calendar_days_multi">' + dow_name[j] + '</td>'; }
+                for(var j = 0; j < 7; j++) { calendar_html += '<td class="jrdp_calendar_days_multi">' + day_names[j] + '</td>'; }
                 calendar_html += '            </tr>';
 
                 var rows_printed = 0;
@@ -234,127 +236,56 @@ var jrDatePicker = function(params) {
 
         display_calendar: function() {
             if(dp_id_name == undefined) return;
-            d.setDate(1);
-            d.setFullYear(yy);
-            d.setMonth(mn);
-            var first_dow = d.getDay();   // Get the day of the week which the 1st falls on (0 - 6 = sun - sat) 
             var calendar_html = '';
-            var days = 1;
-            var total_days = days_in_month(d.getMonth());
-            var offset = 0;
-
             var unique_id = 'jrdp_' + dp_id_name + '_';
 
-            calendar_html  = '<table class="jrDatePicker_miniCalendar" cellspacing="0" cellpadding="0">';
+            citem.day = 1;
+            citem.month = mn;
+            citem.year = yy;
+
+            date.setDate(1);
+            date.setMonth(citem.month);
+            date.setFullYear(citem.year);
+
+            citem.first_dow = date.getDay();
+            citem.offset = 0;
+            citem.total_days = days_in_month(date.getMonth());
+            citem.multi_cal = '';
+
+            calendar_html  = '<table class="jrdp_calendar" cellspacing="0" cellpadding="0">';
 
             calendar_html += '    <tr><td colspan="7">';
             calendar_html += '        <table width="100%" border="0" cellspacing="0" cellpadding="0">';
-            calendar_html += '        <tr class="jrDatePicker_calendarTbar">';
+            calendar_html += '        <tr class="jrdp_calendar_tbar">';
             calendar_html += '            <td align="right"><span id="' + unique_id + 'close" style="cursor: pointer;">';
-            calendar_html += '                              <span class="jrDatePicker_calendarCloseBtn"></span>';
+            calendar_html += '                              <span class="jrdp_calendar_close_btn"></span>';
             calendar_html += '                              </span></td>';
             calendar_html += '        </tr></table>';
             calendar_html += '    </td></tr>';
 
-            calendar_html += '    <tr class="jrDatePicker_calendarMonthTbar">';
+            calendar_html += '    <tr class="jrdp_calendar_month_tbar">';
 
             calendar_html += '    <td>';
             calendar_html += '        <table width="100%" border="0" cellspacing="0" cellpadding="0">';
             calendar_html += '            <tr align="center" valign="middle">';
-            calendar_html += '            <td colspan="1" class="jrDatePicker_calendarMonthPrev" align="left">';
+            calendar_html += '            <td colspan="1" class="jrdp_calendar_month_prev" align="left">';
             calendar_html += '                <span id="' + unique_id + 'prevmonth">&lt;</span></td>';
-            calendar_html += '            <td colspan="5" class="jrDatePicker_calendarMonth">' + months[mn] + ' ' + yy + '</td>';
-            calendar_html += '            <td colspan="1" class="jrDatePicker_calendarMonthNext" align="right">';
+            calendar_html += '            <td colspan="5" class="jrdp_calendar_month">' + month_names[citem.month] + ' ' + citem.year + '</td>';
+            calendar_html += '            <td colspan="1" class="jrdp_calendar_month_next" align="right">';
             calendar_html += '                <span id="' + unique_id + 'nextmonth">&gt</span></td>';
             calendar_html += '            </tr>';
 
             calendar_html += '            <tr>';
-            for(var i = 0; i < 7; i++) { calendar_html += '<td class="jrDatePicker_calendarDays">' + dow_name[i] + '</td>'; }
+            for(var i = 0; i < 7; i++) { calendar_html += '<td class="jrdp_calendar_days">' + day_names[i] + '</td>'; }
             calendar_html += '            </tr>';
 
 
             for(var i = 0; i < 6; i++) {
-                if(first_dow == 999) { break; }
-
+                if(citem.first_dow == 999) { break; }
                 calendar_html += '            <tr>';
-
-                // BEGIN: SUNDAY
-                if(offset >= first_dow)  { 
-                    var td_id = unique_id + mn + '_' + days + '_' + yy;
-                    calendar_html += '<td id="' + td_id + '" class="jrDatePicker_calendarDate1">' + days + '</td>';
-                    if(days >= total_days) { first_dow = 999; } 
+                for(var j = 0; j < 7; j++) {
+                    calendar_html += citem.markup(unique_id);
                 }
-                else { calendar_html += '<td class="jrDatePicker_calendarDate2">&nbsp;</td>'; }
-                offset++;
-                if(offset > first_dow) { days++; }
-                // END: SUNDAY
-
-                // BEGIN: MONDAY
-                if(offset >= first_dow)  { 
-                    var td_id = unique_id + mn + '_' + days + '_' + yy;
-                    calendar_html += '<td id="' + td_id + '" class="jrDatePicker_calendarDate1">' + days + '</td>';
-                    if(days >= total_days) { first_dow = 999; } 
-                }
-                else { calendar_html += '<td class="jrDatePicker_calendarDate2">&nbsp;</td>'; }
-                offset++;
-                if(offset > first_dow) { days++; }
-                // END: MONDAY
-    
-                // BEGIN: TUESDAY
-                if(offset >= first_dow)  { 
-                    var td_id = unique_id + mn + '_' + days + '_' + yy;
-                    calendar_html += '<td id="' + td_id + '" class="jrDatePicker_calendarDate1">' + days + '</td>';
-                    if(days >= total_days) { first_dow = 999; } 
-                }
-                else { calendar_html += '<td class="jrDatePicker_calendarDate2">&nbsp;</td>'; }
-                offset++;
-                if(offset > first_dow) { days++; }
-                // END: TUESDAY
-
-                // BEGIN: WEDNESDAY
-                if(offset >= first_dow)  { 
-                    var td_id = unique_id + mn + '_' + days + '_' + yy;
-                    calendar_html += '<td id="' + td_id + '" class="jrDatePicker_calendarDate1">' + days + '</td>';
-                    if(days >= total_days) { first_dow = 999; } 
-                }
-                else { calendar_html += '<td class="jrDatePicker_calendarDate2">&nbsp;</td>'; }
-                offset++;
-                if(offset > first_dow) { days++; }
-                // END: WEDNESDAY
-
-                // BEGIN: THURSDAY
-                if(offset >= first_dow)  {
-                    var td_id = unique_id + mn + '_' + days + '_' + yy;
-                    calendar_html += '<td id="' + td_id + '" class="jrDatePicker_calendarDate1">' + days + '</td>';
-                    if(days >= total_days) { first_dow = 999; } 
-                }
-                else { calendar_html += '<td class="jrDatePicker_calendarDate2">&nbsp;</td>'; }
-                offset++;
-                if(offset > first_dow) { days++; }
-                // END: THURSDAY
-
-                // BEGIN: FRIDAY
-                if(offset >= first_dow)  { 
-                    var td_id = unique_id + mn + '_' + days + '_' + yy;
-                    calendar_html += '<td id="' + td_id + '" class="jrDatePicker_calendarDate1">' + days + '</td>';
-                    if(days >= total_days) { first_dow = 999; } 
-                }
-                else { calendar_html += '<td class="jrDatePicker_calendarDate2">&nbsp;</td>'; }
-                offset++;
-                if(offset > first_dow) { days++; }
-                // END: FRIDAY
-
-                // BEGIN: SATURDAY
-                if(offset >= first_dow)  { 
-                    var td_id = unique_id + mn + '_' + days + '_' + yy;
-                    calendar_html += '<td id="' + td_id + '" class="jrDatePicker_calendarDate1">' + days + '</td>';
-                    if(days >= total_days) { first_dow = 999; } 
-                }
-                else { calendar_html += '<td class="jrDatePicker_calendarDate2">&nbsp;</td>'; }
-                offset++;
-                if(offset > first_dow) { days++; }
-                // END: SATURDAY
-
                 calendar_html += '            </tr>';
             }
             calendar_html += '        </table>';
@@ -364,7 +295,7 @@ var jrDatePicker = function(params) {
 
             document.getElementById(dp_id_name).innerHTML = calendar_html;
 
-            // Setup some event listeners for elements.
+            // Setup event listeners for elements.
             //
             // These methods replace the existing click event listener(s) on the element if there are any.
             // Because this was essentially part of DOM 0, this method is very widely supported and requires 
@@ -377,7 +308,7 @@ var jrDatePicker = function(params) {
             
             // Bind event listeners to each day for the onclick event.  Get an array of 
             // elements by the class name so we can get the element id name.
-            var day_tds = document.getElementsByClassName('jrDatePicker_calendarDate1');
+            var day_tds = document.getElementsByClassName('jrdp_calendar_day1');
             for(var i = 0; i < day_tds.length; i++) {
                 // The id is in the format of 'jrdp_idname_mm_dd_yy'.
                 // So if we split on the '_' then we can use the last three elements.
