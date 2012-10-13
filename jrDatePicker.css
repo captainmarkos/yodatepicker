@@ -123,11 +123,11 @@
 /* ----------------------------------- */
 .jrdp_encapsulated_table {
     position: relative;
-    border: 2px solid #000088;
+    border: 2px solid #0000ff;
 }
 
 .jrdp_calendar_multi {
-    border: 1px solid #000000;
+    border: 1px solid #0000ff;  
     width: 400px;
     margin: 0;
     padding: 0;
@@ -138,7 +138,7 @@
     z-index: 99;
 }
 
-.jrdp_calendar_tbar_multi  { background-color: #00cf08; }
+.jrdp_calendar_tbar_multi  { background-color: #d94867; }
 
 .jrdp_calendar_close_btn_multi {
     background: url('jrDatePicker_close_button.jpg') no-repeat;
@@ -150,7 +150,7 @@
 
 .jrdp_calendar_close_btn_multi:hover { cursor: pointer; }
 
-.jrdp_calendar_month_tbar_multi { background-color: #ffffcc; }
+.jrdp_calendar_month_tbar_multi { background-color: #64d7f5; }
 
 .jrdp_calendar_month_multi {
     font-family: Arial, Helvetica, sans-serif; 
@@ -194,7 +194,7 @@
     font-weight: bold; 
     color: #ffffff; 
     text-decoration: none; 
-    background-color: #336699;
+    background-color: #396221;
     width: 40px;
     height: 40px;
     text-align: center;
@@ -208,7 +208,7 @@
     font-weight: normal;
     color: #000000;   
     text-decoration: none; 
-    background-color: #ffffff;
+    background-color: #f3e1a5;
     height: 40px;
     width: 40px;
     text-align: center;
@@ -228,7 +228,7 @@
     font-weight: normal;
     color: #000000;   
     text-decoration: none; 
-    background-color: #ffffff;
+    background-color: #f3e1a5;
     height: 40px;
     width: 40px;
     text-align: center;

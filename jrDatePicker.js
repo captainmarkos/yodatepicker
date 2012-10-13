@@ -1,7 +1,10 @@
 // ------------------------------------------------------------------------- //
-// jrDatePicker.js                                                           //
+// jrDatePicker.js                                  Mark Brettin  2012-09-12 //
 //                                                                           //
-// Mark Brettin     SEP 12, 2012                                             //
+// A simple / stand-alone javascript datapicker.  No external javascript,    //
+// such as jquery, is needed.  This is intended to be simple and to work     //
+// within all browsers.                                                      //
+//                                                                           //
 // ------------------------------------------------------------------------- //
 
 
@@ -74,10 +77,10 @@ var jrDatePicker = function(params) {
         close_onselect = (close_onselect == undefined) ? true : close_onselect;
 
     var date = new Date();            
-    var month_names = get_month_names(locale);      // array of month names
+    var month_names = get_month_names(locale);  // array of month names
     var day_names = get_dow_names(locale);      // array of day of week names
-    var mn = date.getMonth();                     // month 0 - 11
-    var yy = date.getFullYear();                  // 4-digit year
+    var mn = date.getMonth();                   // month 0 - 11
+    var yy = date.getFullYear();                // 4-digit year
 
     var citem = {
         day: 0,
@@ -106,14 +109,12 @@ var jrDatePicker = function(params) {
     // ---- Public ----
     var that = {
         show: function() {
-            if(display_count <= 1)
-                this.display_calendar();
-            else
-                this.display_calendar_multi();
+
+            this.display_calendar();
         },
 
 
-        display_calendar_multi: function() {
+        display_calendar: function() {
             if(dp_id_name == undefined) return;
             var calendar_html = '';
             var unique_id = 'jrdp_' + dp_id_name + '_';
@@ -138,17 +139,17 @@ var jrDatePicker = function(params) {
                 citem.offset = 0;
                 citem.first_dow = date.getDay(); // 0 - 6 (sun - sat)
                 citem.total_days = days_in_month(date.getMonth());
-                citem.multi_cal = '_multi';
+                citem.multi_cal = (display_count > 1) ? '_multi' : '';
 
                 calendar_html += '<td>';
-                calendar_html += '<table class="jrdp_calendar_multi" cellspacing="0" cellpadding="0">';
+                calendar_html += '<table class="jrdp_calendar' + citem.multi_cal + '" cellspacing="0" cellpadding="0">';
 
                 calendar_html += '    <tr><td colspan="7">';
                 calendar_html += '        <table width="100%" border="0" cellspacing="0" cellpadding="0">';
-                calendar_html += '        <tr class="jrdp_calendar_tbar_multi">';
+                calendar_html += '        <tr class="jrdp_calendar_tbar' + citem.multi_cal + '">';
                 if(close_onselect) {
                     calendar_html += '            <td align="right"><span id="' + unique_id + 'close" style="cursor: pointer;">';
-                    calendar_html += '                                  <span class="jrdp_calendar_close_btn_multi"></span>';
+                    calendar_html += '                                  <span class="jrdp_calendar_close_btn' + citem.multi_cal + '"></span>';
                     calendar_html += '                              </span></td>';
                 }
                 else { calendar_html += '            <td align="right">&nbsp;</td>'; }
@@ -156,20 +157,20 @@ var jrDatePicker = function(params) {
                 calendar_html += '        </tr></table>';
                 calendar_html += '    </td></tr>';
 
-                calendar_html += '    <tr class="jrdp_calendar_month_tbar_multi">';
+                calendar_html += '    <tr class="jrdp_calendar_month_tbar' + citem.multi_cal + '">';
 
                 calendar_html += '    <td>';
                 calendar_html += '        <table width="100%" border="0" cellspacing="0" cellpadding="0">';
                 calendar_html += '            <tr align="center" valign="middle">';
-                calendar_html += '            <td colspan="1" class="jrdp_calendar_month_prev_multi" align="left">';
-                calendar_html += '                <span id="' + unique_id + 'prevmonth_multi_' + i +'">&lt;</span></td>';
-                calendar_html += '            <td colspan="5" class="jrdp_calendar_month_multi">' + month_names[citem.month] + ' ' + citem.year + '</td>';
-                calendar_html += '            <td colspan="1" class="jrdp_calendar_month_next_multi" align="right">';
-                calendar_html += '                <span id="' + unique_id + 'nextmonth_multi_' + i +'">&gt</span></td>';
+                calendar_html += '            <td colspan="1" class="jrdp_calendar_month_prev' + citem.multi_cal + '" align="left">';
+                calendar_html += '                <span id="' + unique_id + 'prevmonth' + citem.multi_cal + '_' + i +'">&lt;</span></td>';
+                calendar_html += '            <td colspan="5" class="jrdp_calendar_month' + citem.multi_cal + '">' + month_names[citem.month] + ' ' + citem.year + '</td>';
+                calendar_html += '            <td colspan="1" class="jrdp_calendar_month_next' + citem.multi_cal + '" align="right">';
+                calendar_html += '                <span id="' + unique_id + 'nextmonth' + citem.multi_cal + '_' + i +'">&gt</span></td>';
                 calendar_html += '            </tr>';
 
                 calendar_html += '            <tr>';
-                for(var j = 0; j < 7; j++) { calendar_html += '<td class="jrdp_calendar_days_multi">' + day_names[j] + '</td>'; }
+                for(var j = 0; j < 7; j++) { calendar_html += '<td class="jrdp_calendar_days' + citem.multi_cal + '">' + day_names[j] + '</td>'; }
                 calendar_html += '            </tr>';
 
                 var rows_printed = 0;
@@ -186,7 +187,7 @@ var jrDatePicker = function(params) {
                 for(var j = 0; j < (6-rows_printed); j++) {
                     calendar_html += '<tr>';
                     for(var k = 0; k < 7; k++) {
-                        calendar_html += '<td class="jrdp_calendar_day2_multi">&nbsp;</td>';
+                        calendar_html += '<td class="jrdp_calendar_day2' + citem.multi_cal + '">&nbsp;</td>';
                     }
                     calendar_html += '</tr>';
                 }
@@ -206,14 +207,14 @@ var jrDatePicker = function(params) {
             // Because this was essentially part of DOM 0, this method is very widely supported and requires 
             // no special cross–browser code; hence it is normally used to register event listeners dynamically.
             for(var j = 0; j < i; j++) {
-                document.getElementById(unique_id + 'prevmonth_multi_' + j).onclick = this.month_dec;
-                document.getElementById(unique_id + 'nextmonth_multi_' + j).onclick = this.month_inc;
+                document.getElementById(unique_id + 'prevmonth' + citem.multi_cal + '_' + j).onclick = this.month_dec;
+                document.getElementById(unique_id + 'nextmonth' + citem.multi_cal + '_' + j).onclick = this.month_inc;
             }
             if(close_onselect) document.getElementById(unique_id + 'close').onclick = this.close_datepicker;
             
             // Bind event listeners to each day for the onclick event.  Get an array of 
             // elements by the class name so we can get the element id name.
-            var day_tds = document.getElementsByClassName('jrdp_calendar_day1_multi');
+            var day_tds = document.getElementsByClassName('jrdp_calendar_day1' + citem.multi_cal);
             for(var i = 0; i < day_tds.length; i++) {
                 // The id is in the format of 'jrdp_idname_mm_dd_yy'.
                 // So if we split on the '_' then we can use the last three elements.
@@ -231,101 +232,6 @@ var jrDatePicker = function(params) {
 
             // Uncomment the below to dump the html for debugging.
             this.dump_html(calendar_html);
-        },
-
-
-        display_calendar: function() {
-            if(dp_id_name == undefined) return;
-            var calendar_html = '';
-            var unique_id = 'jrdp_' + dp_id_name + '_';
-
-            citem.day = 1;
-            citem.month = mn;
-            citem.year = yy;
-
-            date.setDate(1);
-            date.setMonth(citem.month);
-            date.setFullYear(citem.year);
-
-            citem.first_dow = date.getDay();
-            citem.offset = 0;
-            citem.total_days = days_in_month(date.getMonth());
-            citem.multi_cal = '';
-
-            calendar_html  = '<table class="jrdp_calendar" cellspacing="0" cellpadding="0">';
-
-            calendar_html += '    <tr><td colspan="7">';
-            calendar_html += '        <table width="100%" border="0" cellspacing="0" cellpadding="0">';
-            calendar_html += '        <tr class="jrdp_calendar_tbar">';
-            calendar_html += '            <td align="right"><span id="' + unique_id + 'close" style="cursor: pointer;">';
-            calendar_html += '                              <span class="jrdp_calendar_close_btn"></span>';
-            calendar_html += '                              </span></td>';
-            calendar_html += '        </tr></table>';
-            calendar_html += '    </td></tr>';
-
-            calendar_html += '    <tr class="jrdp_calendar_month_tbar">';
-
-            calendar_html += '    <td>';
-            calendar_html += '        <table width="100%" border="0" cellspacing="0" cellpadding="0">';
-            calendar_html += '            <tr align="center" valign="middle">';
-            calendar_html += '            <td colspan="1" class="jrdp_calendar_month_prev" align="left">';
-            calendar_html += '                <span id="' + unique_id + 'prevmonth">&lt;</span></td>';
-            calendar_html += '            <td colspan="5" class="jrdp_calendar_month">' + month_names[citem.month] + ' ' + citem.year + '</td>';
-            calendar_html += '            <td colspan="1" class="jrdp_calendar_month_next" align="right">';
-            calendar_html += '                <span id="' + unique_id + 'nextmonth">&gt</span></td>';
-            calendar_html += '            </tr>';
-
-            calendar_html += '            <tr>';
-            for(var i = 0; i < 7; i++) { calendar_html += '<td class="jrdp_calendar_days">' + day_names[i] + '</td>'; }
-            calendar_html += '            </tr>';
-
-
-            for(var i = 0; i < 6; i++) {
-                if(citem.first_dow == 999) { break; }
-                calendar_html += '            <tr>';
-                for(var j = 0; j < 7; j++) {
-                    calendar_html += citem.markup(unique_id);
-                }
-                calendar_html += '            </tr>';
-            }
-            calendar_html += '        </table>';
-            calendar_html += '    </td>';
-            calendar_html += '    </tr>';
-            calendar_html += '</table>';
-
-            document.getElementById(dp_id_name).innerHTML = calendar_html;
-
-            // Setup event listeners for elements.
-            //
-            // These methods replace the existing click event listener(s) on the element if there are any.
-            // Because this was essentially part of DOM 0, this method is very widely supported and requires 
-            // no special cross–browser code; hence it is normally used to register event listeners dynamically.
-            //
-            // Pass a function reference — do not add '()' after it, that would call the function!
-            document.getElementById(unique_id + 'prevmonth').onclick = this.month_dec;
-            document.getElementById(unique_id + 'nextmonth').onclick = this.month_inc;
-            document.getElementById(unique_id + 'close').onclick = this.close_datepicker;
-            
-            // Bind event listeners to each day for the onclick event.  Get an array of 
-            // elements by the class name so we can get the element id name.
-            var day_tds = document.getElementsByClassName('jrdp_calendar_day1');
-            for(var i = 0; i < day_tds.length; i++) {
-                // The id is in the format of 'jrdp_idname_mm_dd_yy'.
-                // So if we split on the '_' then we can use the last three elements.
-                var items = day_tds[i].id.split('_');
-                var mmtmp = items[items.length -3];
-                var ddtmp = items[items.length -2];
-                var yytmp = items[items.length -1];
-          
-                var tmp_id = unique_id + mmtmp + '_' + ddtmp + '_' + yytmp;
-
-                var s  = 'document.getElementById("' + tmp_id + '").onclick = ';
-                    s += 'function() { that.select_date(' + mmtmp + ',' + ddtmp + ',' + yytmp + '); };';
-                eval(s);
-            }
-
-            // Uncomment the below to dump the html for debugging.
-            //this.dump_html(calendar_html);
         },
 
 
