@@ -65,18 +65,24 @@ var jrDatePicker = function(params) {
         }
     };
 
-    var MAX_DATEPICKERS = 2;
+    // jrDatePicker options
+    var MAX_CALENDARS = 2;
     var dp_id_name = params.dp_id_name || '';  // selector id where to display the datepicker
     var id_name = params.id_name || '';        // selector id where to populate a selected date
     var locale = params.locale || 'en';
     var ondateselected_callback = (params.onDateSelected instanceof Function) ? params.onDateSelected : null;
     var onclose_callback = (params.onClose instanceof Function) ? params.onClose : null;
     var display_count = params.display_count || 1;
-        display_count = (display_count > MAX_DATEPICKERS) ? MAX_DATEPICKERS : display_count;
+        display_count = (display_count > MAX_CALENDARS) ? MAX_CALENDARS : display_count;
     var close_onselect = params.close_onselect;
         close_onselect = (close_onselect == undefined) ? true : close_onselect;
 
-    var date = new Date();            
+    var max_date = params.max_date || '1Y';  // max date user can scroll forward to, default is one year
+    var min_date = params.max_date || '0';   // min date user can scroll back to, default is current date
+
+
+    var date = new Date();
+    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     var month_names = get_month_names(locale);  // array of month names
     var day_names = get_dow_names(locale);      // array of day of week names
     var mn = date.getMonth();                   // month 0 - 11
@@ -93,9 +99,15 @@ var jrDatePicker = function(params) {
 
         markup: function(unique_id) {
             var the_html = '';
-            if(this.offset >= this.first_dow) { 
+            if(this.offset >= this.first_dow) {
+                var tmp_date = new Date(this.year, this.month, this.day);
                 var td_id = unique_id + this.month+ '_' + this.day + '_' + this.year;
-                the_html += '<td id="' + td_id + '" class="jrdp_calendar_day1' + this.multi_cal + '">' + this.day + '</td>';
+                if(tmp_date.valueOf() == today.valueOf()) {
+                    the_html += '<td id="' + td_id + '" class="jrdp_calendar_current_day' + this.multi_cal + '">' + this.day + '</td>';
+                }
+                else {
+                    the_html += '<td id="' + td_id + '" class="jrdp_calendar_day1' + this.multi_cal + '">' + this.day + '</td>';
+                }
                 if(this.day >= this.total_days) { this.first_dow = 999; } 
             }
             else { the_html += '<td class="jrdp_calendar_day2' + this.multi_cal + '">&nbsp;</td>'; }
@@ -109,12 +121,6 @@ var jrDatePicker = function(params) {
     // ---- Public ----
     var that = {
         show: function() {
-
-            this.display_calendar();
-        },
-
-
-        display_calendar: function() {
             if(dp_id_name == undefined) return;
             var calendar_html = '';
             var unique_id = 'jrdp_' + dp_id_name + '_';
@@ -230,6 +236,21 @@ var jrDatePicker = function(params) {
                 eval(s);
             }
 
+            // Check for the current day node because it has a different class name
+            var curr_day_td = document.getElementsByClassName('jrdp_calendar_current_day' + citem.multi_cal);
+            if(curr_day_td.length > 0) {
+                var items = curr_day_td[0].id.split('_');
+                var mmtmp = items[items.length -3];
+                var ddtmp = items[items.length -2];
+                var yytmp = items[items.length -1];
+          
+                var tmp_id = unique_id + mmtmp + '_' + ddtmp + '_' + yytmp;
+
+                var s  = 'document.getElementById("' + tmp_id + '").onclick = ';
+                    s += 'function() { that.select_date(' + mmtmp + ',' + ddtmp + ',' + yytmp + '); };';
+                eval(s);
+            }
+
             // Uncomment the below to dump the html for debugging.
             this.dump_html(calendar_html);
         },
@@ -245,7 +266,9 @@ var jrDatePicker = function(params) {
 
             //alert(the_month + "/" + the_day + "/" + yy);
 
-            eval('document.getElementById("' + id_name + '").value = the_month + "/" + the_day + "/" + yy');
+            if(id_name != '') {
+                eval('document.getElementById("' + id_name + '").value = the_month + "/" + the_day + "/" + yy');
+            }
 
             if(ondateselected_callback != undefined) ondateselected_callback();
             this.close_datepicker();
@@ -271,7 +294,8 @@ var jrDatePicker = function(params) {
         close_datepicker: function() {
             if(close_onselect) {
                 document.getElementById(dp_id_name).innerHTML = "";
-                eval('document.getElementById("' + id_name + '").focus();');
+                if(id_name != '')
+                    eval('document.getElementById("' + id_name + '").focus();');
 
                 if(onclose_callback != undefined) onclose_callback();
             }
