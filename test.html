@@ -93,26 +93,69 @@ var my_datepicker = jrDatePicker({
 });
 
 
-Check-Out Date: &lt;input type="text" id="start_date" value="" /&gt;
-                &lt;img class="jrdp_calendar_icon" src="icon_calendar.gif" onclick="my_datepicker.show();" /&gt;
-                &lt;span class="jrdp_calendar_pos" id="disp_datepicker"&gt;
-
-
-Options:
-
-    dp_id_name:      location where the datepicker is to be displayed - required
-    id_name:         location where the selected date is copied - optional
-    locale:          en, fr, es, de - default is 'en'
-    display_count:   number of months to display in datepicker - default is 1
-    close_onselect:  true | false - default is true
-    max_date:        maximum date user can scroll forward to and select - default is 1Y
-                     acceptable values: 3M, 6M, 9M, 1Y, 2Y, * (infinity)
-    min_date:        minimum date user can scroll backward to and select - default is 0 (current date)
-                     acceptable values: 0, 3M, 6M, 9M, 1Y, 2Y, * (infinity)
-    onDateSelected:  callback function
-    onClose:         callback function
+Start Date: &lt;input type=&quot;text&quot; id=&quot;start_date&quot; value=&quot;&quot; /&gt;
+            &lt;img class=&quot;jrdp_calendar_icon&quot; src=&quot;icon_calendar.gif&quot; onclick=&quot;my_datepicker.show();&quot; /&gt;
+            &lt;span class=&quot;jrdp_calendar_pos&quot; id=&quot;disp_datepicker&quot;&gt;
 
 </pre>
+
+<table style="width: 550px; font-family: Verdana, Arial, sans-serif; font-size: 11pt;" border="1" cellspacing="2" cellpadding="2">
+    <tr>
+        <td colspan="2" align="center" style="background-color: #D94867;"><b>Files</b></td>
+    </tr>
+    <tr><td align="left">jrDatePicker.js</td>
+        <td align="left">Javascript code for the datepicker.</tr>
+    <tr><td align="left">jrDatePicker.css</td>
+        <td align="left">Styling for the datepicker.  You can provide you own styling however the class names are required.</tr>
+</table>
+
+<br />
+
+<table style="width: 550px; font-family: Verdana, Arial, sans-serif; font-size: 11pt;" border="1" cellspacing="2" cellpadding="2">
+    <tr>
+        <td colspan="2" align="center" style="background-color: #D94867;"><b>Options</b></td>
+    </tr>
+    <tr>
+        <td align="left">dp_id_name</td>
+        <td align="left">location where the datepicker is to be displayed <br />required</td>
+    </tr>
+    <tr>
+        <td align="left">id_name</td>
+        <td align="left">location where the selected date is copied <br />optional</td>
+    </tr>
+    <tr>
+        <td align="left">locale</td>
+        <td align="left">en, fr, es, de <br />default is 'en'</td>
+    </tr>
+    <tr>
+        <td align="left">display_count</td>
+        <td align="left">number of months to display in datepicker <br />default is 1</td>
+    </tr>
+    <tr>
+        <td align="left">close_onselect</td>
+        <td align="left">true | false <br />default is true</td>
+    </tr>
+    <tr>
+        <td align="left">max_date</td>
+        <td align="left">maximum date user can scroll forward to and select <br />default is 1Y
+                         <br />acceptable values: 3M, 6M, 9M, 1Y, 2Y, * (infinity)</td>
+    </tr>
+    <tr>
+        <td align="left">min_date</td>
+        <td align="left">minimum date user can scroll backward to and select <br />default is 0 (current date)
+                         <br />acceptable values: 0, 3M, 6M, 9M, 1Y, 2Y, * (infinity)</td>
+    </tr>
+    <tr>
+        <td align="left">onDateSelected</td>
+        <td align="left">callback function</td>
+    </tr>
+    <tr>
+        <td align="left">onClose</td>
+        <td align="left">callback function</td>
+    </tr>
+</table>
+
+
 
 <hr style="background-color: #cd0000; width: 100%; height: 1px;" />
 <br />

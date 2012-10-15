@@ -65,6 +65,74 @@ var jrDatePicker = function(params) {
         }
     };
 
+    var get_max_date = function(param_max_date) {
+        // Return a date object set to max_date.  
+        // Acceptable parameter formats: 3M, 6M, 9M, 1Y, 2Y, * (infinity)
+        var date = new Date();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+
+        switch(param_max_date) {
+            case '3M':
+                if((month + 3) > 11) { month = (month +3) % 12; year++; }
+                else { month += 3; }
+                break;
+            case '6M':
+                if((month + 6) > 11) { month = (month +6) % 12; year++; }
+                else { month += 6; }
+                break;
+            case '9M':
+                if((month + 9) > 11) { month = (month +9) % 12; year++; }
+                else { month += 9; }
+                break;
+            case '2Y':
+                year += 2;
+                break;
+            case '*':
+                year = 3125;
+                break;
+            default:       // '1Y' is the default
+                year += 1;
+        }
+        return(new Date(year, month, date.getDate()));
+    };
+
+    var get_min_date = function(param_min_date) {
+        // Return a date object set to max_date.  
+        // Acceptable parameter formats: 0, 3M, 6M, 9M, 1Y, 2Y, * (infinity)
+        var date = new Date();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+
+        param_min_date = '9M';
+
+        switch(param_min_date) {
+            case '3M':
+                if((month - 3) < 0) { month = (month -3) % 12; year--; }
+                else { month -= 3; }
+                break;
+            case '6M':
+                if((month - 6) < 0) { month = (month -6) % 12; year--; }
+                else { month -= 6; }
+                break;
+            case '9M':
+                if((month - 9) < 0) { month = (month -9) % 12; year--; }
+                else { month -= 9; }
+                break;
+            case '1Y':
+                year -= 1;
+            case '2Y':
+                year -= 2;
+                break;
+            case '*':
+                year = 1900;
+                break;
+            default:
+                break;  // default is the current date
+        }
+        return(new Date(year, month, date.getDate()));
+    };
+
     // jrDatePicker options
     var MAX_CALENDARS = 2;
     var dp_id_name = params.dp_id_name || '';  // selector id where to display the datepicker
@@ -77,9 +145,11 @@ var jrDatePicker = function(params) {
     var close_onselect = params.close_onselect;
         close_onselect = (close_onselect == undefined) ? true : close_onselect;
 
-    var max_date = params.max_date || '1Y';  // max date user can scroll forward to, default is one year
-    var min_date = params.max_date || '0';   // min date user can scroll back to, default is current date
+    var max_date = get_max_date((params.max_date || '1Y'));  // max date user can scroll forward to
+    //alert('max_date = ' + max_date.toString());
 
+    var min_date = get_min_date((params.min_date || '0'));     // min date user can scroll back to
+    //alert('min_date = ' + min_date.toString());
 
     var date = new Date();
     var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
