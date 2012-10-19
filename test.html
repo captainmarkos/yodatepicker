@@ -11,6 +11,8 @@
     var start_datepicker = jrDatePicker({
         dp_id_name: 'dp_start_date',           // selector id where to display the datepicker
         id_name: 'start_date',                 // selector id where to populate a selected date
+        max_date: '3M',
+        min_date: '3M',
         locale: 'en'
         //onDateSelected: function() {alert("callback called");}
     });
@@ -29,6 +31,8 @@
         id_name: 'price_calendar',
         display_count: 2,                     // display two calendar months
         close_onselect: false,                // display the calendar all the time
+        max_date: '3M',
+        min_date: '3M',
         locale: 'en'
     });
 
@@ -88,6 +92,8 @@ var my_datepicker = jrDatePicker({
     dp_id_name: 'disp_datepicker',    // datepicker is displayed here
     id_name: 'start_date',            // selected date is inserted here
     locale: 'fr',                     // setting locale to french
+    max_date: '3M',                   // maximum selectable date
+    min_date: '3M',                   // minimum selectable date
     onDateSelected: function() {alert("ondateselected callback");},
     onClose: function() {alert("onclose callback");}
 });

@@ -72,6 +72,8 @@ var jrDatePicker = function(params) {
         var month = date.getMonth();
         var year = date.getFullYear();
 
+        param_max_date = '3M';
+
         switch(param_max_date) {
             case '3M':
                 if((month + 3) > 11) { month = (month +3) % 12; year++; }
@@ -104,7 +106,7 @@ var jrDatePicker = function(params) {
         var month = date.getMonth();
         var year = date.getFullYear();
 
-        param_min_date = '9M';
+        param_min_date = '0';
 
         switch(param_min_date) {
             case '3M':
@@ -148,7 +150,7 @@ var jrDatePicker = function(params) {
     var max_date = get_max_date((params.max_date || '1Y'));  // max date user can scroll forward to
     //alert('max_date = ' + max_date.toString());
 
-    var min_date = get_min_date((params.min_date || '0'));     // min date user can scroll back to
+    var min_date = get_min_date((params.min_date || '0'));   // min date user can scroll back to
     //alert('min_date = ' + min_date.toString());
 
     var date = new Date();
@@ -172,12 +174,19 @@ var jrDatePicker = function(params) {
             if(this.offset >= this.first_dow) {
                 var tmp_date = new Date(this.year, this.month, this.day);
                 var td_id = unique_id + this.month+ '_' + this.day + '_' + this.year;
-                if(tmp_date.valueOf() == today.valueOf()) {
+                if(tmp_date.valueOf() > max_date.valueOf()) {
+                    the_html += '<td id="' + td_id + '" class="jrdp_calendar_day1_noselect' + this.multi_cal + '">' + this.day + '</td>';
+                }
+                else if(tmp_date.valueOf() < min_date.valueOf()) {
+                    the_html += '<td id="' + td_id + '" class="jrdp_calendar_day1_noselect' + this.multi_cal + '">' + this.day + '</td>';
+                }
+                else if(tmp_date.valueOf() == today.valueOf()) {
                     the_html += '<td id="' + td_id + '" class="jrdp_calendar_current_day' + this.multi_cal + '">' + this.day + '</td>';
                 }
                 else {
                     the_html += '<td id="' + td_id + '" class="jrdp_calendar_day1' + this.multi_cal + '">' + this.day + '</td>';
                 }
+
                 if(this.day >= this.total_days) { this.first_dow = 999; } 
             }
             else { the_html += '<td class="jrdp_calendar_day2' + this.multi_cal + '">&nbsp;</td>'; }
@@ -347,6 +356,11 @@ var jrDatePicker = function(params) {
 
         month_inc: function() {
             //alert("month_inc() --> mn:" + mn);
+            var scroll_date = new Date(yy, mn, today.getDate());
+            if((scroll_date.getFullYear() == max_date.getFullYear()) &&
+               (scroll_date.getMonth() >= max_date.getMonth()))
+                return;
+
             if(mn < 11) { mn++; }
             else { mn = 0; yy++; }
             that.show();
@@ -355,6 +369,11 @@ var jrDatePicker = function(params) {
 
         month_dec: function() {
             //alert("month_dec() --> mn:" + mn);
+            var scroll_date = new Date(yy, mn, today.getDate());
+            if((scroll_date.getFullYear() == min_date.getFullYear()) &&
+               (scroll_date.getMonth() <= min_date.getMonth()))
+                return;
+
             if(mn > 0) { mn--; }
             else { mn = 11; yy--; }
             that.show();

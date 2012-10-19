@@ -103,7 +103,7 @@
     font-weight: normal;
     color: #000000;   
     text-decoration: none; 
-    background-color: #cccc66;
+    background-color: #b5dce5;
     height: 16px;
     width: 20px;
     text-align: center;
@@ -113,7 +113,7 @@
 .jrdp_calendar_current_day:hover { background-color: #ffff99; cursor: pointer; }
 
 .jrdp_calendar_day1 {
-    /* style for a cell that has a day */
+    /* style for a cell that has a day and is selectable */
     font-family: Arial, Helvetica, sans-serif; 
     font-size: 10px; 
     font-style: normal; 
@@ -130,6 +130,24 @@
 .jrdp_calendar_day1:hover {
     background-color: #ffff99;
     cursor: pointer;
+}
+
+.jrdp_calendar_day1_noselect {
+    /* style for a cell that has a day and is not selectable */
+    font-family: Arial, Helvetica, sans-serif; 
+    font-size: 10px; 
+    font-style: normal; 
+    font-weight: normal;
+    color: #000000;   
+    text-decoration: none; 
+    background-color: #ffffff;
+    height: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.jrdp_calendar_day1_noselect:hover {
+    background-color: #c0c0c0;
 }
 
 .jrdp_calendar_day2 {
@@ -253,7 +271,7 @@
     font-weight: normal;
     color: #000000;   
     text-decoration: none; 
-    background-color: #cccc66;
+    background-color: #b5dce5;
     height: 16px;
     width: 20px;
     text-align: center;
@@ -263,7 +281,7 @@
 .jrdp_calendar_current_day_multi:hover { background-color: #ffff99; cursor: pointer; }
 
 .jrdp_calendar_day1_multi {
-    /* style for a cell that has a day */
+    /* style for a cell that has a day and is selectable */
     font-family: Arial, Helvetica, sans-serif; 
     font-size: 14px; 
     font-style: normal; 
@@ -280,6 +298,24 @@
 .jrdp_calendar_day1_multi:hover {
     background-color: #ffff99;
     cursor: pointer;
+}
+
+.jrdp_calendar_day1_noselect_multi {
+    /* style for a cell that has a day and is not selectable */
+    font-family: Arial, Helvetica, sans-serif; 
+    font-size: 14px; 
+    font-style: normal; 
+    font-weight: normal;
+    color: #000000;   
+    text-decoration: none; 
+    background-color: #f3e1a5;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+}
+
+.jrdp_calendar_day1_noselect_multi:hover {
+    background-color: #c0c0c0;
 }
 
 .jrdp_calendar_day2_multi {
