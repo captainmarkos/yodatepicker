@@ -14,17 +14,15 @@
         max_date: '3M',
         min_date: '3M',
         locale: 'en'
-        //onDateSelected: function() {alert("callback called");}
     });
 
     var end_datepicker = jrDatePicker({
         dp_id_name: 'dp_end_date',             // selector id where to display the datepicker
         id_name: 'end_date',                   // selector id where to populate a selected date
-        locale: 'de'
-        //onDateSelected: function() {alert("ondateselected callback");},
-        //onClose: function() {alert("onclose callback");}
+        locale: 'de',
+        onDateSelected: function() {alert("onDateSelected callback");},
+        onClose: function() {alert("onClose callback");}
     });
-
 
     var double_datepicker = jrDatePicker({
         dp_id_name: 'dp_price_calendar',
@@ -39,38 +37,56 @@
 
 </script>
 <title>jrDatePicker</title>
+<style>
+a { text-decoration: none; color: #0000ff; }
+
+a:hover { text-decoration: underline; color: #cd0000; }
+
+hr { background-color: #cd0000; width: 100%; height: 1px; }
+
+.myfont1 {        
+    font-family: Verdana, Arial, sans-serif; 
+    font-size: 11pt;
+}
+
+.fixedwidth_font {
+    font-family: courier new, Verdana, Arial;
+    font-size: 11pt;
+}
+</style>
 </head>
 
 
 <body>
 
 
-<center><h2>jrDatePicker</h2></center>
-<hr style="background-color: #cd0000; width: 100%; height: 1px;" />
+<center><h2>jrDatePicker - A simple Date Picker</h2>
+<br />
+<span class="myfont1">
+jrDatePicker is open source and available at github <a href="https://github.com/captainmarkos/jrDatePicker" target="_blank">here</a>.</span>
+</center>
+<hr />
 <br />
 
 
-<div style="text-align: center;">
-<form action="" method="get" id="widget_booking_form" name="widget_booking_form">
-
-
-<div style="display: inline;">
-    <div style="display: inline;">Check-In Date:</div>
-    <input type="text" name="start_date" id="start_date" readonly="readonly" value="mm/dd/yyyy" size="12" />
+<div style="display: inline;" class="myfont1">
+    <div style="display: inline;">Start Date:</div>
+    <input type="text" name="start_date" id="start_date" value="mm/dd/yyyy" size="12" />
     <img class="jrdp_calendar_icon" src="icon_calendar.gif" onclick="start_datepicker.show();" />
     <span class="jrdp_calendar_pos" id="dp_start_date"></span>
 </div>
 
+&nbsp;&nbsp;&nbsp;&nbsp;
 
-<div style="display: inline;">
-    <div style="display: inline;">Check-Out Date:</div>
-    <input type="text" name="end_date" id="end_date" readonly="readonly" value="mm/dd/yyyy" size="12" />
+<div style="display: inline;" class="myfont1">
+    <div style="display: inline;">End Date:</div>
+    <input type="text" name="end_date" id="end_date" value="mm/dd/yyyy" size="12" />
     <img class="jrdp_calendar_icon" src="icon_calendar.gif" onclick="end_datepicker.show();" />
     <span class="jrdp_calendar_pos" id="dp_end_date"></span>
 </div>
 
 <br /><br />
-<hr style="background-color: #cd0000; width: 100%; height: 1px;" />
+<hr />
 <br />
 <center>
     <span id="dp_price_calendar"></span>
@@ -80,10 +96,8 @@
 </center>
 <br />
 
-</form>
-</div>
 
-<pre>
+<pre class="fixedwidth_font">
 
 Example usage:
 --------------
@@ -105,7 +119,7 @@ Start Date: &lt;input type=&quot;text&quot; id=&quot;start_date&quot; value=&quo
 
 </pre>
 
-<table style="width: 550px; font-family: Verdana, Arial, sans-serif; font-size: 11pt;" border="1" cellspacing="2" cellpadding="2">
+<table class="myfont1" style="width: 550px;" border="1" cellspacing="2" cellpadding="2">
     <tr>
         <td colspan="2" align="center" style="background-color: #D94867;"><b>Files</b></td>
     </tr>
@@ -113,11 +127,10 @@ Start Date: &lt;input type=&quot;text&quot; id=&quot;start_date&quot; value=&quo
         <td align="left">Javascript code for the datepicker.</tr>
     <tr><td align="left">jrDatePicker.css</td>
         <td align="left">Styling for the datepicker.  You can provide you own styling however the class names are required.</tr>
-</table>
 
-<br />
 
-<table style="width: 550px; font-family: Verdana, Arial, sans-serif; font-size: 11pt;" border="1" cellspacing="2" cellpadding="2">
+    <tr><td colspan="2">&nbsp;</td></tr>
+
     <tr>
         <td colspan="2" align="center" style="background-color: #D94867;"><b>Options</b></td>
     </tr>
@@ -163,7 +176,7 @@ Start Date: &lt;input type=&quot;text&quot; id=&quot;start_date&quot; value=&quo
 
 
 
-<hr style="background-color: #cd0000; width: 100%; height: 1px;" />
+<hr />
 <br />
 
 <div id="htmldump"></div>

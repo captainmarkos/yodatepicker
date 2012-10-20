@@ -100,13 +100,11 @@ var jrDatePicker = function(params) {
     };
 
     var get_min_date = function(param_min_date) {
-        // Return a date object set to max_date.  
+        // Return a date object set to min_date.  
         // Acceptable parameter formats: 0, 3M, 6M, 9M, 1Y, 2Y, * (infinity)
         var date = new Date();
         var month = date.getMonth();
         var year = date.getFullYear();
-
-        param_min_date = '0';
 
         switch(param_min_date) {
             case '3M':
@@ -146,19 +144,15 @@ var jrDatePicker = function(params) {
         display_count = (display_count > MAX_CALENDARS) ? MAX_CALENDARS : display_count;
     var close_onselect = params.close_onselect;
         close_onselect = (close_onselect == undefined) ? true : close_onselect;
-
     var max_date = get_max_date((params.max_date || '1Y'));  // max date user can scroll forward to
-    //alert('max_date = ' + max_date.toString());
+    var min_date = get_min_date((params.min_date || '*'));   // min date user can scroll back to
 
-    var min_date = get_min_date((params.min_date || '0'));   // min date user can scroll back to
-    //alert('min_date = ' + min_date.toString());
-
-    var date = new Date();
-    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    var currdate = new Date();
+    var today = new Date(currdate.getFullYear(), currdate.getMonth(), currdate.getDate());
     var month_names = get_month_names(locale);  // array of month names
     var day_names = get_dow_names(locale);      // array of day of week names
-    var mn = date.getMonth();                   // month 0 - 11
-    var yy = date.getFullYear();                // 4-digit year
+    var mn = currdate.getMonth();               // month 0 - 11
+    var yy = currdate.getFullYear();            // 4-digit year
 
     var citem = {
         day: 0,
@@ -197,6 +191,72 @@ var jrDatePicker = function(params) {
     };
 
 
+    var select_date = function(mm, dd, yy) {
+        var the_month, the_day;
+
+        mm++;    // Note: mm is the month number 0 - 11 so always add 1.
+        if(mm < 10) { the_month = "0" + mm; } else { the_month = mm.toString(); }
+        if(dd < 10) { the_day = "0" + dd;   } else { the_day = dd.toString();   }
+
+        if(id_name != '') {
+            eval('document.getElementById("' + id_name + '").value = the_month + "/" + the_day + "/" + yy');
+        }
+
+        if(ondateselected_callback != undefined) ondateselected_callback();
+        close_datepicker();
+    };
+
+
+    var month_inc = function() {
+        var scroll_date = new Date(yy, mn, today.getDate());
+        if((scroll_date.getFullYear() == max_date.getFullYear()) &&
+           (scroll_date.getMonth() >= max_date.getMonth()))
+            return;
+
+        if(mn < 11) { mn++; }
+        else { mn = 0; yy++; }
+        that.show();
+    };
+
+
+    var month_dec = function() {
+        var scroll_date = new Date(yy, mn, today.getDate());
+        if((scroll_date.getFullYear() == min_date.getFullYear()) &&
+           (scroll_date.getMonth() <= min_date.getMonth()))
+            return;
+
+        if(mn > 0) { mn--; }
+        else { mn = 11; yy--; }
+        that.show();
+    };
+
+
+    var close_datepicker = function() {
+        if(close_onselect) {
+            document.getElementById(dp_id_name).innerHTML = "";
+            if(id_name != '')
+                eval('document.getElementById("' + id_name + '").focus();');
+
+             if(onclose_callback != undefined) onclose_callback();
+        }
+    };
+
+
+    var dump_html = function(calendar_html) {
+        var the_html = '<tt>';
+        for(var j=0; j<calendar_html.length; j++) {
+            var ch = calendar_html.charAt(j);
+            if(ch == '<') ch = '&lt;';
+            else if(ch == '>') ch = '&gt;<br />';
+            else if(ch == ' ') ch = '&nbsp;';
+            the_html += ch;
+        }
+        the_html += '</tt>';
+        if(document.getElementById('htmldump') != null)
+            document.getElementById('htmldump').innerHTML = the_html;
+    };
+
+
     // ---- Public ----
     var that = {
         show: function() {
@@ -204,7 +264,7 @@ var jrDatePicker = function(params) {
             var calendar_html = '';
             var unique_id = 'jrdp_' + dp_id_name + '_';
             
-            calendar_html  = '<table class="jrdp_encapsulated_table" cellspacing="0" cellpadding="0">';
+            calendar_html  = '<table id="dude" class="jrdp_encapsulated_table" cellspacing="0" cellpadding="0">';
             calendar_html += '<tr>';
 
             for(i = 0; i < display_count; i++) {
@@ -217,13 +277,13 @@ var jrDatePicker = function(params) {
                     else { citem.month = 0; citem.year = yy +1; }
                 }
 
-                date.setDate(1);                 // set day of month to the 1st
-                date.setMonth(citem.month);      // set the month
-                date.setFullYear(citem.year);    // set to 4-digit year
+                currdate.setDate(1);                 // set day of month to the 1st
+                currdate.setMonth(citem.month);      // set the month
+                currdate.setFullYear(citem.year);    // set to 4-digit year
 
                 citem.offset = 0;
-                citem.first_dow = date.getDay(); // 0 - 6 (sun - sat)
-                citem.total_days = days_in_month(date.getMonth());
+                citem.first_dow = currdate.getDay(); // 0 - 6 (sun - sat)
+                citem.total_days = days_in_month(currdate.getMonth());
                 citem.multi_cal = (display_count > 1) ? '_multi' : '';
 
                 calendar_html += '<td>';
@@ -292,10 +352,15 @@ var jrDatePicker = function(params) {
             // Because this was essentially part of DOM 0, this method is very widely supported and requires 
             // no special cross–browser code; hence it is normally used to register event listeners dynamically.
             for(var j = 0; j < i; j++) {
-                document.getElementById(unique_id + 'prevmonth' + citem.multi_cal + '_' + j).onclick = this.month_dec;
-                document.getElementById(unique_id + 'nextmonth' + citem.multi_cal + '_' + j).onclick = this.month_inc;
+                document.getElementById(unique_id + 'prevmonth' + citem.multi_cal + '_' + j).onclick = month_dec;
+                document.getElementById(unique_id + 'nextmonth' + citem.multi_cal + '_' + j).onclick = month_inc;
             }
-            if(close_onselect) document.getElementById(unique_id + 'close').onclick = this.close_datepicker;
+
+            if(close_onselect) {
+                document.getElementById(unique_id + 'close' + citem.multi_cal).onclick = close_datepicker;
+                document.getElementById('dude').onblur = close_datepicker;
+            }
+
             
             // Bind event listeners to each day for the onclick event.  Get an array of 
             // elements by the class name so we can get the element id name.
@@ -311,7 +376,7 @@ var jrDatePicker = function(params) {
                 var tmp_id = unique_id + mmtmp + '_' + ddtmp + '_' + yytmp;
 
                 var s  = 'document.getElementById("' + tmp_id + '").onclick = ';
-                    s += 'function() { that.select_date(' + mmtmp + ',' + ddtmp + ',' + yytmp + '); };';
+                    s += 'function() { select_date(' + mmtmp + ',' + ddtmp + ',' + yytmp + '); };';
                 eval(s);
             }
 
@@ -326,84 +391,13 @@ var jrDatePicker = function(params) {
                 var tmp_id = unique_id + mmtmp + '_' + ddtmp + '_' + yytmp;
 
                 var s  = 'document.getElementById("' + tmp_id + '").onclick = ';
-                    s += 'function() { that.select_date(' + mmtmp + ',' + ddtmp + ',' + yytmp + '); };';
+                    s += 'function() { select_date(' + mmtmp + ',' + ddtmp + ',' + yytmp + '); };';
                 eval(s);
             }
 
             // Uncomment the below to dump the html for debugging.
-            this.dump_html(calendar_html);
-        },
-
-
-        select_date: function(mm, dd, yy) {
-            var the_month, the_day;
-
-            mm++;    // Note: mm is the month number 0 - 11 so always add 1.
-
-            if(mm < 10) { the_month = "0" + mm; } else { the_month = mm.toString(); }
-            if(dd < 10) { the_day = "0" + dd;   } else { the_day = dd.toString();   }
-
-            //alert(the_month + "/" + the_day + "/" + yy);
-
-            if(id_name != '') {
-                eval('document.getElementById("' + id_name + '").value = the_month + "/" + the_day + "/" + yy');
-            }
-
-            if(ondateselected_callback != undefined) ondateselected_callback();
-            this.close_datepicker();
-        },
-
-
-        month_inc: function() {
-            //alert("month_inc() --> mn:" + mn);
-            var scroll_date = new Date(yy, mn, today.getDate());
-            if((scroll_date.getFullYear() == max_date.getFullYear()) &&
-               (scroll_date.getMonth() >= max_date.getMonth()))
-                return;
-
-            if(mn < 11) { mn++; }
-            else { mn = 0; yy++; }
-            that.show();
-        },
-
-
-        month_dec: function() {
-            //alert("month_dec() --> mn:" + mn);
-            var scroll_date = new Date(yy, mn, today.getDate());
-            if((scroll_date.getFullYear() == min_date.getFullYear()) &&
-               (scroll_date.getMonth() <= min_date.getMonth()))
-                return;
-
-            if(mn > 0) { mn--; }
-            else { mn = 11; yy--; }
-            that.show();
-        },
-
-
-        close_datepicker: function() {
-            if(close_onselect) {
-                document.getElementById(dp_id_name).innerHTML = "";
-                if(id_name != '')
-                    eval('document.getElementById("' + id_name + '").focus();');
-
-                if(onclose_callback != undefined) onclose_callback();
-            }
-        },
-
-
-        dump_html: function(calendar_html) {
-            var the_html = '<tt>';
-            for(var j=0; j<calendar_html.length; j++) {
-                var ch = calendar_html.charAt(j);
-                if(ch == '<') ch = '&lt;';
-                else if(ch == '>') ch = '&gt;<br />';
-                else if(ch == ' ') ch = '&nbsp;';
-                the_html += ch;
-            }
-            the_html += '</tt>';
-            if(document.getElementById('htmldump') != null)
-                document.getElementById('htmldump').innerHTML = the_html;
-        },
+            dump_html(calendar_html);
+        }
     };
 
     return(that);
