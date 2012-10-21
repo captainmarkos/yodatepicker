@@ -16,53 +16,56 @@ var jrDatePicker = function(params) {
 
 
     // ---- Private ----
-    var leap_year = function(yr) { return(yr % 400 == 0) || (yr % 4 == 0 && yr % 100 != 0); };
+    var leap_year = function(yr) { return(yr % 400 === 0) || (yr % 4 === 0 && yr % 100 !== 0); };
 
 
     var get_dow_names = function(loc) {
-        if(loc == undefined || loc == null) { loc = 'en'; }
+        if(loc === undefined || loc === null) { loc = 'en'; }
 
-        if(loc == 'es' || loc == 'fr') { return(['D', 'L', 'M', 'M', 'J', 'V', 'S']); }
-        else if(loc == 'de') { return(['S', 'M', 'D', 'M', 'D', 'F', 'S']); }
-        else                 { return(['S', 'M', 'T', 'W', 'T', 'F', 'S']); }
+        if(loc === 'es' || loc === 'fr') { return(['D', 'L', 'M', 'M', 'J', 'V', 'S']); }
+
+        if(loc === 'de') { return(['S', 'M', 'D', 'M', 'D', 'F', 'S']); }
+        
+        return(['S', 'M', 'T', 'W', 'T', 'F', 'S']);
     };
 
 
     var get_month_names = function(loc) {
-        if(loc == undefined || loc == null) { loc = 'en'; }
+        if(loc === undefined || loc === null) { loc = 'en'; }
 
-        if(loc == 'es') {
+        if(loc === 'es') {
             return(['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 
                     'Augosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']);
         }
-        else if(loc == 'fr') {
+
+        if(loc === 'fr') {
             return(['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
                     'Aout', 'Septembre', 'Octobre', 'Novembre', 'Decembre']);
         }
-        else if(loc == 'de') {
+
+        if(loc === 'de') {
             return(['Januar', 'Februar', 'Marz', 'April', 'Mai', 'Juni', 'Juli',
                     'August', 'September', 'Oktober', 'November', 'Dezember']);
         }
-        else {
-            return(['January', 'February', 'March', 'April', 'May', 'June', 'July',
-                    'August', 'September', 'October', 'November', 'December']);
-        }
+
+        return(['January', 'February', 'March', 'April', 'May', 'June', 'July',
+                'August', 'September', 'October', 'November', 'December']);
     };
 
 
-    var days_in_month = function(month_num) {
+    var days_in_month = function(month_num, full_year) {
         // Jan == 0, Feb == 1, Mar == 2, ...
-        if(month_num == 0 || month_num == 2 || month_num == 4 || 
-           month_num == 6 || month_num == 7 || month_num == 9 || month_num == 11) {
+        if(month_num === 0 || month_num === 2 || month_num === 4 || 
+           month_num === 6 || month_num === 7 || month_num === 9 || month_num === 11) {
             return(31);
         }
-        else if(month_num == 3 || month_num == 5 || 
-                month_num == 8 || month_num == 10) {
+
+        if(month_num === 3 || month_num === 5 || 
+                month_num === 8 || month_num === 10) {
             return(30);
         }
-        else {
-            return(leap_year(yy) ? 29 : 28);
-        }
+
+        return(leap_year(full_year) ? 29 : 28);
     };
 
     var get_max_date = function(param_max_date) {
@@ -121,6 +124,7 @@ var jrDatePicker = function(params) {
                 break;
             case '1Y':
                 year -= 1;
+                break;
             case '2Y':
                 year -= 2;
                 break;
@@ -191,6 +195,18 @@ var jrDatePicker = function(params) {
     };
 
 
+    var close_datepicker = function() {
+        if(close_onselect) {
+            document.getElementById(dp_id_name).innerHTML = "";
+            if(id_name != '') {
+                eval('document.getElementById("' + id_name + '").focus();');
+            }
+
+            if(onclose_callback != undefined) { onclose_callback(); }
+        }
+    };
+
+
     var select_date = function(mm, dd, yy) {
         var the_month, the_day;
 
@@ -202,7 +218,7 @@ var jrDatePicker = function(params) {
             eval('document.getElementById("' + id_name + '").value = the_month + "/" + the_day + "/" + yy');
         }
 
-        if(ondateselected_callback != undefined) ondateselected_callback();
+        if(ondateselected_callback != undefined) { ondateselected_callback(); }
         close_datepicker();
     };
 
@@ -210,8 +226,9 @@ var jrDatePicker = function(params) {
     var month_inc = function() {
         var scroll_date = new Date(yy, mn, today.getDate());
         if((scroll_date.getFullYear() == max_date.getFullYear()) &&
-           (scroll_date.getMonth() >= max_date.getMonth()))
+           (scroll_date.getMonth() >= max_date.getMonth())) {
             return;
+        }
 
         if(mn < 11) { mn++; }
         else { mn = 0; yy++; }
@@ -222,23 +239,13 @@ var jrDatePicker = function(params) {
     var month_dec = function() {
         var scroll_date = new Date(yy, mn, today.getDate());
         if((scroll_date.getFullYear() == min_date.getFullYear()) &&
-           (scroll_date.getMonth() <= min_date.getMonth()))
+           (scroll_date.getMonth() <= min_date.getMonth())) {
             return;
+        }
 
         if(mn > 0) { mn--; }
         else { mn = 11; yy--; }
         that.show();
-    };
-
-
-    var close_datepicker = function() {
-        if(close_onselect) {
-            document.getElementById(dp_id_name).innerHTML = "";
-            if(id_name != '')
-                eval('document.getElementById("' + id_name + '").focus();');
-
-             if(onclose_callback != undefined) onclose_callback();
-        }
     };
 
 
@@ -283,7 +290,7 @@ var jrDatePicker = function(params) {
 
                 citem.offset = 0;
                 citem.first_dow = currdate.getDay(); // 0 - 6 (sun - sat)
-                citem.total_days = days_in_month(currdate.getMonth());
+                citem.total_days = days_in_month(currdate.getMonth(), currdate.getFullYear());
                 citem.multi_cal = (display_count > 1) ? '_multi' : '';
 
                 calendar_html += '<td>';
@@ -360,7 +367,6 @@ var jrDatePicker = function(params) {
                 document.getElementById(unique_id + 'close' + citem.multi_cal).onclick = close_datepicker;
                 document.getElementById('dude').onblur = close_datepicker;
             }
-
             
             // Bind event listeners to each day for the onclick event.  Get an array of 
             // elements by the class name so we can get the element id name.
@@ -395,8 +401,8 @@ var jrDatePicker = function(params) {
                 eval(s);
             }
 
-            // Uncomment the below to dump the html for debugging.
-            dump_html(calendar_html);
+            // Uncomment the below to dump the html for debugging.  Need an element with id='htmldump'
+            //dump_html(calendar_html);
         }
     };
 
