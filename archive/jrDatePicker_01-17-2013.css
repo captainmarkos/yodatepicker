@@ -65,7 +65,7 @@
     font-weight: bold;
     color: #343434;
     text-decoration: none; 
-    text-transform: uppercase;
+	text-transform: uppercase;
 }
 
 .jrdp_calendar_month_prev {
@@ -77,8 +77,7 @@
     color: #343434;
     text-decoration: none;
     cursor: pointer;
-    /*padding: 4px 7px 4px 12px; */
-    text-align: center;
+    padding: 4px 7px 4px 12px; 
 }
 
 .jrdp_calendar_month_next {
@@ -90,8 +89,7 @@
     color: #343434;
     text-decoration: none;
     cursor: pointer;
-    /*padding: 4px 12px 4px 7px; */
-    text-align: center;
+    padding: 4px 12px 4px 7px; 
 }
 
 .jrdp_calendar_month_prev:hover { background-color: #c3c3c3; }

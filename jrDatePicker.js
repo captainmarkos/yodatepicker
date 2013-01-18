@@ -75,8 +75,6 @@ var jrDatePicker = function(params) {
         var month = date.getMonth();
         var year = date.getFullYear();
 
-        param_max_date = '3M';
-
         switch(param_max_date) {
             case '3M':
                 if((month + 3) > 11) { month = (month +3) % 12; year++; }
@@ -301,7 +299,7 @@ var jrDatePicker = function(params) {
                 calendar_html += '        <tr class="jrdp_calendar_tbar' + citem.multi_cal + '">';
                 if(close_onselect) {
                     calendar_html += '            <td align="right"><span id="' + unique_id + 'close" style="cursor: pointer;">';
-                    calendar_html += '                                  <span class="jrdp_calendar_close_btn' + citem.multi_cal + '"></span>';
+                    calendar_html += '                                  <span class="jrdp_calendar_close_btn' + citem.multi_cal + '">x</span>';
                     calendar_html += '                              </span></td>';
                 }
                 else { calendar_html += '            <td align="right">&nbsp;</td>'; }
@@ -315,10 +313,10 @@ var jrDatePicker = function(params) {
                 calendar_html += '        <table width="100%" border="0" cellspacing="0" cellpadding="0">';
                 calendar_html += '            <tr align="center" valign="middle">';
                 calendar_html += '            <td colspan="1" class="jrdp_calendar_month_prev' + citem.multi_cal + '" align="left">';
-                calendar_html += '                <span id="' + unique_id + 'prevmonth' + citem.multi_cal + '_' + i +'">&lt;</span></td>';
+                calendar_html += '                <span id="' + unique_id + 'prevmonth' + citem.multi_cal + '_' + i +'">&lsaquo;</span></td>';
                 calendar_html += '            <td colspan="5" class="jrdp_calendar_month' + citem.multi_cal + '">' + month_names[citem.month] + ' ' + citem.year + '</td>';
                 calendar_html += '            <td colspan="1" class="jrdp_calendar_month_next' + citem.multi_cal + '" align="right">';
-                calendar_html += '                <span id="' + unique_id + 'nextmonth' + citem.multi_cal + '_' + i +'">&gt</span></td>';
+                calendar_html += '                <span id="' + unique_id + 'nextmonth' + citem.multi_cal + '_' + i +'">&rsaquo;</span></td>';
                 calendar_html += '            </tr>';
 
                 calendar_html += '            <tr>';
@@ -361,6 +359,9 @@ var jrDatePicker = function(params) {
             for(var j = 0; j < i; j++) {
                 document.getElementById(unique_id + 'prevmonth' + citem.multi_cal + '_' + j).onclick = month_dec;
                 document.getElementById(unique_id + 'nextmonth' + citem.multi_cal + '_' + j).onclick = month_inc;
+
+                document.getElementById(unique_id + 'prevmonth' + citem.multi_cal + '_' + j).style.display = 'block';
+                document.getElementById(unique_id + 'nextmonth' + citem.multi_cal + '_' + j).style.display = 'block';
             }
 
             if(close_onselect) {
