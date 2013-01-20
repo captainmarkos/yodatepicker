@@ -107,6 +107,9 @@ var jrDatePicker = function(params) {
         var month = date.getMonth();
         var year = date.getFullYear();
 
+        // If a Date object is passed in, use that.
+        if(param_min_date instanceof Date) { return(param_min_date); }
+
         switch(param_min_date) {
             case '3M':
                 if((month - 3) < 0) { month = (month -3) % 12; year--; }
@@ -153,8 +156,10 @@ var jrDatePicker = function(params) {
     var today = new Date(currdate.getFullYear(), currdate.getMonth(), currdate.getDate());
     var month_names = get_month_names(locale);  // array of month names
     var day_names = get_dow_names(locale);      // array of day of week names
-    var mn = currdate.getMonth();               // month 0 - 11
-    var yy = currdate.getFullYear();            // 4-digit year
+    //var mn = currdate.getMonth();               // month 0 - 11
+    //var yy = currdate.getFullYear();            // 4-digit year
+    var mn = (currdate.getTime() < min_date.getTime()) ? min_date.getMonth() : currdate.getMonth();
+    var yy = (currdate.getTime() < min_date.getTime()) ? min_date.getFullYear() : currdate.getFullYear();
 
     var citem = {
         day: 0,
@@ -264,6 +269,15 @@ var jrDatePicker = function(params) {
 
     // ---- Public ----
     var that = {
+        set_min_date: function(mdate) {
+            // This will override the min_date param.
+            if(mdate instanceof Date) {
+                min_date = mdate;
+                mn = (currdate.getTime() < min_date.getTime()) ? min_date.getMonth() : currdate.getMonth();
+                yy = (currdate.getTime() < min_date.getTime()) ? min_date.getFullYear() : currdate.getFullYear();
+            }
+        },
+
         show: function() {
             if(dp_id_name == undefined) return;
             var calendar_html = '';
