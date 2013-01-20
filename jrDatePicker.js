@@ -218,7 +218,12 @@ var jrDatePicker = function(params) {
         if(dd < 10) { the_day = "0" + dd;   } else { the_day = dd.toString();   }
 
         if(id_name != '') {
-            eval('document.getElementById("' + id_name + '").value = the_month + "/" + the_day + "/" + yy');
+            if(locale === 'en') {
+                eval('document.getElementById("' + id_name + '").value = the_month + "/" + the_day + "/" + yy');
+            }
+            else {
+                eval('document.getElementById("' + id_name + '").value = the_day + "/" + the_month + "/" + yy');
+            }
         }
 
         if(ondateselected_callback != undefined) { ondateselected_callback(); }
