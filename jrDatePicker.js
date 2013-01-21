@@ -10,8 +10,8 @@
 
 var jrDatePicker = function(params) {
     // Create an object literal (that) that includes properties and methods
-    // for public use.  Any local variables defined outside of that{} or 
-    // passed to jrDatePicker will remain private but still accessible 
+    // for public use.  Any local variables defined outside of that{} or
+    // passed to jrDatePicker will remain private but still accessible
     // from functions within that{}.
 
 
@@ -25,7 +25,7 @@ var jrDatePicker = function(params) {
         if(loc === 'es' || loc === 'fr') { return(['D', 'L', 'M', 'M', 'J', 'V', 'S']); }
 
         if(loc === 'de') { return(['S', 'M', 'D', 'M', 'D', 'F', 'S']); }
-        
+
         return(['S', 'M', 'T', 'W', 'T', 'F', 'S']);
     };
 
@@ -34,7 +34,7 @@ var jrDatePicker = function(params) {
         if(loc === undefined || loc === null) { loc = 'en'; }
 
         if(loc === 'es') {
-            return(['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 
+            return(['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
                     'Augosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']);
         }
 
@@ -55,12 +55,12 @@ var jrDatePicker = function(params) {
 
     var days_in_month = function(month_num, full_year) {
         // Jan == 0, Feb == 1, Mar == 2, ...
-        if(month_num === 0 || month_num === 2 || month_num === 4 || 
+        if(month_num === 0 || month_num === 2 || month_num === 4 ||
            month_num === 6 || month_num === 7 || month_num === 9 || month_num === 11) {
             return(31);
         }
 
-        if(month_num === 3 || month_num === 5 || 
+        if(month_num === 3 || month_num === 5 ||
                 month_num === 8 || month_num === 10) {
             return(30);
         }
@@ -69,7 +69,7 @@ var jrDatePicker = function(params) {
     };
 
     var get_max_date = function(param_max_date) {
-        // Return a date object set to max_date.  
+        // Return a date object set to max_date.
         // Acceptable parameter formats: 3M, 6M, 9M, 1Y, 2Y, * (infinity)
         var date = new Date();
         var month = date.getMonth();
@@ -101,7 +101,7 @@ var jrDatePicker = function(params) {
     };
 
     var get_min_date = function(param_min_date) {
-        // Return a date object set to min_date.  
+        // Return a date object set to min_date.
         // Acceptable parameter formats: 0, 3M, 6M, 9M, 1Y, 2Y, * (infinity)
         var date = new Date();
         var month = date.getMonth();
@@ -165,8 +165,8 @@ var jrDatePicker = function(params) {
         day: 0,
         month: 0,
         year: 1900,
-        first_dow: 0, 
-        total_days: 0, 
+        first_dow: 0,
+        total_days: 0,
         offset: 0,
         multi_cal: '',
 
@@ -188,7 +188,7 @@ var jrDatePicker = function(params) {
                     the_html += '<td id="' + td_id + '" class="jrdp_calendar_day1' + this.multi_cal + '">' + this.day + '</td>';
                 }
 
-                if(this.day >= this.total_days) { this.first_dow = 999; } 
+                if(this.day >= this.total_days) { this.first_dow = 999; }
             }
             else { the_html += '<td class="jrdp_calendar_day2' + this.multi_cal + '">&nbsp;</td>'; }
             this.offset++;
@@ -287,8 +287,8 @@ var jrDatePicker = function(params) {
             if(dp_id_name == undefined) return;
             var calendar_html = '';
             var unique_id = 'jrdp_' + dp_id_name + '_';
-            
-            calendar_html  = '<table id="dude" class="jrdp_encapsulated_table" cellspacing="0" cellpadding="0">';
+
+            calendar_html  = '<table class="jrdp_encapsulated_table" cellspacing="0" cellpadding="0">';
             calendar_html += '<tr>';
 
             for(i = 0; i < display_count; i++) {
@@ -367,13 +367,13 @@ var jrDatePicker = function(params) {
                 calendar_html += '</td>';
             }
             calendar_html += '</tr></table>';
-   
+
             document.getElementById(dp_id_name).innerHTML = calendar_html;
 
             // Setup event listeners for elements.
             //
             // These methods replace the existing click event listener(s) on the element if there are any.
-            // Because this was essentially part of DOM 0, this method is very widely supported and requires 
+            // Because this was essentially part of DOM 0, this method is very widely supported and requires
             // no special cross–browser code; hence it is normally used to register event listeners dynamically.
             for(var j = 0; j < i; j++) {
                 document.getElementById(unique_id + 'prevmonth' + citem.multi_cal + '_' + j).onclick = month_dec;
@@ -387,8 +387,8 @@ var jrDatePicker = function(params) {
                 document.getElementById(unique_id + 'close' + citem.multi_cal).onclick = close_datepicker;
                 document.getElementById('dude').onblur = close_datepicker;
             }
-            
-            // Bind event listeners to each day for the onclick event.  Get an array of 
+
+            // Bind event listeners to each day for the onclick event.  Get an array of
             // elements by the class name so we can get the element id name.
             var day_tds = document.getElementsByClassName('jrdp_calendar_day1' + citem.multi_cal);
             for(var i = 0; i < day_tds.length; i++) {
@@ -398,7 +398,7 @@ var jrDatePicker = function(params) {
                 var mmtmp = items[items.length -3];
                 var ddtmp = items[items.length -2];
                 var yytmp = items[items.length -1];
-          
+
                 var tmp_id = unique_id + mmtmp + '_' + ddtmp + '_' + yytmp;
 
                 var s  = 'document.getElementById("' + tmp_id + '").onclick = ';
@@ -413,7 +413,7 @@ var jrDatePicker = function(params) {
                 var mmtmp = items[items.length -3];
                 var ddtmp = items[items.length -2];
                 var yytmp = items[items.length -1];
-          
+
                 var tmp_id = unique_id + mmtmp + '_' + ddtmp + '_' + yytmp;
 
                 var s  = 'document.getElementById("' + tmp_id + '").onclick = ';
