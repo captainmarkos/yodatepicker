@@ -298,7 +298,8 @@ var jrDatePicker = function(params) {
             var calendar_html = '';
             var unique_id = 'jrdp_' + dp_id_name + '_';
 
-            calendar_html  = '<table class="jrdp_encapsulated_table" cellspacing="0" cellpadding="0">';
+
+            calendar_html  = '<table id="jrdp_' + dp_id_name + '" + class="jrdp_encapsulated_table" cellspacing="0" cellpadding="0">';
             calendar_html += '<tr>';
 
             for(i = 0; i < display_count; i++) {
@@ -397,6 +398,31 @@ var jrDatePicker = function(params) {
                 document.getElementById(unique_id + 'close' + citem.multi_cal).onclick = close_datepicker;
             }
 
+
+            // Attach event listeners to the following events so that the datepicker
+            // will close when the user clicks outside of the calendar.
+            document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
+
+            document.getElementById('jrdp_' + dp_id_name).onmouseover = function(e) { 
+                // IE 7-8 does not support event.currentTarget but does so for event.srcElement;
+                target = (e.currentTarget) ? e.currentTarget : e.srcElement;
+                //console.log("OVER: The id of the triggered element: " + target.id);
+                document.getElementById(target.id).onmouseover = function() {
+                    document.getElementsByTagName('body')[0].onmousedown = null;
+                };
+            };
+
+            document.getElementById('jrdp_' + dp_id_name).onmouseout = function(e) {
+                // IE 7-8 does not support event.currentTarget but does so for event.srcElement;
+                target = (e.currentTarget) ? e.currentTarget : e.srcElement;
+                //console.log("OUT: The id of the triggered element: " + target.id);
+                document.getElementById(target.id).onmouseout = function() {
+                    document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
+                };
+                document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
+            };
+
+
             // Bind event listeners to each day for the onclick event.  Get an array of
             // elements by the class name so we can get the element id name.
             var day_tds = document.querySelectorAll('.jrdp_calendar_day1' + citem.multi_cal);
@@ -431,7 +457,7 @@ var jrDatePicker = function(params) {
             }
 
             // Uncomment the below to dump the html for debugging.  Need an element with id='htmldump'
-            //dump_html(calendar_html);
+            dump_html(calendar_html);
         }
     };
 
