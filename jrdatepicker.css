@@ -213,7 +213,7 @@
 
 .jrdp_calendar_close_btn_multi {
     /* close button displayed in top title bar (not used if close_onselect option is false) */
-    background: url('jrDatePicker_close_button.jpg') no-repeat;
+    background: url('close_button_01.jpg') no-repeat;
     width: 15px;
     height: 15px;
     display: block;

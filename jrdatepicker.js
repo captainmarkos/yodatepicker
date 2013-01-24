@@ -1,5 +1,5 @@
 // ------------------------------------------------------------------------- //
-// jrDatePicker.js                                  Mark Brettin  2012-09-12 //
+// jrdatepicker.js                                  Mark Brettin  2012-09-12 //
 //                                                                           //
 // A simple / stand-alone javascript datapicker.  No external javascript,    //
 // such as jquery, is needed.  This is intended to be simple and to work     //
@@ -15,7 +15,9 @@ var jrDatePicker = function(params) {
     // from functions within that{}.
 
 
-    // ---- Private ----
+    //
+    // Private methods
+    //
     var leap_year = function(yr) { return(yr % 400 === 0) || (yr % 4 === 0 && yr % 100 !== 0); };
 
 
@@ -272,8 +274,16 @@ var jrDatePicker = function(params) {
     };
 
 
-    // ---- Public ----
+    //
+    // Public methods
+    //
     var that = {
+        version: '1.6',
+
+        hide: function() {
+            close_datepicker();
+        },
+
         set_min_date: function(mdate) {
             // This will override the min_date param.
             if(mdate instanceof Date) {
@@ -385,12 +395,11 @@ var jrDatePicker = function(params) {
 
             if(close_onselect) {
                 document.getElementById(unique_id + 'close' + citem.multi_cal).onclick = close_datepicker;
-                document.getElementById('dude').onblur = close_datepicker;
             }
 
             // Bind event listeners to each day for the onclick event.  Get an array of
             // elements by the class name so we can get the element id name.
-            var day_tds = document.getElementsByClassName('jrdp_calendar_day1' + citem.multi_cal);
+            var day_tds = document.querySelectorAll('.jrdp_calendar_day1' + citem.multi_cal);
             for(var i = 0; i < day_tds.length; i++) {
                 // The id is in the format of 'jrdp_idname_mm_dd_yy'.
                 // So if we split on the '_' then we can use the last three elements.
@@ -406,8 +415,8 @@ var jrDatePicker = function(params) {
                 eval(s);
             }
 
-            // Check for the current day node because it has a different class name
-            var curr_day_td = document.getElementsByClassName('jrdp_calendar_current_day' + citem.multi_cal);
+            // Check for the current day node because it will have a different class name.
+            var curr_day_td = document.querySelectorAll('.jrdp_calendar_current_day' + citem.multi_cal);
             if(curr_day_td.length > 0) {
                 var items = curr_day_td[0].id.split('_');
                 var mmtmp = items[items.length -3];
