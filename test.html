@@ -13,7 +13,8 @@
         id_name: 'start_date',                 // selector id where to populate a selected date
         max_date: '1Y',
         min_date: '0',
-        locale: 'en'
+        locale: 'en',
+        close_button: true                    // display a close button
     });
 
     var end_datepicker = jrDatePicker({
@@ -158,6 +159,10 @@ Start Date: &lt;input type=&quot;text&quot; id=&quot;start_date&quot; value=&quo
         <td align="left">true | false <br />default is true</td>
     </tr>
     <tr>
+        <td align="left">close_button</td>
+        <td align="left">display a close button in upper-right of datepicker<br />true | false <br />default is false</td>
+    </tr>
+    <tr>
         <td align="left">max_date</td>
         <td align="left">maximum date user can scroll forward to and select <br />default is 1Y
                          <br />acceptable values: 3M, 6M, 9M, 1Y, 2Y, * (infinity)</td>
@@ -175,6 +180,21 @@ Start Date: &lt;input type=&quot;text&quot; id=&quot;start_date&quot; value=&quo
         <td align="left">onClose</td>
         <td align="left">callback function</td>
     </tr>
+
+    <tr><td colspan="2">&nbsp;</td></tr>
+
+    <tr>
+        <td colspan="2" align="center" style="background-color: #D94867;"><b>Public Methods</b></td>
+    </tr>
+    <tr><td align="left">show()</td>
+        <td align="left">Show the datepicker.</tr>
+    <tr><td align="left">hide()</td>
+        <td align="left">Hide the datepicker</tr>
+    <tr><td align="left">set_min_date(Date)</td>
+        <td align="left">Set the minimum selectable date.  
+                         This takes a javascript Date object and will override the min_date param.</tr>
+
+
 </table>
 
 

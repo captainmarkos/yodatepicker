@@ -153,6 +153,8 @@ var jrDatePicker = function(params) {
         close_onselect = (close_onselect == undefined) ? true : close_onselect;
     var max_date = get_max_date((params.max_date || '1Y'));  // max date user can scroll forward to
     var min_date = get_min_date((params.min_date || '*'));   // min date user can scroll back to
+    var use_close_button = params.close_button;              // default to false
+        use_close_button = (use_close_button == undefined) ? false : use_close_button;
 
     var currdate = new Date();
     var today = new Date(currdate.getFullYear(), currdate.getMonth(), currdate.getDate());
@@ -329,7 +331,9 @@ var jrDatePicker = function(params) {
                 calendar_html += '        <tr class="jrdp_calendar_tbar' + citem.multi_cal + '">';
                 if(close_onselect) {
                     calendar_html += '            <td align="right"><span id="' + unique_id + 'close" style="cursor: pointer;">';
-                    calendar_html += '                                  <span class="jrdp_calendar_close_btn' + citem.multi_cal + '">x</span>';
+                    if(use_close_button) {
+                        calendar_html += '                          <span class="jrdp_calendar_close_btn' + citem.multi_cal + '">x</span>';
+                    }
                     calendar_html += '                              </span></td>';
                 }
                 else { calendar_html += '            <td align="right">&nbsp;</td>'; }
