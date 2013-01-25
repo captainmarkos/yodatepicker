@@ -8,11 +8,18 @@
 // ------------------------------------------------------------------------- //
 
 
+
 var jrDatePicker = function(params) {
     // Create an object literal (that) that includes properties and methods
     // for public use.  Any local variables defined outside of that{} or
     // passed to jrDatePicker will remain private but still accessible
     // from functions within that{}.
+
+
+    // Define document.querySelectorAll() for IE7
+    if(document.all && !document.querySelector) {
+        (function(d){d=document,a=d.styleSheets[0]||d.createStyleSheet();d.querySelectorAll=function(e){a.addRule(e,'f:b');for(var l=d.all,b=0,c=[],f=l.length;b<f;b++)l[b].currentStyle.f&&c.push(l[b]);a.removeRule(0);return c}})()
+    }
 
 
     //
@@ -409,26 +416,35 @@ var jrDatePicker = function(params) {
 
             document.getElementById('jrdp_' + dp_id_name).onmouseover = function(e) { 
                 // IE 7-8 does not support event.currentTarget but does so for event.srcElement;
-                var target;
-                try { target = (e.currentTarget) ? e.currentTarget : e.srcElement; }
-                catch(err) { target = e.srcElement; }
-
-                //console.log("MOUSE OVER: The id of the triggered element: " + target.id);
-                document.getElementById(target.id).onmouseover = function() {
-                    document.getElementsByTagName('body')[0].onmousedown = null;
-                };
+                var target, target_id, ev = e || window.event;
+                var using_srcElement = false;
+                try { target = ev.currentTarget; }
+                catch(err) { target = ev.srcElement; using_srcElement = true; }
+                try { target_id = target.id; }
+                catch(err) { target_id = (target) ? target : 'jrdp_' + dp_id_name; }
+                if(target_id) {
+                    //console.log('MOUSE OVER: target_id of triggered element: "' + target_id + '" using_srcElement: ' + using_srcElement);
+                    document.getElementById(target_id).onmouseover = function() {
+                        document.getElementsByTagName('body')[0].onmousedown = null;
+                    };
+                }
             };
 
             document.getElementById('jrdp_' + dp_id_name).onmouseout = function(e) {
                 // IE 7-8 does not support event.currentTarget but does so for event.srcElement;
-                var target;
-                try { target = (e.currentTarget) ? e.currentTarget : e.srcElement; }
-                catch(err) { target = e.srcElement; }
-                //console.log("MOUSE OUT: The id of the triggered element: " + target.id);
-                document.getElementById(target.id).onmouseout = function() {
-                    document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
-                };
-                document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
+                var target, target_id, ev = e || window.event;
+                var using_srcElement = false;
+                try { target = ev.currentTarget; }
+                catch(err) { target = ev.srcElement; using_srcElement = true; }
+                try { target_id = target.id; }
+                catch(err) { target_id = (target) ? target : 'jrdp_' + dp_id_name; }
+                if(target_id) {
+                    //console.log('MOUSE OUT: target_id of triggered element: "' + target_id + '" using_srcElement: ' + using_srcElement);
+                    document.getElementById(target_id).onmouseout = function() {
+                        document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
+                    };
+                }
+                //document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
             };
 
 
