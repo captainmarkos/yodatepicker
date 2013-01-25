@@ -409,8 +409,11 @@ var jrDatePicker = function(params) {
 
             document.getElementById('jrdp_' + dp_id_name).onmouseover = function(e) { 
                 // IE 7-8 does not support event.currentTarget but does so for event.srcElement;
-                target = (e.currentTarget) ? e.currentTarget : e.srcElement;
-                //console.log("OVER: The id of the triggered element: " + target.id);
+                var target;
+                try { target = (e.currentTarget) ? e.currentTarget : e.srcElement; }
+                catch(err) { target = e.srcElement; }
+
+                //console.log("MOUSE OVER: The id of the triggered element: " + target.id);
                 document.getElementById(target.id).onmouseover = function() {
                     document.getElementsByTagName('body')[0].onmousedown = null;
                 };
@@ -418,8 +421,10 @@ var jrDatePicker = function(params) {
 
             document.getElementById('jrdp_' + dp_id_name).onmouseout = function(e) {
                 // IE 7-8 does not support event.currentTarget but does so for event.srcElement;
-                target = (e.currentTarget) ? e.currentTarget : e.srcElement;
-                //console.log("OUT: The id of the triggered element: " + target.id);
+                var target;
+                try { target = (e.currentTarget) ? e.currentTarget : e.srcElement; }
+                catch(err) { target = e.srcElement; }
+                //console.log("MOUSE OUT: The id of the triggered element: " + target.id);
                 document.getElementById(target.id).onmouseout = function() {
                     document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
                 };
