@@ -428,6 +428,7 @@ var jrDatePicker = function(params) {
                         document.getElementsByTagName('body')[0].onmousedown = null;
                     };
                 }
+                document.getElementsByTagName('body')[0].onmousedown = null;
             };
 
             document.getElementById('jrdp_' + dp_id_name).onmouseout = function(e) {
@@ -444,7 +445,7 @@ var jrDatePicker = function(params) {
                         document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
                     };
                 }
-                //document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
+                document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
             };
 
 
