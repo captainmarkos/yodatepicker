@@ -308,7 +308,7 @@ var jrDatePicker = function(params) {
             var unique_id = 'jrdp_' + dp_id_name + '_';
 
 
-            calendar_html  = '<table id="jrdp_' + dp_id_name + '" + class="jrdp_encapsulated_table" cellspacing="0" cellpadding="0">';
+            calendar_html  = '<table id="jrdp_' + dp_id_name + '" class="jrdp_encapsulated_table" cellspacing="0" cellpadding="0">';
             calendar_html += '<tr>';
 
             for(i = 0; i < display_count; i++) {
