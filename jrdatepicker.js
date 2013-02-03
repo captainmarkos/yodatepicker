@@ -8,6 +8,10 @@
 // ------------------------------------------------------------------------- //
 
 
+// Define document.querySelectorAll() for IE7
+if(document.all && !document.querySelectorAll) { (function(d){d=document,a=d.styleSheets[0]||d.createStyleSheet();d.querySelectorAll=function(e){a.addRule(e,'f:b');for(var l=d.all,b=0,c=[],f=l.length;b<f;b++)l[b].currentStyle.f&&c.push(l[b]);a.removeRule(0);return c}})() }
+
+
 
 var jrDatePicker = function(params) {
     // Create an object literal (that) that includes properties and methods
@@ -16,17 +20,10 @@ var jrDatePicker = function(params) {
     // from functions within that{}.
 
 
-    // Define document.querySelectorAll() for IE7
-    if(document.all && !document.querySelector) {
-        (function(d){d=document,a=d.styleSheets[0]||d.createStyleSheet();d.querySelectorAll=function(e){a.addRule(e,'f:b');for(var l=d.all,b=0,c=[],f=l.length;b<f;b++)l[b].currentStyle.f&&c.push(l[b]);a.removeRule(0);return c}})()
-    }
-
-
     //
     // Private methods
     //
     var leap_year = function(yr) { return(yr % 400 === 0) || (yr % 4 === 0 && yr % 100 !== 0); };
-
 
     var get_dow_names = function(loc) {
         if(loc === undefined || loc === null) { loc = 'en'; }
@@ -37,7 +34,6 @@ var jrDatePicker = function(params) {
 
         return(['S', 'M', 'T', 'W', 'T', 'F', 'S']);
     };
-
 
     var get_month_names = function(loc) {
         if(loc === undefined || loc === null) { loc = 'en'; }
@@ -60,7 +56,6 @@ var jrDatePicker = function(params) {
         return(['January', 'February', 'March', 'April', 'May', 'June', 'July',
                 'August', 'September', 'October', 'November', 'December']);
     };
-
 
     var days_in_month = function(month_num, full_year) {
         // Jan == 0, Feb == 1, Mar == 2, ...
@@ -147,7 +142,7 @@ var jrDatePicker = function(params) {
         return(new Date(year, month, date.getDate()));
     };
 
-    // jrDatePicker options
+    // jrDatePicker options and variables
     var MAX_CALENDARS = 2;
     var dp_id_name = params.dp_id_name || '';  // selector id where to display the datepicker
     var id_name = params.id_name || '';        // selector id where to populate a selected date
@@ -208,7 +203,6 @@ var jrDatePicker = function(params) {
         }
     };
 
-
     var close_datepicker = function() {
         if(close_onselect) {
             document.getElementById(dp_id_name).innerHTML = "";
@@ -219,7 +213,6 @@ var jrDatePicker = function(params) {
             if(onclose_callback != undefined) { onclose_callback(); }
         }
     };
-
 
     var select_date = function(mm, dd, yy) {
         var the_month, the_day;
@@ -241,7 +234,6 @@ var jrDatePicker = function(params) {
         close_datepicker();
     };
 
-
     var month_inc = function() {
         var scroll_date = new Date(yy, mn, today.getDate());
         if((scroll_date.getFullYear() == max_date.getFullYear()) &&
@@ -254,7 +246,6 @@ var jrDatePicker = function(params) {
         that.show();
     };
 
-
     var month_dec = function() {
         var scroll_date = new Date(yy, mn, today.getDate());
         if((scroll_date.getFullYear() == min_date.getFullYear()) &&
@@ -266,7 +257,6 @@ var jrDatePicker = function(params) {
         else { mn = 11; yy--; }
         that.show();
     };
-
 
     var dump_html = function(calendar_html) {
         var the_html = '<tt>';
@@ -287,7 +277,7 @@ var jrDatePicker = function(params) {
     // Public methods
     //
     var that = {
-        version: '1.6',
+        version: '1.6.3',
 
         hide: function() {
             close_datepicker();
@@ -333,15 +323,17 @@ var jrDatePicker = function(params) {
                 calendar_html += '<td>';
                 calendar_html += '<table class="jrdp_calendar' + citem.multi_cal + '" cellspacing="0" cellpadding="0">';
 
-                calendar_html += '    <tr><td colspan="7">';
+                calendar_html += '    <tr><td>';
                 calendar_html += '        <table width="100%" border="0" cellspacing="0" cellpadding="0">';
                 calendar_html += '        <tr class="jrdp_calendar_tbar' + citem.multi_cal + '">';
                 if(close_onselect) {
-                    calendar_html += '            <td align="right"><span id="' + unique_id + 'close" style="cursor: pointer;">';
+                    calendar_html += '            <td align="right">';
                     if(use_close_button) {
-                        calendar_html += '                          <span class="jrdp_calendar_close_btn' + citem.multi_cal + '">x</span>';
+                        calendar_html += '            <span id="' + unique_id + 'close" style="cursor: pointer;">';
+                        calendar_html += '                <span class="jrdp_calendar_close_btn' + citem.multi_cal + '">x</span>';
+                        calendar_html += '            </span>';
                     }
-                    calendar_html += '                              </span></td>';
+                    calendar_html += '            </td>';
                 }
                 else { calendar_html += '            <td align="right">&nbsp;</td>'; }
 
@@ -389,7 +381,6 @@ var jrDatePicker = function(params) {
                 calendar_html += '</td>';
             }
             calendar_html += '</tr></table>';
-
             document.getElementById(dp_id_name).innerHTML = calendar_html;
 
             // Setup event listeners for elements.
@@ -405,7 +396,7 @@ var jrDatePicker = function(params) {
                 document.getElementById(unique_id + 'nextmonth' + citem.multi_cal + '_' + j).style.display = 'block';
             }
 
-            if(close_onselect) {
+            if(close_onselect && use_close_button) {
                 document.getElementById(unique_id + 'close' + citem.multi_cal).onclick = close_datepicker;
             }
 
