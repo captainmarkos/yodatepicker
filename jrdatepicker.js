@@ -8,16 +8,14 @@
 // ------------------------------------------------------------------------- //
 
 
-// Define document.querySelectorAll() for IE7
-if(document.all && !document.querySelectorAll) { (function(d){d=document,a=d.styleSheets[0]||d.createStyleSheet();d.querySelectorAll=function(e){a.addRule(e,'f:b');for(var l=d.all,b=0,c=[],f=l.length;b<f;b++)l[b].currentStyle.f&&c.push(l[b]);a.removeRule(0);return c}})() }
-
-
-
 var jrDatePicker = function(params) {
     // Create an object literal (that) that includes properties and methods
     // for public use.  Any local variables defined outside of that{} or
     // passed to jrDatePicker will remain private but still accessible
     // from functions within that{}.
+
+    // Define document.querySelectorAll() for IE7
+    if(document.all && !document.querySelector) { (function(d){d=document,a=d.styleSheets[0]||d.createStyleSheet();d.querySelectorAll=function(e){a.addRule(e,'f:b');for(var l=d.all,b=0,c=[],f=l.length;b<f;b++)l[b].currentStyle.f&&c.push(l[b]);a.removeRule(0);return c}})() }
 
 
     //
@@ -205,7 +203,7 @@ var jrDatePicker = function(params) {
 
     var close_datepicker = function() {
         if(close_onselect) {
-            document.getElementById(dp_id_name).innerHTML = "";
+            document.getElementById(dp_id_name).innerHTML = '';
             if(id_name != '') {
                 eval('document.getElementById("' + id_name + '").focus();');
             }
@@ -326,16 +324,15 @@ var jrDatePicker = function(params) {
                 calendar_html += '    <tr><td>';
                 calendar_html += '        <table width="100%" border="0" cellspacing="0" cellpadding="0">';
                 calendar_html += '        <tr class="jrdp_calendar_tbar' + citem.multi_cal + '">';
+
                 if(close_onselect) {
                     calendar_html += '            <td align="right">';
-                    if(use_close_button) {
-                        calendar_html += '            <span id="' + unique_id + 'close" style="cursor: pointer;">';
-                        calendar_html += '                <span class="jrdp_calendar_close_btn' + citem.multi_cal + '">x</span>';
-                        calendar_html += '            </span>';
-                    }
+                    calendar_html += '            <span id="' + unique_id + 'close" style="cursor: pointer;">';
+                    calendar_html += '                <span class="jrdp_calendar_close_btn' + citem.multi_cal + '">x</span>';
+                    calendar_html += '            </span>';
                     calendar_html += '            </td>';
                 }
-                else { calendar_html += '            <td align="right">&nbsp;</td>'; }
+                else { calendar_html += '         <td align="right">&nbsp;</td>'; }
 
                 calendar_html += '        </tr></table>';
                 calendar_html += '    </td></tr>';
@@ -383,6 +380,11 @@ var jrDatePicker = function(params) {
             calendar_html += '</tr></table>';
             document.getElementById(dp_id_name).innerHTML = calendar_html;
 
+            // If were not using the close button set the innerHTML to empty.
+            if(close_onselect && !use_close_button) {
+                document.getElementById(unique_id + 'close').innerHTML = '';
+            }
+
             // Setup event listeners for elements.
             //
             // These methods replace the existing click event listener(s) on the element if there are any.
@@ -396,10 +398,9 @@ var jrDatePicker = function(params) {
                 document.getElementById(unique_id + 'nextmonth' + citem.multi_cal + '_' + j).style.display = 'block';
             }
 
-            if(close_onselect && use_close_button) {
-                document.getElementById(unique_id + 'close' + citem.multi_cal).onclick = close_datepicker;
+            if(close_onselect) {
+                document.getElementById(unique_id + 'close').onclick = close_datepicker;
             }
-
 
             // Attach event listeners to the following events so that the datepicker
             // will close when the user clicks outside of the calendar.
@@ -439,7 +440,6 @@ var jrDatePicker = function(params) {
                 document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
             };
 
-
             // Bind event listeners to each day for the onclick event.  Get an array of
             // elements by the class name so we can get the element id name.
             var day_tds = document.querySelectorAll('.jrdp_calendar_day1' + citem.multi_cal);
@@ -474,7 +474,7 @@ var jrDatePicker = function(params) {
             }
 
             // Uncomment the below to dump the html for debugging.  Need an element with id='htmldump'
-            dump_html(calendar_html);
+            //dump_html(calendar_html);
         }
     };
 
