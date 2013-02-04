@@ -455,7 +455,10 @@ var jrDatePicker = function(params) {
 
                 var s  = 'document.getElementById("' + tmp_id + '").onclick = ';
                     s += 'function() { select_date(' + mmtmp + ',' + ddtmp + ',' + yytmp + '); };';
-                eval(s);
+
+                if(document.getElementById(tmp_id)) {
+                    eval(s);
+                }
             }
 
             // Check for the current day node because it will have a different class name.
@@ -470,7 +473,9 @@ var jrDatePicker = function(params) {
 
                 var s  = 'document.getElementById("' + tmp_id + '").onclick = ';
                     s += 'function() { select_date(' + mmtmp + ',' + ddtmp + ',' + yytmp + '); };';
-                eval(s);
+                if(document.getElementById(tmp_id)) {
+                    eval(s);
+                }
             }
 
             // Uncomment the below to dump the html for debugging.  Need an element with id='htmldump'

@@ -31,11 +31,12 @@
 
 .jrdp_calendar_tbar { 
     /* top title bar */
-    background-color: none; 
+    background-color: #c0c0c0;
 }
 
 .jrdp_calendar_close_btn {
     /* close button displayed in top title bar (not used if close_onselect option is false) */
+    /*
     background-color: #343434;
     width: 24px;
     height: 23px;
@@ -51,6 +52,7 @@
     text-align: center;
     color: #ffffff;
     padding-top: 1px;
+    */
 }
 
 .jrdp_calendar_close_btn:hover { cursor: pointer; }
@@ -211,7 +213,7 @@
 
 .jrdp_calendar_tbar_multi {
     /* top title bar */
-    background-color: #d94867;
+    background-color: #d94800;
 }
 
 .jrdp_calendar_close_btn_multi {
