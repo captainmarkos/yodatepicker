@@ -26,7 +26,8 @@
 
 .jrdp_calendar_pos {
     position: absolute;
-    z-index: 99;
+    display: inline;
+    z-index: 9999;
 }
 
 .jrdp_calendar_tbar { 
