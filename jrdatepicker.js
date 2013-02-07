@@ -15,8 +15,36 @@ var jrDatePicker = function(params) {
     // from functions within that{}.
 
     // Define document.querySelectorAll() for IE7
-    if(document.all && !document.querySelector) { (function(d){d=document,a=d.styleSheets[0]||d.createStyleSheet();d.querySelectorAll=function(e){a.addRule(e,'f:b');for(var l=d.all,b=0,c=[],f=l.length;b<f;b++)l[b].currentStyle.f&&c.push(l[b]);a.removeRule(0);return c}})() }
+    //if(document.all && !document.querySelector) { (function(d){d=document,a=d.styleSheets[0]||d.createStyleSheet();d.querySelectorAll=function(e){a.addRule(e,'f:b');for(var l=d.all,b=0,c=[],f=l.length;b<f;b++)l[b].currentStyle.f&&c.push(l[b]);a.removeRule(0);return c}})() }
 
+    //
+    // Define getElementsByClassName() for browsers that do not have this method defined (IE7).
+    //
+    if(typeof document.getElementsByClassName != 'function') {
+        document.getElementsByClassName = function() {
+            var elms = document.getElementsByTagName('*');
+            var ei = new Array();
+            for(i=0; i<elms.length; i++) {
+                if(elms[i].getAttribute('class')) {
+                    ecl = elms[i].getAttribute('class').split(' ');
+                    for(j=0; j<ecl.length; j++) {
+                        if(ecl[j].toLowerCase() == arguments[0].toLowerCase()) {
+                            ei.push(elms[i]);
+                       }
+                    }
+                }
+                else if(elms[i].className) {
+                    ecl = elms[i].className.split(' ');
+                    for (j=0;j<ecl.length;j++) {
+                        if (ecl[j].toLowerCase() == arguments[0].toLowerCase()) {
+                            ei.push(elms[i]);
+                        }
+                    }
+                }
+            }
+            return ei;
+        }
+    }
 
     //
     // Private methods
@@ -153,8 +181,6 @@ var jrDatePicker = function(params) {
         close_onselect = (close_onselect == undefined) ? true : close_onselect;
     var max_date = get_max_date((params.max_date || '1Y'));  // max date user can scroll forward to
     var min_date = get_min_date((params.min_date || '*'));   // min date user can scroll back to
-    var use_close_button = params.close_button;              // default to false
-        use_close_button = (use_close_button == undefined) ? false : use_close_button;
 
     var currdate = new Date();
     var today = new Date(currdate.getFullYear(), currdate.getMonth(), currdate.getDate());
@@ -275,7 +301,7 @@ var jrDatePicker = function(params) {
     // Public methods
     //
     var that = {
-        version: '1.6.3',
+        version: '1.6.7',
 
         hide: function() {
             close_datepicker();
@@ -321,37 +347,33 @@ var jrDatePicker = function(params) {
                 calendar_html += '<td>';
                 calendar_html += '<table class="jrdp_calendar' + citem.multi_cal + '" cellspacing="0" cellpadding="0">';
 
+                // This below snippet needs to eventually come out as it serves no purpose.
                 calendar_html += '    <tr><td>';
-                calendar_html += '        <table width="100%" border="0" cellspacing="0" cellpadding="0">';
+                calendar_html += '        <table id="jrdp_calendar_table_inner" width="100%" border="0" cellspacing="0" cellpadding="0">';
                 calendar_html += '        <tr class="jrdp_calendar_tbar' + citem.multi_cal + '">';
-
                 if(close_onselect) {
                     calendar_html += '            <td align="right">';
                     calendar_html += '            <span id="' + unique_id + 'close" style="cursor: pointer;">';
-                    calendar_html += '                <span class="jrdp_calendar_close_btn' + citem.multi_cal + '">x</span>';
+                    calendar_html += '                <span class="jrdp_calendar_close_btn' + citem.multi_cal + '"></span>';
                     calendar_html += '            </span>';
                     calendar_html += '            </td>';
                 }
                 else { calendar_html += '         <td align="right">&nbsp;</td>'; }
-
                 calendar_html += '        </tr></table>';
                 calendar_html += '    </td></tr>';
+                // This above snippet needs to eventually come out as it serves no purpose.
 
                 calendar_html += '    <tr class="jrdp_calendar_month_tbar' + citem.multi_cal + '">';
-
-                calendar_html += '    <td>';
-                calendar_html += '        <table width="100%" border="0" cellspacing="0" cellpadding="0">';
-                calendar_html += '            <tr align="center" valign="middle">';
                 calendar_html += '            <td colspan="1" class="jrdp_calendar_month_prev' + citem.multi_cal + '" align="left">';
                 calendar_html += '                <span id="' + unique_id + 'prevmonth' + citem.multi_cal + '_' + i +'">&lsaquo;</span></td>';
-                calendar_html += '            <td colspan="5" class="jrdp_calendar_month' + citem.multi_cal + '">' + month_names[citem.month] + ' ' + citem.year + '</td>';
+                calendar_html += '            <td colspan="5" class="jrdp_calendar_month' + citem.multi_cal + '" align="center">' + month_names[citem.month] + ' ' + citem.year + '</td>';
                 calendar_html += '            <td colspan="1" class="jrdp_calendar_month_next' + citem.multi_cal + '" align="right">';
                 calendar_html += '                <span id="' + unique_id + 'nextmonth' + citem.multi_cal + '_' + i +'">&rsaquo;</span></td>';
-                calendar_html += '            </tr>';
+                calendar_html += '    </tr>';
 
-                calendar_html += '            <tr>';
+                calendar_html += '    <tr>';
                 for(var j = 0; j < 7; j++) { calendar_html += '<td class="jrdp_calendar_days' + citem.multi_cal + '">' + day_names[j] + '</td>'; }
-                calendar_html += '            </tr>';
+                calendar_html += '    </tr>';
 
                 var rows_printed = 0;
                 for(var j = 0; j < 6; j++) {
@@ -371,19 +393,11 @@ var jrDatePicker = function(params) {
                     }
                     calendar_html += '</tr>';
                 }
-                calendar_html += '        </table>';
-                calendar_html += '    </td>';
-                calendar_html += '    </tr>';
                 calendar_html += '</table>';
                 calendar_html += '</td>';
             }
             calendar_html += '</tr></table>';
             document.getElementById(dp_id_name).innerHTML = calendar_html;
-
-            // If were not using the close button set the innerHTML to empty.
-            if(close_onselect && !use_close_button) {
-                document.getElementById(unique_id + 'close').innerHTML = '';
-            }
 
             // Setup event listeners for elements.
             //
@@ -396,10 +410,6 @@ var jrDatePicker = function(params) {
 
                 document.getElementById(unique_id + 'prevmonth' + citem.multi_cal + '_' + j).style.display = 'block';
                 document.getElementById(unique_id + 'nextmonth' + citem.multi_cal + '_' + j).style.display = 'block';
-            }
-
-            if(close_onselect) {
-                document.getElementById(unique_id + 'close').onclick = close_datepicker;
             }
 
             // Attach event listeners to the following events so that the datepicker
@@ -442,7 +452,8 @@ var jrDatePicker = function(params) {
 
             // Bind event listeners to each day for the onclick event.  Get an array of
             // elements by the class name so we can get the element id name.
-            var day_tds = document.querySelectorAll('.jrdp_calendar_day1' + citem.multi_cal);
+            //var day_tds = document.querySelectorAll('.jrdp_calendar_day1' + citem.multi_cal);
+            var day_tds = document.getElementsByClassName('jrdp_calendar_day1' + citem.multi_cal);
             for(var i = 0; i < day_tds.length; i++) {
                 // The id is in the format of 'jrdp_idname_mm_dd_yy'.
                 // So if we split on the '_' then we can use the last three elements.
@@ -462,7 +473,8 @@ var jrDatePicker = function(params) {
             }
 
             // Check for the current day node because it will have a different class name.
-            var curr_day_td = document.querySelectorAll('.jrdp_calendar_current_day' + citem.multi_cal);
+            //var curr_day_td = document.querySelectorAll('.jrdp_calendar_current_day' + citem.multi_cal);
+            var curr_day_td = document.getElementsByClassName('jrdp_calendar_current_day' + citem.multi_cal);
             if(curr_day_td.length > 0) {
                 var items = curr_day_td[0].id.split('_');
                 var mmtmp = items[items.length -3];
