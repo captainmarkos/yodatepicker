@@ -14,7 +14,12 @@ var jrDatePicker = function(params) {
     // passed to jrDatePicker will remain private but still accessible
     // from functions within that{}.
 
+    // Define document.querySelectorAll() for IE7
+    //if(document.all && !document.querySelector) { (function(d){d=document,a=d.styleSheets[0]||d.createStyleSheet();d.querySelectorAll=function(e){a.addRule(e,'f:b');for(var l=d.all,b=0,c=[],f=l.length;b<f;b++)l[b].currentStyle.f&&c.push(l[b]);a.removeRule(0);return c}})() }
+
+    //
     // Define getElementsByClassName() for browsers that do not have this method defined (IE7).
+    //
     if(typeof document.getElementsByClassName != 'function') {
         document.getElementsByClassName = function() {
             var elms = document.getElementsByTagName('*');
