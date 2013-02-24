@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="jrdatepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="jrdatepicker.css" />
+<link rel="stylesheet" type="text/css" href="cssreset-context-min.css" />
+<link rel="stylesheet" type="text/css" href="cssbase-context-min.css" />
+<script type="text/javascript">
+
+    // The onDateSelected and onClose parameters are callback functions.
+
+    var start_datepicker = jrDatePicker({
+        dp_id_name: 'dp_start_date',           // selector id where to display the datepicker
+        id_name: 'start_date',                 // selector id where to populate a selected date
+        max_date: '1Y',
+        min_date: '0',
+        locale: 'en',
+        close_button: true                    // display a close button
+    });
+
+    var end_datepicker = jrDatePicker({
+        dp_id_name: 'dp_end_date',             // selector id where to display the datepicker
+        id_name: 'end_date',                   // selector id where to populate a selected date
+        locale: 'en',
+        min_date: new Date('02/03/2013')      // setting min_date using a Date object
+        //onDateSelected: function() {alert("onDateSelected callback");},
+        //onClose: function() {alert("onClose callback");}
+    });
+
+    var double_datepicker = jrDatePicker({
+        dp_id_name: 'dp_price_calendar',
+        id_name: 'price_calendar',
+        display_count: 2,                     // display two calendar months
+        close_onselect: false,                // display the calendar all the time
+        max_date: '3M',
+        min_date: '3M',
+        locale: 'es'
+    });
+
+
+</script>
+<title>jrDatePicker</title>
+<style>
+a { text-decoration: none; color: #0000ff; }
+
+a:hover { text-decoration: underline; color: #cd0000; }
+
+hr { background-color: #cd0000; width: 100%; height: 1px; }
+
+.myfont1 {
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 11pt;
+}
+
+.fixedwidth_font {
+    font-family: courier new, Verdana, Arial;
+    font-size: 11pt;
+}
+</style>
+</head>
+
+
+<body>
+
+
+<center><h2>jrDatePicker - A simple Date Picker</h2></center>
+<br />
+<span class="myfont1">
+jrDatePicker 
+<script type="text/javascript">document.write('Version: ' + start_datepicker.version);</script>
+is open source and available at github <a href="https://github.com/captainmarkos/jrDatePicker" target="_blank">here</a>.</span>
+<hr style="height: 1px; color: #cd0000;" />
+<br />
+
+Testing with YUI cssreset &amp; cssbase<br />
+<br />
+
+<div style="display: inline;" class="myfont1">
+    <div style="display: inline;">Start Date (cssreset):</div>
+    <input type="text" name="start_date" id="start_date" value="mm/dd/yyyy" size="12" />
+    <img class="jrdp_calendar_icon" src="icon_calendar.gif" onclick="start_datepicker.show();" />
+    <div class="jrdp_calendar_pos yui3-cssreset" id="dp_start_date"></div>
+</div>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<div style="display: inline;" class="myfont1">
+    <div style="display: inline;">End Date (cssbase):</div>
+    <input type="text" name="end_date" id="end_date" value="mm/dd/yyyy" size="12" />
+    <img class="jrdp_calendar_icon" src="icon_calendar.gif" onclick="end_datepicker.set_min_date(new Date('03/27/2013')); end_datepicker.show();" />
+    <div class="jrdp_calendar_pos yui3-cssbase" id="dp_end_date"></div>
+</div>
+
+
+<br /><br />
+<hr style="height: 1px; color: #cd0000;" />
+<br />
+<center>
+    <span id="dp_price_calendar"></span>
+    <br />
+    <input type="text" id="price_calendar" value="" />
+    <script type="text/javascript">double_datepicker.show();</script>
+</center>
+<br />
+
+
+<pre class="fixedwidth_font">
+
+Example usage:
+--------------
+
+var my_datepicker = jrDatePicker({
+    dp_id_name: 'disp_datepicker',    // datepicker is displayed here
+    id_name: 'start_date',            // selected date is inserted here
+    locale: 'fr',                     // setting locale to french
+    max_date: '3M',                   // maximum selectable date
+    min_date: '3M',                   // minimum selectable date
+    onDateSelected: function() {alert("ondateselected callback");},
+    onClose: function() {alert("onclose callback");}
+});
+
+
+Start Date: &lt;input type=&quot;text&quot; id=&quot;start_date&quot; value=&quot;&quot; /&gt;
+            &lt;img class=&quot;jrdp_calendar_icon&quot; src=&quot;icon_calendar.gif&quot; onclick=&quot;my_datepicker.show();&quot; /&gt;
+            &lt;span class=&quot;jrdp_calendar_pos&quot; id=&quot;disp_datepicker&quot;&gt;
+
+</pre>
+
+<table class="myfont1" style="width: 550px;" border="1" cellspacing="2" cellpadding="2">
+    <tr>
+        <td colspan="2" align="center" style="background-color: #D94867;"><b>Files</b></td>
+    </tr>
+    <tr><td align="left">jrDatePicker.js</td>
+        <td align="left">Javascript code for the datepicker.</tr>
+    <tr><td align="left">jrDatePicker.css</td>
+        <td align="left">Styling for the datepicker.  You can provide you own styling however the class names are required.</tr>
+
+
+    <tr><td colspan="2">&nbsp;</td></tr>
+
+    <tr>
+        <td colspan="2" align="center" style="background-color: #D94867;"><b>Options</b></td>
+    </tr>
+    <tr>
+        <td align="left">dp_id_name</td>
+        <td align="left">location where the datepicker is to be displayed <br />required</td>
+    </tr>
+    <tr>
+        <td align="left">id_name</td>
+        <td align="left">location where the selected date is copied <br />optional</td>
+    </tr>
+    <tr>
+        <td align="left">locale</td>
+        <td align="left">en, fr, es, de <br />default is 'en'</td>
+    </tr>
+    <tr>
+        <td align="left">display_count</td>
+        <td align="left">number of months to display in datepicker <br />default is 1</td>
+    </tr>
+    <tr>
+        <td align="left">close_onselect</td>
+        <td align="left">true | false <br />default is true</td>
+    </tr>
+    <tr>
+        <td align="left">close_button</td>
+        <td align="left">display a close button in upper-right of datepicker<br />true | false <br />default is false</td>
+    </tr>
+    <tr>
+        <td align="left">max_date</td>
+        <td align="left">maximum date user can scroll forward to and select <br />default is 1Y
+                         <br />acceptable values: 3M, 6M, 9M, 1Y, 2Y, * (infinity)</td>
+    </tr>
+    <tr>
+        <td align="left">min_date</td>
+        <td align="left">minimum date user can scroll backward to and select <br />default is 0 (current date)
+                         <br />acceptable values: 0, 3M, 6M, 9M, 1Y, 2Y, * (infinity)</td>
+    </tr>
+    <tr>
+        <td align="left">onDateSelected</td>
+        <td align="left">callback function</td>
+    </tr>
+    <tr>
+        <td align="left">onClose</td>
+        <td align="left">callback function</td>
+    </tr>
+
+    <tr><td colspan="2">&nbsp;</td></tr>
+
+    <tr>
+        <td colspan="2" align="center" style="background-color: #D94867;"><b>Public Methods</b></td>
+    </tr>
+    <tr><td align="left">show()</td>
+        <td align="left">Show the datepicker.</tr>
+    <tr><td align="left">hide()</td>
+        <td align="left">Hide the datepicker</tr>
+    <tr><td align="left">set_min_date(Date)</td>
+        <td align="left">Set the minimum selectable date.  
+                         This takes a javascript Date object and will override the min_date param.</tr>
+
+
+</table>
+
+
+
+<hr />
+<br />
+
+<div id="htmldump"></div>
+
+
+
+
+</body>
+</html>
