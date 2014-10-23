@@ -12,7 +12,7 @@
 var yodatepicker = function(options) {
 
     var configure = function(options) {
-        var config = {
+        var cfg = {
             MAX_CALENDARS: 2,
             dp_id_name: options.dp_id_name || '',  // selector id where to display the datepicker
             id_name: options.id_name || '',        // selector id where to populate a selected date
@@ -23,22 +23,24 @@ var yodatepicker = function(options) {
             close_onselect: options.close_onselect,
             max_date: get_max_date((options.max_date || '1Y')),  // max date user can scroll forward to
             min_date: get_min_date((options.min_date || '*')),   // min date user can scroll back to
-            currdate: new Date(),
-            today: new Date(currdate.getFullYear(), currdate.getMonth(), currdate.getDate()),
-            month_names: get_month_names(locale),  // array of month names
-            day_names: get_dow_names(locale),      // array of day of week names
-            //mn: currdate.getMonth(),               // month 0 - 11
-            //yy: currdate.getFullYear(),            // 4-digit year
-            mn: (currdate.getTime() < min_date.getTime()) ? min_date.getMonth() : currdate.getMonth(),
-            yy: (currdate.getTime() < min_date.getTime()) ? min_date.getFullYear() : currdate.getFullYear()
-        }
- 
-        config.close_onselect = (close_onselect === undefined) ?
-                                true : close_onselect;
+            currdate: new Date()
+        };
 
-        config.display_count = (config.display_count > MAX_CALENDARS) ?
-                               MAX_CALENDARS : config.display_count;
-        return config;
+        cfg.today = new Date(cfg.currdate.getFullYear(), cfg.currdate.getMonth(), cfg.currdate.getDate());
+        cfg.month_names = get_month_names(cfg.locale);      // array of month names
+        cfg.day_names = get_dow_names(cfg.locale);      // array of day of week names
+        cfg.mn = (cfg.currdate.getTime() < cfg.min_date.getTime()) ?
+                 cfg.min_date.getMonth() : cfg.currdate.getMonth();
+        cfg.yy = (cfg.currdate.getTime() < cfg.min_date.getTime()) ?
+                 cfg.min_date.getFullYear() : cfg.currdate.getFullYear();
+
+
+        cfg.close_onselect = (cfg.close_onselect === undefined) ?
+                                true : cfg.close_onselect;
+
+        cfg.display_count = (cfg.display_count > cfg.MAX_CALENDARS) ?
+                               cfg.MAX_CALENDARS : cfg.display_count;
+        return cfg;
     };
 
     // Private
@@ -168,99 +170,110 @@ var get_min_date = function(param_min_date) {
             break;  // default is the current date
     }
     return(new Date(year, month, date.getDate()));
-}
-
-var citem = {
-    day: 0,
-    month: 0,
-    year: 1900,
-    first_dow: 0,
-    total_days: 0,
-    offset: 0,
-    multi_cal: '',
-
-    markup: function(unique_id) {
-        var the_html = '';
-        if(this.offset >= this.first_dow) {
-            var tmp_date = new Date(this.year, this.month, this.day);
-            var td_id = unique_id + this.month+ '_' + this.day + '_' + this.year;
-            if(tmp_date.valueOf() > max_date.valueOf()) {
-                the_html += '<td id="' + td_id + '" class="jrdp_calendar_day1_noselect' + this.multi_cal + '">' + this.day + '</td>';
-            }
-            else if(tmp_date.valueOf() < min_date.valueOf()) {
-                the_html += '<td id="' + td_id + '" class="jrdp_calendar_day1_noselect' + this.multi_cal + '">' + this.day + '</td>';
-            }
-            else if(tmp_date.valueOf() === today.valueOf()) {
-                the_html += '<td id="' + td_id + '" class="jrdp_calendar_current_day' + this.multi_cal + '">' + this.day + '</td>';
-            }
-            else {
-                the_html += '<td id="' + td_id + '" class="jrdp_calendar_day1' + this.multi_cal + '">' + this.day + '</td>';
-            }
-
-            if(this.day >= this.total_days) { this.first_dow = 999; }
-        }
-        else { the_html += '<td class="jrdp_calendar_day2' + this.multi_cal + '">&nbsp;</td>'; }
-        this.offset++;
-        if(this.offset > this.first_dow) { this.day++; }
-        return(the_html);
-    }
 };
 
-    var close_datepicker = function() {
-        if(close_onselect) {
-            document.getElementById(dp_id_name).innerHTML = '';
-            if(id_name !== '') {
-                eval('document.getElementById("' + id_name + '").focus();');
-            }
+    var citem = {
+        day: 0,
+        month: 0,
+        year: 1900,
+        first_dow: 0,
+        total_days: 0,
+        offset: 0,
+        multi_cal: '',
 
-            if(onclose_callback !== undefined) { onclose_callback(); }
+        markup: function(unique_id) {
+            var the_html = '';
+            if(this.offset >= this.first_dow) {
+                var tmp_date = new Date(this.year, this.month, this.day);
+                var td_id = unique_id + this.month+ '_' + this.day + '_' + this.year;
+                if(tmp_date.valueOf() > cfg.max_date.valueOf()) {
+                    the_html += '<td id="' + td_id + '" class="jrdp_calendar_day1_noselect' + this.multi_cal + '">' + this.day + '</td>';
+                }
+                else if(tmp_date.valueOf() < cfg.min_date.valueOf()) {
+                    the_html += '<td id="' + td_id + '" class="jrdp_calendar_day1_noselect' + this.multi_cal + '">' + this.day + '</td>';
+                }
+                else if(tmp_date.valueOf() === cfg.today.valueOf()) {
+                    the_html += '<td id="' + td_id + '" class="jrdp_calendar_current_day' + this.multi_cal + '">' + this.day + '</td>';
+                }
+                else {
+                    the_html += '<td id="' + td_id + '" class="jrdp_calendar_day1' + this.multi_cal + '">' + this.day + '</td>';
+                }
+
+                if(this.day >= this.total_days) { this.first_dow = 999; }
+            }
+            else { the_html += '<td class="jrdp_calendar_day2' + this.multi_cal + '">&nbsp;</td>'; }
+            this.offset++;
+            if(this.offset > this.first_dow) { this.day++; }
+            return(the_html);
         }
     };
 
-var select_date = function(mm, dd, yy) {
-    var the_month, the_day;
+    var close_datepicker = function() {
+        if(cfg.close_onselect) {
+            document.getElementById(cfg.dp_id_name).innerHTML = '';
+            if(cfg.id_name !== '') {
+                eval('document.getElementById("' + cfg.id_name + '").focus();');
+            }
 
-    mm++;    // Note: mm is the month number 0 - 11 so always add 1.
-    if(mm < 10) { the_month = "0" + mm; } else { the_month = mm.toString(); }
-    if(dd < 10) { the_day = "0" + dd;   } else { the_day = dd.toString();   }
-
-    if(id_name !== '') {
-        if(locale === 'en') {
-            eval('document.getElementById("' + id_name + '").value = the_month + "/" + the_day + "/" + yy');
+            if(cfg.onclose_callback !== undefined) { cfg.onclose_callback(); }
         }
-        else {
-            eval('document.getElementById("' + id_name + '").value = the_day + "/" + the_month + "/" + yy');
+    };
+
+/* -------------------- */
+/* jshint unused: false */
+/* -------------------- */
+    var select_date = function(mm, dd, yy) {
+        var the_month, the_day;
+
+        mm++;    // Note: mm is the month number 0 - 11 so always add 1.
+        if(mm < 10) { the_month = '0' + mm; } else { the_month = mm.toString(); }
+        if(dd < 10) { the_day = '0' + dd;   } else { the_day = dd.toString();   }
+
+        if(cfg.id_name !== '') {
+            if(cfg.locale === 'en') {
+                eval('document.getElementById("' + cfg.id_name +
+                     '").value = the_month + "/" + the_day + "/" + yy');
+            } else {
+                eval('document.getElementById("' + cfg.id_name +
+                     '").value = the_day + "/" + the_month + "/" + yy');
+            }
         }
-    }
 
-    if(ondateselected_callback !== undefined) { ondateselected_callback(); }
-    close_datepicker();
-};
+        if(cfg.ondateselected_callback) { cfg.ondateselected_callback(); }
+        close_datepicker();
+    };
+/* -------------------- */
+/* jshint unused: true  */
+/* -------------------- */
 
-var month_inc = function() {
-    var scroll_date = new Date(yy, mn, today.getDate());
-    if((scroll_date.getFullYear() === max_date.getFullYear()) &&
-       (scroll_date.getMonth() >= max_date.getMonth())) {
-        return;
-    }
-
-    if(mn < 11) { mn++; }
-    else { mn = 0; yy++; }
-    this.show();
-};
-
-    var month_dec = function() {
-        var scroll_date = new Date(yy, mn, today.getDate());
-        if((scroll_date.getFullYear() === min_date.getFullYear()) &&
-           (scroll_date.getMonth() <= min_date.getMonth())) {
+    var month_inc = function() {
+        var scroll_date = new Date(cfg.yy, cfg.mn, cfg.today.getDate());
+        if((scroll_date.getFullYear() === cfg.max_date.getFullYear()) &&
+           (scroll_date.getMonth() >= cfg.max_date.getMonth())) {
             return;
         }
 
-        if(mn > 0) { mn--; }
-        else { mn = 11; yy--; }
+        if(cfg.mn < 11) { cfg.mn++; }
+        else { cfg.mn = 0; cfg.yy++; }
         this.show();
     };
 
+    var month_dec = function() {
+        var scroll_date = new Date(cfg.yy, cfg.mn, cfg.today.getDate());
+        if((scroll_date.getFullYear() === cfg.min_date.getFullYear()) &&
+           (scroll_date.getMonth() <= cfg.min_date.getMonth())) {
+            return;
+        }
+
+        if(cfg.mn > 0) { cfg.mn--; }
+        else { cfg.mn = 11; cfg.yy--; }
+        this.show();
+    };
+
+
+/* -------------------- */
+/* jshint unused: false */
+/* -------------------- */
     var dump_html = function(calendar_html) {
         var the_html = '<tt>';
         for(var j=0; j<calendar_html.length; j++) {
@@ -275,7 +288,9 @@ var month_inc = function() {
             document.getElementById('htmldump').innerHTML = the_html;
         }
     };
-
+/* -------------------- */
+/* jshint unused: true  */
+/* -------------------- */
 
 
     var cfg = configure(options);
@@ -288,34 +303,37 @@ var month_inc = function() {
         },
 
         set_min_date: function(mdate) {
-            // This will override the min_date param.
+            // This will override the cfg.min_date param.
             if(mdate instanceof Date) {
-                min_date = mdate;
-                mn = (cfg.currdate.getTime() < min_date.getTime()) ?
-                         min_date.getMonth() : cfg.currdate.getMonth();
-                yy = (cfg.currdate.getTime() < min_date.getTime()) ?
-                         min_date.getFullYear() : cfg.currdate.getFullYear();
+                cfg.min_date = mdate;
+                cfg.mn = (cfg.currdate.getTime() < cfg.min_date.getTime()) ?
+                          cfg.min_date.getMonth() : cfg.currdate.getMonth();
+                cfg.yy = (cfg.currdate.getTime() < cfg.min_date.getTime()) ?
+                         cfg.min_date.getFullYear() : cfg.currdate.getFullYear();
             }
         },
 
+/* --------------------------- */
+/* jshint maxstatements: false */
+/* --------------------------- */
         show: function() {
             console.log('--> jodatepicker.show() fired!');
-console.log('cfg.dp_id_name: ' + cfg.dp_id_name);
-            if(dp_id_name === undefined) { return; }
+console.log(cfg.dp_id_name);
+            if(cfg.dp_id_name === undefined) { return; }
             var calendar_html = '';
-            var unique_id = 'jrdp_' + dp_id_name + '_';
+            var unique_id = 'jrdp_' + cfg.dp_id_name + '_';
 
-            calendar_html  = '<table id="jrdp_' + dp_id_name + '" class="jrdp_encapsulated_table" cellspacing="0" cellpadding="0">';
+            calendar_html  = '<table id="jrdp_' + cfg.dp_id_name + '" class="jrdp_encapsulated_table" cellspacing="0" cellpadding="0">';
             calendar_html += '<tr>';
 
-            for(var i = 0; i < display_count; i++) {
+            for(var i = 0; i < cfg.display_count; i++) {
                 citem.day = 1;
-                citem.month = mn;
-                citem.year = yy;
+                citem.month = cfg.mn;
+                citem.year = cfg.yy;
 
                 if(i > 0) {
-                    if(mn < 11) { citem.month = mn +1; }
-                    else { citem.month = 0; citem.year = yy +1; }
+                    if(cfg.mn < 11) { citem.month = cfg.mn +1; }
+                    else { citem.month = 0; citem.year = cfg.yy +1; }
                 }
 
                 cfg.currdate.setDate(1);                 // set day of month to the 1st
@@ -325,7 +343,7 @@ console.log('cfg.dp_id_name: ' + cfg.dp_id_name);
                 citem.offset = 0;
                 citem.first_dow = cfg.currdate.getDay(); // 0 - 6 (sun - sat)
                 citem.total_days = days_in_month(cfg.currdate.getMonth(), cfg.currdate.getFullYear());
-                citem.multi_cal = (display_count > 1) ? '_multi' : '';
+                citem.multi_cal = (cfg.display_count > 1) ? '_multi' : '';
 
                 calendar_html += '<td>';
                 calendar_html += '<table class="jrdp_calendar' + citem.multi_cal + '" cellspacing="0" cellpadding="0">';
@@ -334,7 +352,7 @@ console.log('cfg.dp_id_name: ' + cfg.dp_id_name);
                 calendar_html += '    <tr><td>';
                 calendar_html += '        <table id="jrdp_calendar_table_inner" width="100%" border="0" cellspacing="0" cellpadding="0">';
                 calendar_html += '        <tr class="jrdp_calendar_tbar' + citem.multi_cal + '">';
-                if(close_onselect) {
+                if(cfg.close_onselect) {
                     calendar_html += '            <td align="right">';
                     calendar_html += '            <span id="' + unique_id + 'close" style="cursor: pointer;">';
                     calendar_html += '                <span class="jrdp_calendar_close_btn' + citem.multi_cal + '"></span>';
@@ -349,13 +367,13 @@ console.log('cfg.dp_id_name: ' + cfg.dp_id_name);
                 calendar_html += '    <tr class="jrdp_calendar_month_tbar' + citem.multi_cal + '">';
                 calendar_html += '            <td colspan="1" class="jrdp_calendar_month_prev' + citem.multi_cal + '" align="left">';
                 calendar_html += '                <span id="' + unique_id + 'prevmonth' + citem.multi_cal + '_' + i +'">&lsaquo;</span></td>';
-                calendar_html += '            <td colspan="5" class="jrdp_calendar_month' + citem.multi_cal + '" align="center">' + month_names[citem.month] + ' ' + citem.year + '</td>';
+                calendar_html += '            <td colspan="5" class="jrdp_calendar_month' + citem.multi_cal + '" align="center">' + cfg.month_names[citem.month] + ' ' + citem.year + '</td>';
                 calendar_html += '            <td colspan="1" class="jrdp_calendar_month_next' + citem.multi_cal + '" align="right">';
                 calendar_html += '                <span id="' + unique_id + 'nextmonth' + citem.multi_cal + '_' + i +'">&rsaquo;</span></td>';
                 calendar_html += '    </tr>';
 
                 calendar_html += '    <tr>';
-                for(var a = 0; a < 7; a++) { calendar_html += '<td class="jrdp_calendar_days' + citem.multi_cal + '">' + day_names[a] + '</td>'; }
+                for(var a = 0; a < 7; a++) { calendar_html += '<td class="jrdp_calendar_days' + citem.multi_cal + '">' + cfg.day_names[a] + '</td>'; }
                 calendar_html += '    </tr>';
 
                 var rows_printed = 0;
@@ -380,7 +398,7 @@ console.log('cfg.dp_id_name: ' + cfg.dp_id_name);
                 calendar_html += '</td>';
             }
             calendar_html += '</tr></table>';
-            document.getElementById(dp_id_name).innerHTML = calendar_html;
+            document.getElementById(cfg.dp_id_name).innerHTML = calendar_html;
 
             // Setup event listeners for elements.
             //
@@ -399,14 +417,14 @@ console.log('cfg.dp_id_name: ' + cfg.dp_id_name);
             // will close when the user clicks outside of the calendar.
             document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
 
-            document.getElementById('jrdp_' + dp_id_name).onmouseover = function(e) {
+            document.getElementById('jrdp_' + cfg.dp_id_name).onmouseover = function(e) {
                 // IE 7-8 does not support event.currentTarget but does so for event.srcElement;
                 var target, target_id, ev = e || window.event;
                 var using_srcElement = false;
                 try { target = ev.currentTarget; }
                 catch(err) { target = ev.srcElement; using_srcElement = true; }
                 try { target_id = target.id; }
-                catch(err) { target_id = (target) ? target : 'jrdp_' + dp_id_name; }
+                catch(err) { target_id = (target) ? target : 'jrdp_' + cfg.dp_id_name; }
                 if(target_id) {
                     //console.log('MOUSE OVER: target_id of triggered element: "' + target_id + '" using_srcElement: ' + using_srcElement);
                     document.getElementById(target_id).onmouseover = function() {
@@ -416,14 +434,14 @@ console.log('cfg.dp_id_name: ' + cfg.dp_id_name);
                 document.getElementsByTagName('body')[0].onmousedown = null;
             };
 
-            document.getElementById('jrdp_' + dp_id_name).onmouseout = function(e) {
+            document.getElementById('jrdp_' + cfg.dp_id_name).onmouseout = function(e) {
                 // IE 7-8 does not support event.currentTarget but does so for event.srcElement;
                 var target, target_id, ev = e || window.event;
                 var using_srcElement = false;
                 try { target = ev.currentTarget; }
                 catch(err) { target = ev.srcElement; using_srcElement = true; }
                 try { target_id = target.id; }
-                catch(err) { target_id = (target) ? target : 'jrdp_' + dp_id_name; }
+                catch(err) { target_id = (target) ? target : 'jrdp_' + cfg.dp_id_name; }
                 if(target_id) {
                     //console.log('MOUSE OUT: target_id of triggered element: "' + target_id + '" using_srcElement: ' + using_srcElement);
                     document.getElementById(target_id).onmouseout = function() {
@@ -477,6 +495,9 @@ console.log('cfg.dp_id_name: ' + cfg.dp_id_name);
             //dump_html(calendar_html);
         }
     };
+/* --------------------------- */
+/* jshint maxstatements: 20 */
+/* --------------------------- */
 
     return _yodatepicker;
 };

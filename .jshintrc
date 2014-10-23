@@ -3,6 +3,7 @@
   "es3": true,
   "freeze": true,
   "eqeqeq": true,
+  "evil": false,
   "browser": true,
   "camelcase": false,
   "curly": true,
