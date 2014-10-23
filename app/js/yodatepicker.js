@@ -11,18 +11,41 @@
 
 var yodatepicker = function(options) {
 
-    var configure = function(options) {
+    var configure = function(opts) {
         var cfg = {
+            // Max months to display on a multi-month yodatepicker.
             MAX_CALENDARS: 2,
-            dp_id_name: options.dp_id_name || '',  // selector id where to display the datepicker
-            id_name: options.id_name || '',        // selector id where to populate a selected date
-            locale: options.locale || 'en',
-            ondateselected_callback: (options.onDateSelected instanceof Function) ? options.onDateSelected : null,
-            onclose_callback: (options.onClose instanceof Function) ? options.onClose : null,
-            display_count: options.display_count || 1,
-            close_onselect: options.close_onselect,
-            max_date: get_max_date((options.max_date || '1Y')),  // max date user can scroll forward to
-            min_date: get_min_date((options.min_date || '*')),   // min date user can scroll back to
+
+            // Element id where to display the yodatepicker.
+            dp_id_name: opts.dp_id_name || '',
+
+            // Element id where to populate a selected date.
+            id_name: opts.id_name || '',
+
+            // Localization.
+            locale: opts.locale || 'en',
+
+            // User defined function executed when selecting a date.
+            ondateselected_callback: (opts.onDateSelected instanceof Function) ?
+                                     opts.onDateSelected : null,
+
+            // User defined function to be called when closing yodatepicker.
+            onclose_callback: (opts.onClose instanceof Function) ?
+                                     opts.onClose : null,
+
+            // Number of months to display in multi-month yodatepicker.
+            display_count: opts.display_count || 1,
+
+            // Boolean triggers yodatepicker to close when user selects a date.
+            close_onselect: opts.close_onselect,
+
+            // Max date user can scroll forward to.
+            max_date: get_max_date((opts.max_date || '1Y')),
+
+            // Min date user can scroll backward to.
+            min_date: get_min_date((opts.min_date || '*')),
+
+            // The current date.
             currdate: new Date()
         };
 
@@ -42,11 +65,6 @@ var yodatepicker = function(options) {
                                cfg.MAX_CALENDARS : cfg.display_count;
         return cfg;
     };
-
-    // Private
-    //
-    // yodatepicker options and variables
-
 
     var leap_year = function(yr) {
         return(yr % 400 === 0) || (yr % 4 === 0 && yr % 100 !== 0);
@@ -215,7 +233,7 @@ var get_min_date = function(param_min_date) {
                 eval('document.getElementById("' + cfg.id_name + '").focus();');
             }
 
-            if(cfg.onclose_callback !== undefined) { cfg.onclose_callback(); }
+            if(cfg.onclose_callback) { cfg.onclose_callback(); }
         }
     };
 
@@ -226,8 +244,8 @@ var get_min_date = function(param_min_date) {
         var the_month, the_day;
 
         mm++;    // Note: mm is the month number 0 - 11 so always add 1.
-        if(mm < 10) { the_month = '0' + mm; } else { the_month = mm.toString(); }
-        if(dd < 10) { the_day = '0' + dd;   } else { the_day = dd.toString();   }
+        if(mm < 10) {the_month = '0' + mm;} else { the_month = mm.toString(); }
+        if(dd < 10) {the_day = '0' + dd;  } else { the_day = dd.toString();   }
 
         if(cfg.id_name !== '') {
             if(cfg.locale === 'en') {
@@ -242,38 +260,7 @@ var get_min_date = function(param_min_date) {
         if(cfg.ondateselected_callback) { cfg.ondateselected_callback(); }
         close_datepicker();
     };
-/* -------------------- */
-/* jshint unused: true  */
-/* -------------------- */
 
-    var month_inc = function() {
-        var scroll_date = new Date(cfg.yy, cfg.mn, cfg.today.getDate());
-        if((scroll_date.getFullYear() === cfg.max_date.getFullYear()) &&
-           (scroll_date.getMonth() >= cfg.max_date.getMonth())) {
-            return;
-        }
-
-        if(cfg.mn < 11) { cfg.mn++; }
-        else { cfg.mn = 0; cfg.yy++; }
-        this.show();
-    };
-
-    var month_dec = function() {
-        var scroll_date = new Date(cfg.yy, cfg.mn, cfg.today.getDate());
-        if((scroll_date.getFullYear() === cfg.min_date.getFullYear()) &&
-           (scroll_date.getMonth() <= cfg.min_date.getMonth())) {
-            return;
-        }
-
-        if(cfg.mn > 0) { cfg.mn--; }
-        else { cfg.mn = 11; cfg.yy--; }
-        this.show();
-    };
-
-
-/* -------------------- */
-/* jshint unused: false */
-/* -------------------- */
     var dump_html = function(calendar_html) {
         var the_html = '<tt>';
         for(var j=0; j<calendar_html.length; j++) {
@@ -304,22 +291,25 @@ var get_min_date = function(param_min_date) {
 
         set_min_date: function(mdate) {
             // This will override the cfg.min_date param.
-            if(mdate instanceof Date) {
-                cfg.min_date = mdate;
-                cfg.mn = (cfg.currdate.getTime() < cfg.min_date.getTime()) ?
-                          cfg.min_date.getMonth() : cfg.currdate.getMonth();
-                cfg.yy = (cfg.currdate.getTime() < cfg.min_date.getTime()) ?
-                         cfg.min_date.getFullYear() : cfg.currdate.getFullYear();
-            }
+            if(!mdate instanceof Date) { return false; }
+
+            cfg.min_date = mdate;
+
+            cfg.mn = (cfg.currdate.getTime() < cfg.min_date.getTime()) ?
+                     cfg.min_date.getMonth() : cfg.currdate.getMonth();
+
+            cfg.yy = (cfg.currdate.getTime() < cfg.min_date.getTime()) ?
+                     cfg.min_date.getFullYear() : cfg.currdate.getFullYear();
+
+            return cfg.min_date;
         },
 
 /* --------------------------- */
 /* jshint maxstatements: false */
 /* --------------------------- */
         show: function() {
-            console.log('--> jodatepicker.show() fired!');
-console.log(cfg.dp_id_name);
-            if(cfg.dp_id_name === undefined) { return; }
+            if(!cfg.dp_id_name) { return; }
+
             var calendar_html = '';
             var unique_id = 'jrdp_' + cfg.dp_id_name + '_';
 
@@ -498,6 +488,30 @@ console.log(cfg.dp_id_name);
 /* --------------------------- */
 /* jshint maxstatements: 20 */
 /* --------------------------- */
+
+    var month_inc = function() {
+        var scroll_date = new Date(cfg.yy, cfg.mn, cfg.today.getDate());
+        if((scroll_date.getFullYear() === cfg.max_date.getFullYear()) &&
+           (scroll_date.getMonth() >= cfg.max_date.getMonth())) {
+            return;
+        }
+
+        if(cfg.mn < 11) { cfg.mn++; }
+        else { cfg.mn = 0; cfg.yy++; }
+        _yodatepicker.show();
+    };
+
+    var month_dec = function() {
+        var scroll_date = new Date(cfg.yy, cfg.mn, cfg.today.getDate());
+        if((scroll_date.getFullYear() === cfg.min_date.getFullYear()) &&
+           (scroll_date.getMonth() <= cfg.min_date.getMonth())) {
+            return;
+        }
+
+        if(cfg.mn > 0) { cfg.mn--; }
+        else { cfg.mn = 11; cfg.yy--; }
+        _yodatepicker.show();
+    };
 
     return _yodatepicker;
 };
