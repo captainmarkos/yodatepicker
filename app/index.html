@@ -2,11 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<script type="text/javascript" src="yodatepicker.js"></script>
-<link rel="stylesheet" type="text/css" href="yodatepicker.css" />
+<script type="text/javascript" src="js/yodatepicker.js"></script>
+<link type="text/css" rel="stylesheet" href="styles/yodatepicker.css" />
 <script type="text/javascript">
 
     // The onDateSelected and onClose parameters are callback functions.
+
+    console.log('--> setting up the datepickers <--');
 
     var start_datepicker = yodatepicker({
         dp_id_name: 'dp_start_date',           // selector id where to display the datepicker
@@ -75,7 +77,7 @@ is open source and available at github <a href="https://github.com/captainmarkos
 <div style="display: inline;" class="myfont1">
     <div style="display: inline;">Start Date:</div>
     <input type="text" name="start_date" id="start_date" value="mm/dd/yyyy" size="12" />
-    <img class="jrdp_calendar_icon" src="icon_calendar.gif" onclick="start_datepicker.show();" />
+    <img class="jrdp_calendar_icon" src="images/icon_calendar.gif" onclick="start_datepicker.show();" />
     <div class="jrdp_calendar_pos" id="dp_start_date"></div>
 </div>
 
@@ -84,7 +86,7 @@ is open source and available at github <a href="https://github.com/captainmarkos
 <div style="display: inline;" class="myfont1">
     <div style="display: inline;">End Date:</div>
     <input type="text" name="end_date" id="end_date" value="mm/dd/yyyy" size="12" />
-    <img class="jrdp_calendar_icon" src="icon_calendar.gif" onclick="end_datepicker.set_min_date(new Date('03/27/2013')); end_datepicker.show();" />
+    <img class="jrdp_calendar_icon" src="images/icon_calendar.gif" onclick="end_datepicker.set_min_date(new Date('03/27/2013')); end_datepicker.show();" />
     <div class="jrdp_calendar_pos" id="dp_end_date"></div>
 </div>
 

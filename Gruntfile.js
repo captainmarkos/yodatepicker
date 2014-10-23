@@ -14,8 +14,8 @@ module.exports = function(grunt) {
             gruntfile: {
                 src: 'Gruntfile.js'
             },
-            lib_test: {
-                src: ['lib/**/*.js', 'test/**/*.js']
+            all: {
+                src: ['app/js/{,*/}*.js']
             }
         },
         nodeunit: {
@@ -40,4 +40,8 @@ module.exports = function(grunt) {
 
     // Default task.
     grunt.registerTask('default', ['jshint', 'nodeunit']);
+
+    grunt.registerTask('test', [
+        'jshint:all'
+    ]);
 };
