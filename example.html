@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<script type="text/javascript" src="jrdatepicker.js"></script>
-<link rel="stylesheet" type="text/css" href="jrdatepicker.css" />
+<script type="text/javascript" src="yodatepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="yodatepicker.css" />
 <script type="text/javascript">
 
     // The onDateSelected and onClose parameters are callback functions.
 
-    var start_datepicker = jrDatePicker({
+    var start_datepicker = yodatepicker({
         dp_id_name: 'dp_start_date',           // selector id where to display the datepicker
         id_name: 'start_date',                 // selector id where to populate a selected date
         max_date: '1Y',
@@ -17,7 +17,7 @@
         close_button: true                    // display a close button
     });
 
-    var end_datepicker = jrDatePicker({
+    var end_datepicker = yodatepicker({
         dp_id_name: 'dp_end_date',             // selector id where to display the datepicker
         id_name: 'end_date',                   // selector id where to populate a selected date
         locale: 'en',
@@ -26,7 +26,7 @@
         //onClose: function() {alert("onClose callback");}
     });
 
-    var double_datepicker = jrDatePicker({
+    var double_datepicker = yodatepicker({
         dp_id_name: 'dp_price_calendar',
         id_name: 'price_calendar',
         display_count: 2,                     // display two calendar months
@@ -38,7 +38,7 @@
 
 
 </script>
-<title>jrDatePicker</title>
+<title>yodatepicker</title>
 <style>
 a { text-decoration: none; color: #0000ff; }
 
@@ -62,12 +62,12 @@ hr { background-color: #cd0000; width: 100%; height: 1px; }
 <body>
 
 
-<center><h2>jrDatePicker - A simple Date Picker</h2></center>
+<center><h2>yodatepicker - A simple Date Picker</h2></center>
 <br />
 <span class="myfont1">
-jrDatePicker 
+yodatepicker 
 <script type="text/javascript">document.write('Version: ' + start_datepicker.version);</script>
-is open source and available at github <a href="https://github.com/captainmarkos/jrDatePicker" target="_blank">here</a>.</span>
+is open source and available at github <a href="https://github.com/captainmarkos/yodatepicker" target="_blank">here</a>.</span>
 <hr style="height: 1px; color: #cd0000;" />
 <br />
 
@@ -106,7 +106,7 @@ is open source and available at github <a href="https://github.com/captainmarkos
 Example usage:
 --------------
 
-var my_datepicker = jrDatePicker({
+var my_datepicker = yodatepicker({
     dp_id_name: 'disp_datepicker',    // datepicker is displayed here
     id_name: 'start_date',            // selected date is inserted here
     locale: 'fr',                     // setting locale to french
@@ -127,9 +127,9 @@ Start Date: &lt;input type=&quot;text&quot; id=&quot;start_date&quot; value=&quo
     <tr>
         <td colspan="2" align="center" style="background-color: #D94867;"><b>Files</b></td>
     </tr>
-    <tr><td align="left">jrDatePicker.js</td>
+    <tr><td align="left">yodatepicker.js</td>
         <td align="left">Javascript code for the datepicker.</tr>
-    <tr><td align="left">jrDatePicker.css</td>
+    <tr><td align="left">yodatepicker.css</td>
         <td align="left">Styling for the datepicker.  You can provide you own styling however the class names are required.</tr>
 
 

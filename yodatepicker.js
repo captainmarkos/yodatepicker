@@ -8,10 +8,10 @@
 // ------------------------------------------------------------------------- //
 
 
-var jrDatePicker = function(params) {
+var yodatepicker = function(params) {
     // Create an object literal (that) that includes properties and methods
     // for public use.  Any local variables defined outside of that{} or
-    // passed to jrDatePicker will remain private but still accessible
+    // passed to yodatepicker will remain private but still accessible
     // from functions within that{}.
 
     // Define getElementsByClassName() for browsers that do not have this method defined (IE7).
@@ -163,7 +163,7 @@ var jrDatePicker = function(params) {
         return(new Date(year, month, date.getDate()));
     };
 
-    // jrDatePicker options and variables
+    // yodatepicker options and variables
     var MAX_CALENDARS = 2;
     var dp_id_name = params.dp_id_name || '';  // selector id where to display the datepicker
     var id_name = params.id_name || '';        // selector id where to populate a selected date

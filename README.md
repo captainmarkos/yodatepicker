@@ -1,11 +1,8 @@
-jrDatePicker
-============
+yodatepicker
 
-Javascript DatePicker
+Just another javascript datepicker with options.
 
-This datapicker implementation is intended to be stand-alone, that is no
-external files are used.  As much as I really like jquery, jquery-ui and 
-others, I got tired of running into conflicts and/or issues of some sort.
-So I created a simple datapicker that relies on nothing else, just pure
-javascript (no jquery).
+
+~/local/src/javascript/yodatepicker> date
+Wed Oct 22 20:40:08 EDT 2014
 
