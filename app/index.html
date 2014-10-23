@@ -29,9 +29,9 @@
     });
 
     var double_datepicker = yodatepicker({
-        dp_id_name: 'dp_price_calendar',
-        id_name: 'price_calendar',
-        display_count: 2,                     // display two calendar months
+        dp_id_name: 'rates_calendar_id',
+        id_name: 'rates_calendar',
+        months_to_display: 1,                     // display two calendar months
         close_onselect: false,                // display the calendar all the time
         max_date: '3M',
         min_date: '3M',
@@ -95,9 +95,10 @@ is open source and available at github <a href="https://github.com/captainmarkos
 <hr style="height: 1px; color: #cd0000;" />
 <br />
 <center>
-    <span id="dp_price_calendar"></span>
+    <div id="rates_calendar_id"></div>
     <br />
-    <input type="text" id="price_calendar" value="" />
+    <br />
+    <input type="text" id="rates_calendar" value="" />
     <script type="text/javascript">double_datepicker.show();</script>
 </center>
 <br />
