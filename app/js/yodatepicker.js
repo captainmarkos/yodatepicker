@@ -1,5 +1,6 @@
 'use strict';
 
+// USAGE:
 //
 // var options = {
 //     dp_id_name: 'mydiv_id',
@@ -13,7 +14,11 @@
 //     min_date: '1Y'
 // }
 //
-// var start_datepicker = yodatepicker(options);
+// var checkin_datepicker = yodatepicker(options);
+// var checkout_datepicker = yodatepicker(options);
+//
+// <img src="images/icon_calendar.gif" onclick="checkin_datepicker.show();" />
+// <img src="images/icon_calendar.gif" onclick="checkout_datepicker.show();" />
 //
 
 var yodatepicker = function(options) {
@@ -85,9 +90,11 @@ var yodatepicker = function(options) {
         cfg.yy = (cfg.currdate.getTime() < cfg.min_date.getTime()) ?
                  cfg.min_date.getFullYear() : cfg.currdate.getFullYear();
 
+        // Set flag, tiggers the datepicker to close on selecting a day.
+        cfg.close_onselect = (cfg.close_onselect === undefined) ?
+                             true : cfg.close_onselect;
 
-        cfg.close_onselect = (!cfg.close_onselect) ? true : cfg.close_onselect;
-
+        // Limit the number of months to display for a multi-month datepicker.
         cfg.months_to_display = (cfg.months_to_display > cfg.MAX_CALENDARS) ?
                                cfg.MAX_CALENDARS : cfg.months_to_display;
         return cfg;
@@ -100,11 +107,11 @@ var yodatepicker = function(options) {
         first_dow: 0,
         total_days: 0,
         offset: 0,
-        multi_cal: '',
 
         markup: function(tr_node, yo_id) {
             var the_html = '';
-            var td_class = 'yo-datepicker-day-empty';
+            var multi_cal = (cfg.months_to_display > 1) ? '-multi' : '';
+            var td_class = 'yo-datepicker-day-empty' + multi_cal;
 
             if(this.offset >= this.first_dow) {
                 var tmp_date = new Date(this.year, this.month, this.day);
@@ -113,19 +120,19 @@ var yodatepicker = function(options) {
                             this.month+ '_' + this.day + '_' + this.year;
 
                 if(tmp_date.valueOf() > cfg.max_date.valueOf()) {
-                    td_class = 'yo-datepicker-day-noselect';
+                    td_class = 'yo-datepicker-day-noselect' + multi_cal;
                     _yodatepicker.create_day(tr_node, content, td_id, td_class);
                 }
                 else if(tmp_date.valueOf() < cfg.min_date.valueOf()) {
-                    td_class = 'yo-datepicker-day-noselect';
+                    td_class = 'yo-datepicker-day-noselect' + multi_cal;
                     _yodatepicker.create_day(tr_node, content, td_id, td_class);
                 }
                 else if(tmp_date.valueOf() === cfg.today.valueOf()) {
-                    td_class = 'yo-datepicker-day-current';
+                    td_class = 'yo-datepicker-day-current' + multi_cal;
                     _yodatepicker.create_day(tr_node, content, td_id, td_class);
                 }
                 else {
-                    td_class = 'yo-datepicker-day';
+                    td_class = 'yo-datepicker-day' + multi_cal;
                     _yodatepicker.create_day(tr_node, content, td_id, td_class);
                 }
 
@@ -140,6 +147,8 @@ var yodatepicker = function(options) {
     };
 
     var close_datepicker = function() {
+        console.log('--> close_datepicker() fired!');
+        console.log(cfg.close_onselect);
         if(cfg.close_onselect) {
             document.getElementById(cfg.dp_id_name).innerHTML = '';
             if(cfg.id_name !== '') {
@@ -206,7 +215,14 @@ var yodatepicker = function(options) {
         return(node);
     };
 
+    var remove_element = function(_node, _id) {
+        if(document.getElementById(_id)) {
+            _node.removeChild(document.getElementById(_id));
+        }
+    };
+
     var month_inc = function() {
+        console.log('--> month_inc');
         var scroll_date = new Date(cfg.yy, cfg.mn, cfg.today.getDate());
         if((scroll_date.getFullYear() === cfg.max_date.getFullYear()) &&
            (scroll_date.getMonth() >= cfg.max_date.getMonth())) {
@@ -219,6 +235,7 @@ var yodatepicker = function(options) {
     };
 
     var month_dec = function() {
+        console.log('--> month_dec');
         var scroll_date = new Date(cfg.yy, cfg.mn, cfg.today.getDate());
         if((scroll_date.getFullYear() === cfg.min_date.getFullYear()) &&
            (scroll_date.getMonth() <= cfg.min_date.getMonth())) {
@@ -388,25 +405,49 @@ var yodatepicker = function(options) {
                 }
 
                 var yo_id = 'yo-' + cfg.dp_id_name;
-                var tr_class = 'yo-calendar-title-bar';
+                var multi_cal = (cfg.months_to_display > 1) ? '-multi' : '';
+
+                var tr_class = 'yo-calendar-title-bar' + multi_cal;
                 var tr = params.tbody.appendChild(
                                       element('tr', { klass: tr_class }));
 
-                var prev = yo_id + '-prev-month-' + params.calendar_number;
-                var prev_style = 'yo-previous-month';
+                // previous month navigation element
+                var prev_style = 'yo-previous-month' + multi_cal;
+                var prev_id = yo_id + '-prev-month' + multi_cal + '-' +
+                              params.calendar_number;
                 tr.appendChild(element('td', {klass: prev_style, colspan: '1'}))
-                  .appendChild(element('span', {id: prev}))
+                  .appendChild(element('span', {id: prev_id}))
                   .appendChild(text('<'));
 
-                var text_style = 'yo-calendar-month';
+                // month name element
+                var text_style = 'yo-calendar-month' + multi_cal;
                 tr.appendChild(element('td', {klass: text_style, colspan: '5'}))
                   .appendChild(text(params.month + ' ' + params.year));
 
-                var next = yo_id + '-next-month-' + params.calendar_number;
-                var next_style = 'yo-next-month';
+                // next month navigation element
+                var next_style = 'yo-next-month' + multi_cal;
+                var next_id = yo_id + '-next-month' + multi_cal + '-' +
+                              params.calendar_number;
                 tr.appendChild(element('td', {klass: next_style, colspan: '1'}))
-                  .appendChild(element('span', {id: next}))
+                  .appendChild(element('span', {id: next_id}))
                   .appendChild(text('>'));
+            } catch(e) {
+                console.log(e.toString());
+                return false;
+            }
+            return true;
+        },
+
+        create_dow_header: function(tbody_node) {
+            // Creates the day-of-week header for yodatepicker.
+            try {
+                if(!tbody_node) { throw new YoException(tbody_node); }
+                var tr = tbody_node.appendChild(element('tr'));
+                var td_class = 'yo-calendar-dow-title';
+                for(var i = 0; i < cfg.day_names.length; i++) {
+                    tr.appendChild(element('td', {klass: td_class}))
+                      .appendChild(text(cfg.day_names[i]));
+                }
             } catch(e) {
                 console.log(e.toString());
                 return false;
@@ -418,11 +459,12 @@ var yodatepicker = function(options) {
             // Creates an entire week with empty days.
             try {
                 if(!tbody_node) { throw new YoException(tbody_node); }
-                var td_class = 'yo-datepicker-day-empty';
-                var tbody_tr_node = tbody_node.appendChild(element('tr'));
+                var multi_cal = (cfg.months_to_display > 1) ? '-multi' : '';
+                var td_class = 'yo-datepicker-day-empty' + multi_cal;
+                var tr = tbody_node.appendChild(element('tr'));
                 for(var i = 0; i < 7; i++) {
-                    tbody_tr_node.appendChild(element('td', {klass: td_class}))
-                                 .appendChild(text(' '));
+                    tr.appendChild(element('td', {klass: td_class}))
+                      .appendChild(text(' '));
                 }
             } catch(e) {
                 console.log(e.toString());
@@ -438,6 +480,11 @@ var yodatepicker = function(options) {
             // .yo-datepicker-day-current   // day is the current day
             // .yo-datepicker-day-empty     // empty content
             // .yo-datepicker-day-noselect  // day is not selectable
+            //
+            // .yo-datepicker-day-multi           // day is selectable
+            // .yo-datepicker-day-current-multi   // day is the current day
+            // .yo-datepicker-day-empty-multi     // empty content
+            // .yo-datepicker-day-noselect-multi  // day is not selectable
             try {
                 tr.appendChild(element('td', {klass: _klass, id: _id}))
                   .appendChild(text(content));
@@ -448,26 +495,40 @@ var yodatepicker = function(options) {
             return true;
         },
 
-/* --------------------------- */
-/* jshint maxstatements: false */
-/* --------------------------- */
-
         show: function() {
             var tbody_node;
             var yo_id = 'yo-' + cfg.dp_id_name;
             var root_node = document.getElementById(cfg.dp_id_name);
+            var multi_cal = (cfg.months_to_display > 1) ? '-multi' : '';
+
             if(!root_node) { throw new YoException(root_node); }
 
+            if(document.getElementById(yo_id)) {
+                remove_element(root_node, yo_id);
+            }
+
+/*
             tbody_node = root_node
-                .appendChild(
-                    element('div',{id: cfg.dp_id_name, klass: 'yo-container'}))
+                //.appendChild(element('div',{id: yo_id, klass: 'yo-container'}))
                 .appendChild(element('table', {id: yo_id, klass: 'yo-content'}))
                 .appendChild(element('tbody')).appendChild(element('tr'))
                 .appendChild(element('td'))
-                .appendChild(element('table', {klass: 'yo-calendar'}))
+                .appendChild(element('table', {klass: 'yo-calendar'+multi_cal}))
                 .appendChild(element('tbody'));
+*/
+
+            var td_node = root_node
+                .appendChild(element('table', {id: yo_id, klass: 'yo-content'}))
+                .appendChild(element('tbody')).appendChild(element('tr'))
+                .appendChild(element('td'));
 
             for(var i = 0; i < cfg.months_to_display; i++) {
+                var table_class = 'yo-calendar' + multi_cal;
+                tbody_node = td_node
+                    .appendChild(element('table', {klass: table_class}))
+                    .appendChild(element('tbody'));
+
+
                 citem.day = 1;
                 citem.month = cfg.mn;
                 citem.year = cfg.yy;
@@ -486,14 +547,14 @@ var yodatepicker = function(options) {
                 citem.total_days = days_in_month(cfg.currdate.getMonth(),
                                                  cfg.currdate.getFullYear());
 
-                citem.multi_cal = (cfg.months_to_display > 1) ? '_multi' : '';
-
                 this.create_title_header({
                     tbody: tbody_node,
                     month: cfg.month_names[citem.month],
                     year: citem.year,
                     calendar_number: i
                 });
+
+                this.create_dow_header(tbody_node);
 
                 var weeks_created = 0;
                 for(var j = 0; j < 6; j++) {
@@ -512,11 +573,14 @@ var yodatepicker = function(options) {
             }
 
             // Attach event listeners for the previous and next buttons.
-            var prev_month_id = yo_id + '-prev-month' + citem.multi_cal + '-';
-            var next_month_id = yo_id + '-next-month' + citem.multi_cal + '-';
+            var prev_month_id = yo_id + '-prev-month' + multi_cal + '-';
+            var next_month_id = yo_id + '-next-month' + multi_cal + '-';
             for(var x = 0; x < i; x++) {
                 document.getElementById(prev_month_id + x).onclick = month_dec;
                 document.getElementById(next_month_id + x).onclick = month_inc;
+
+                document.getElementById(prev_month_id + x).style.display = 'block';
+                document.getElementById(next_month_id + x).style.display = 'block';
             }
 
             // Attach event listeners to the following events so that the
@@ -530,11 +594,13 @@ var yodatepicker = function(options) {
                 // IE 7-8 does not support event.currentTarget but does 
                 // so for event.srcElement;
                 var elem, elem_id, ev = e || window.event;
-                var using_srcElement = false;
+
                 try { elem = ev.currentTarget; }
-                catch(err) { elem = ev.srcElement; using_srcElement = true; }
+                catch(err) { elem = ev.srcElement; }
+
                 try { elem_id = elem.id; }
                 catch(err) { elem_id = (elem) ? elem : yo_id; }
+
                 if(elem_id) {
                     document.getElementById(elem_id).onmouseover = function() {
                         document.getElementsByTagName('body')[0]
@@ -549,11 +615,13 @@ var yodatepicker = function(options) {
                 // IE 7-8 does not support event.currentTarget but does
                 // so for event.srcElement;
                 var elem, elem_id, ev = e || window.event;
-                var using_srcElement = false;
+
                 try { elem = ev.currentTarget; }
-                catch(err) { elem = ev.srcElement; using_srcElement = true; }
+                catch(err) { elem = ev.srcElement; }
+
                 try { elem_id = elem.id; }
                 catch(err) { elem_id = (elem) ? elem : yo_id; }
+
                 if(elem_id) {
                     document.getElementById(elem_id).onmouseout = function() {
                         document.getElementsByTagName('body')[0]
@@ -567,7 +635,7 @@ var yodatepicker = function(options) {
             // Bind event listeners to each day for the onclick event.
             // Get an array of elements by the class name so we can get
             // each element id name to bind the onclick handler.
-            var day_selectors = 'yo-datepicker-day' + citem.multi_cal;
+            var day_selectors = 'yo-datepicker-day' + multi_cal;
             var day_tds = document.getElementsByClassName(day_selectors);
             for(var y = 0; y < day_tds.length; y++) {
                 // string to match: 'yo-rates_calendar_id_9_22_2014'
@@ -587,7 +655,7 @@ var yodatepicker = function(options) {
 
             // The current day node will have a different class name so
             // we get that and bind the onclick handler.
-            var selector = 'yo-datepicker-day-current' + citem.multi_cal;
+            var selector = 'yo-datepicker-day-current' + multi_cal;
             var curr_day_td = document.getElementsByClassName(selector);
             if(curr_day_td.length > 0) {
                 var items = curr_day_td[0].id.split('_');
@@ -606,9 +674,6 @@ var yodatepicker = function(options) {
             return true;
         }
     };
-/* --------------------------- */
-/* jshint maxstatements: 20 */
-/* --------------------------- */
 
     return _yodatepicker;
 };

@@ -4,13 +4,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script type="text/javascript" src="js/yodatepicker.js"></script>
 <link type="text/css" rel="stylesheet" href="styles/yodatepicker.css" />
+<link type="text/css" rel="stylesheet" href="styles/yodatepicker-multi.css" />
 <script type="text/javascript">
 
     // The onDateSelected and onClose parameters are callback functions.
 
     console.log('--> setting up the datepickers <--');
 
-    var start_datepicker = yodatepicker({
+    var checkin_datepicker = yodatepicker({
         dp_id_name: 'dp_start_date',           // selector id where to display the datepicker
         id_name: 'start_date',                 // selector id where to populate a selected date
         max_date: '1Y',
@@ -19,7 +20,7 @@
         close_button: true                    // display a close button
     });
 
-    var end_datepicker = yodatepicker({
+    var checkout_datepicker = yodatepicker({
         dp_id_name: 'dp_end_date',             // selector id where to display the datepicker
         id_name: 'end_date',                   // selector id where to populate a selected date
         locale: 'en',
@@ -29,8 +30,8 @@
     });
 
     var double_datepicker = yodatepicker({
-        dp_id_name: 'rates_calendar_id',
-        id_name: 'rates_calendar',
+        dp_id_name: 'dp_price_calendar',
+        id_name: 'price_calendar',
         months_to_display: 2,                     // display two calendar months
         close_onselect: false,                // display the calendar all the time
         max_date: '3M',
@@ -55,7 +56,14 @@ hr { background-color: #cd0000; width: 100%; height: 1px; }
 
 .fixedwidth_font {
     font-family: courier new, Verdana, Arial;
-    font-size: 11pt;
+    font-size: 10pt;
+}
+
+.bigtext {
+    font-family: verdana, arial;
+    font-size: 1.2em;
+    color: #00aaff;
+    font-weight: normal;
 }
 </style>
 </head>
@@ -63,31 +71,30 @@ hr { background-color: #cd0000; width: 100%; height: 1px; }
 
 <body>
 
-
-<center><h2>yodatepicker - A simple Date Picker</h2></center>
-<br />
-<span class="myfont1">
-yodatepicker 
-<script type="text/javascript">document.write('Version: ' + start_datepicker.version);</script>
-is open source and available at github <a href="https://github.com/captainmarkos/yodatepicker" target="_blank">here</a>.</span>
+<center><h2 class="bigtext">yodatepicker: a simple datepicker</h2></center>
 <hr style="height: 1px; color: #cd0000;" />
 <br />
 
-
-<div style="display: inline;" class="myfont1">
-    <div style="display: inline;">Start Date:</div>
-    <input type="text" name="start_date" id="start_date" value="mm/dd/yyyy" size="12" />
-    <img class="jrdp_calendar_icon" src="images/icon_calendar.gif" onclick="start_datepicker.show();" />
-    <div class="jrdp_calendar_pos" id="dp_start_date"></div>
+<div class="bigtext">
+Of course it's configurable!
 </div>
 
-&nbsp;&nbsp;&nbsp;&nbsp;
+<br />
+<br />
 
-<div style="display: inline;" class="myfont1">
-    <div style="display: inline;">End Date:</div>
+<div style="display: inline; border: solid 0px #00aaff; width: 270px; position: absolute;" class="myfont1">
+    <div style="display: inline;">Check In:</div>
+    <input type="text" name="start_date" id="start_date" value="mm/dd/yyyy" size="12" />
+    <img class="jrdp_calendar_icon" src="images/icon_calendar.gif" onclick="checkin_datepicker.show();" />
+    <div class="yo-container" id="dp_start_date"></div>
+</div>
+<br />
+<br />
+<div style="display: inline; border: solid 0px #00aaff; width: 270px; position: absolute;" class="myfont1">
+    <div style="display: inline;">Check Out:</div>
     <input type="text" name="end_date" id="end_date" value="mm/dd/yyyy" size="12" />
-    <img class="jrdp_calendar_icon" src="images/icon_calendar.gif" onclick="end_datepicker.set_min_date(new Date('03/27/2013')); end_datepicker.show();" />
-    <div class="jrdp_calendar_pos" id="dp_end_date"></div>
+    <img class="jrdp_calendar_icon" src="images/icon_calendar.gif" onclick="checkout_datepicker.show();" />
+    <div class="yo-container" id="dp_end_date"></div>
 </div>
 
 
@@ -95,10 +102,10 @@ is open source and available at github <a href="https://github.com/captainmarkos
 <hr style="height: 1px; color: #cd0000;" />
 <br />
 <center>
-    <div id="rates_calendar_id"></div>
+    <div id="dp_price_calendar"></div>
     <br />
     <br />
-    <input type="text" id="rates_calendar" value="" />
+    <input type="text" id="price_calendar" value="" />
     <script type="text/javascript">double_datepicker.show();</script>
 </center>
 <br />
@@ -194,7 +201,7 @@ Start Date: &lt;input type=&quot;text&quot; id=&quot;start_date&quot; value=&quo
     <tr><td align="left">hide()</td>
         <td align="left">Hide the datepicker</tr>
     <tr><td align="left">set_min_date(Date)</td>
-        <td align="left">Set the minimum selectable date.  
+        <td align="left">Set the minimum selectable date.
                          This takes a javascript Date object and will override the min_date param.</tr>
 
 

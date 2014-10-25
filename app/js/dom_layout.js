@@ -45,6 +45,7 @@ var build_dom = function() {
 
     create_week(tbody_node);
 
+    // create the days
     for(var week = 1; week <=4; week++) {
         var tbody_tr_node = tbody_node.appendChild(element('tr'));
         for(var day = 1; day <=7; day++) {
