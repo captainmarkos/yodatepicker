@@ -1,12 +1,19 @@
 'use strict';
 
-// var yo_options = {
 //
+// var options = {
+//     dp_id_name: 'mydiv_id',
+//     id_name: 'id_name',
+//     locale: 'en',
+//     onDateSelected: function() {},
+//     onClose: function() {},
+//     months_to_display: 1,
+//     close_onselect: boolean,
+//     max_date: '1Y',
+//     min_date: '1Y'
 // }
 //
-// var start_datepicker = yodatepicker(yo_options);
-//
-//
+// var start_datepicker = yodatepicker(options);
 //
 
 var yodatepicker = function(options) {
@@ -20,7 +27,6 @@ var yodatepicker = function(options) {
     };
 
     var configure = function(opts) {
-        console.log('configure() fired!');
         var cfg = {
             // Max months to display on a multi-month yodatepicker.
             MAX_CALENDARS: 2,
@@ -353,6 +359,7 @@ var yodatepicker = function(options) {
 
     // This object is returned and represents the public properties and methods.
     var _yodatepicker = {
+        version: 'yo-da',
 
         hide: function() {
             close_datepicker();
@@ -446,13 +453,9 @@ var yodatepicker = function(options) {
 /* --------------------------- */
 
         show: function() {
-            if(!cfg.dp_id_name) { return false; }
-            console.log('show(): this');
-            console.log(this);
-
-            var root_node = document.getElementById(cfg.dp_id_name);
             var tbody_node;
             var yo_id = 'yo-' + cfg.dp_id_name;
+            var root_node = document.getElementById(cfg.dp_id_name);
             if(!root_node) { throw new YoException(root_node); }
 
             tbody_node = root_node
@@ -518,21 +521,24 @@ var yodatepicker = function(options) {
 
             // Attach event listeners to the following events so that the
             // datepicker will close when the user clicks outside the calendar.
-            document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
+            document.getElementsByTagName('body')[0]
+                    .onmousedown = close_datepicker;
 
             // Event onmouseover is set to disable onmousedown so that when
             // mouseover the datepicker, mousedown doesn't close it.
             document.getElementById(yo_id).onmouseover = function(e) {
-                // IE 7-8 does not support event.currentTarget but does so for event.srcElement;
-                var target, target_id, ev = e || window.event;
+                // IE 7-8 does not support event.currentTarget but does 
+                // so for event.srcElement;
+                var elem, elem_id, ev = e || window.event;
                 var using_srcElement = false;
-                try { target = ev.currentTarget; }
-                catch(err) { target = ev.srcElement; using_srcElement = true; }
-                try { target_id = target.id; }
-                catch(err) { target_id = (target) ? target : yo_id; }
-                if(target_id) {
-                    document.getElementById(target_id).onmouseover = function() {
-                        document.getElementsByTagName('body')[0].onmousedown = null;
+                try { elem = ev.currentTarget; }
+                catch(err) { elem = ev.srcElement; using_srcElement = true; }
+                try { elem_id = elem.id; }
+                catch(err) { elem_id = (elem) ? elem : yo_id; }
+                if(elem_id) {
+                    document.getElementById(elem_id).onmouseover = function() {
+                        document.getElementsByTagName('body')[0]
+                                .onmousedown = null;
                     };
                 }
                 document.getElementsByTagName('body')[0].onmousedown = null;
@@ -540,69 +546,61 @@ var yodatepicker = function(options) {
 
             // Event onmouseout is set to close_datepicker.
             document.getElementById(yo_id).onmouseout = function(e) {
-                // IE 7-8 does not support event.currentTarget but does so for event.srcElement;
-                var target, target_id, ev = e || window.event;
+                // IE 7-8 does not support event.currentTarget but does
+                // so for event.srcElement;
+                var elem, elem_id, ev = e || window.event;
                 var using_srcElement = false;
-                try { target = ev.currentTarget; }
-                catch(err) { target = ev.srcElement; using_srcElement = true; }
-                try { target_id = target.id; }
-                catch(err) { target_id = (target) ? target : yo_id; }
-                if(target_id) {
-                    document.getElementById(target_id).onmouseout = function() {
-                        document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
+                try { elem = ev.currentTarget; }
+                catch(err) { elem = ev.srcElement; using_srcElement = true; }
+                try { elem_id = elem.id; }
+                catch(err) { elem_id = (elem) ? elem : yo_id; }
+                if(elem_id) {
+                    document.getElementById(elem_id).onmouseout = function() {
+                        document.getElementsByTagName('body')[0]
+                                .onmousedown = close_datepicker;
                     };
                 }
-                document.getElementsByTagName('body')[0].onmousedown = close_datepicker;
+                document.getElementsByTagName('body')[0]
+                        .onmousedown = close_datepicker;
             };
 
-            // Bind event listeners to each day for the onclick event.  Get an array of
-            // elements by the class name so we can get the element id name.
-
-            try {
-                var day_selectors = 'yo-datepicker-day' + citem.multi_cal;
-                var day_tds = document.getElementsByClassName(day_selectors);
-                for(var y = 0; y < day_tds.length; y++) {
-                    // string to match: 'yo-rates_calendar_id_9_22_2014'
-                    //var items = day_tds[y].id.match(/.+\_(\d+)\_(\d+)\_(\d{4})$/);
-                    // So if we split on the '_' then we can use the last three elements.
-                    var items = day_tds[y].id.split('_');
-                    var mmtmp = items[items.length -3];
-                    var ddtmp = items[items.length -2];
-                    var yytmp = items[items.length -1];
-                    var tmp_id = yo_id + '_' + mmtmp + '_' + ddtmp + '_' + yytmp;
-                    var s  = 'document.getElementById("' + tmp_id + '").onclick = ';
-                        s += 'function() { select_date(' + mmtmp + ',' + ddtmp + ',' + yytmp + '); };';
-                    if(document.getElementById(tmp_id)) {
-                        eval(s);
-                    }
+            // Bind event listeners to each day for the onclick event.
+            // Get an array of elements by the class name so we can get
+            // each element id name to bind the onclick handler.
+            var day_selectors = 'yo-datepicker-day' + citem.multi_cal;
+            var day_tds = document.getElementsByClassName(day_selectors);
+            for(var y = 0; y < day_tds.length; y++) {
+                // string to match: 'yo-rates_calendar_id_9_22_2014'
+                // Split on '_' then we can use the last three elements.
+                var items = day_tds[y].id.split('_');
+                var mmtmp = items[items.length -3];
+                var ddtmp = items[items.length -2];
+                var yytmp = items[items.length -1];
+                var t_id = yo_id + '_' + mmtmp + '_' + ddtmp + '_' + yytmp;
+                var s  = 'document.getElementById("' + t_id + '")' +
+                         '.onclick = function() { select_date(' +
+                          mmtmp + ',' + ddtmp + ',' + yytmp + '); };';
+                if(document.getElementById(t_id)) {
+                    eval(s);
                 }
-            } catch(e) {
-                console.log(e.toString());
-                return false;
             }
 
-            try {
-                // The current day node will have a different class name.
-                var selector = 'yo-datepicker-day-current' + citem.multi_cal;
-                var curr_day_td = document.getElementsByClassName(selector);
-                if(curr_day_td.length !== 1) {
-                    throw new YoException(curr_day_td);
+            // The current day node will have a different class name so
+            // we get that and bind the onclick handler.
+            var selector = 'yo-datepicker-day-current' + citem.multi_cal;
+            var curr_day_td = document.getElementsByClassName(selector);
+            if(curr_day_td.length > 0) {
+                var items = curr_day_td[0].id.split('_');
+                var mmtmp = items[items.length -3];
+                var ddtmp = items[items.length -2];
+                var yytmp = items[items.length -1];
+                var t_id = yo_id + mmtmp + '_' + ddtmp + '_' + yytmp;
+                var s  = 'document.getElementById("' + t_id + '")' +
+                         '.onclick = function() ' + '{ select_date(' +
+                         mmtmp + ',' + ddtmp + ',' + yytmp + '); };';
+                if(document.getElementById(t_id)) {
+                    eval(s);
                 }
-                if(curr_day_td.length > 0) {
-                    var items = curr_day_td[0].id.split('_');
-                    var mmtmp = items[items.length -3];
-                    var ddtmp = items[items.length -2];
-                    var yytmp = items[items.length -1];
-                    var tmp_id = yo_id + mmtmp + '_' + ddtmp + '_' + yytmp;
-                    var s  = 'document.getElementById("' + tmp_id + '").onclick = ';
-                        s += 'function() { select_date(' + mmtmp + ',' + ddtmp + ',' + yytmp + '); };';
-                    if(document.getElementById(tmp_id)) {
-                        eval(s);
-                    }
-                }
-            } catch(e) {
-                console.log(e.toString());
-                return false;
             }
 
             return true;
