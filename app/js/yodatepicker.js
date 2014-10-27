@@ -21,8 +21,9 @@
 // <img src="images/icon_calendar.gif" onclick="checkout_datepicker.show();" />
 //
 
+/* jshint unused: false */
 var yodatepicker = function(options) {
-
+/* jshint unused: true */
     var YoException = function(value) {
         this.value = value;
         this.message = 'yoException: something is wrong with ';
@@ -149,47 +150,51 @@ var yodatepicker = function(options) {
         if(cfg.close_onselect) {
             document.getElementById(cfg.dp_id_name).innerHTML = '';
             if(cfg.id_name !== '') {
+                /* jshint evil: true */
                 eval('document.getElementById("' + cfg.id_name + '").focus();');
+                /* jshint evil: false */
             }
 
             if(cfg.onclose_callback) { cfg.onclose_callback(); }
         }
     };
 
-    var select_date = function(mm, dd, yy) {
-        var the_month, the_day;
-
-        mm++;    // Note: mm is the month number 0 - 11 so always add 1.
-        if(mm < 10) {the_month = '0' + mm;} else { the_month = mm.toString(); }
-        if(dd < 10) {the_day = '0' + dd;  } else { the_day = dd.toString();   }
-
-        if(cfg.id_name !== '') {
-            if(cfg.locale === 'en') {
-                eval('document.getElementById("' + cfg.id_name +
-                     '").value = the_month + "/" + the_day + "/" + yy');
-            } else {
-                eval('document.getElementById("' + cfg.id_name +
-                     '").value = the_day + "/" + the_month + "/" + yy');
+    /* jshint unused: false */
+    var select_date = function(_mm, _dd, _yy) {
+        try {
+            var the_month, the_day;
+            if(_mm === undefined || _dd === undefined || _yy === undefined) {
+                throw new YoException('undefined paramter');
             }
-        }
 
-        if(cfg.ondateselected_callback) { cfg.ondateselected_callback(); }
-        close_datepicker();
-    };
+            _mm++;    // Note: _mm is the month number 0 - 11 so always add 1.
 
-    var dump_html = function(calendar_html) {
-        var the_html = '<tt>';
-        for(var j=0; j<calendar_html.length; j++) {
-            var ch = calendar_html.charAt(j);
-            if(ch === '<')      { ch = '&lt;'; }
-            else if(ch === '>') { ch = '&gt;<br />'; }
-            else if(ch === ' ') { ch = '&nbsp;'; }
-            the_html += ch;
+            if(_mm < 10) { the_month = '0' + _mm; }
+            else         { the_month = _mm.toString(); }
+
+            if(_dd < 10) { the_day = '0' + _dd;  }
+            else         { the_day = _dd.toString();   }
+
+            /* jshint evil: true */
+            if(cfg.id_name !== '') {
+                if(cfg.locale === 'en') {
+                    eval('document.getElementById("' + cfg.id_name +
+                         '").value = the_month + "/" + the_day + "/" + _yy');
+                } else {
+                    eval('document.getElementById("' + cfg.id_name +
+                         '").value = the_day + "/" + the_month + "/" + _yy');
+                }
+            }
+            /* jshint evil: false */
+
+            if(cfg.ondateselected_callback) { cfg.ondateselected_callback(); }
+            close_datepicker();
+        } catch(e) {
+            console.log(e.toString());
+            return false;
         }
-        the_html += '</tt>';
-        if(document.getElementById('htmldump') !== null) {
-            document.getElementById('htmldump').innerHTML = the_html;
-        }
+        return true;
+    /* jshint unused: true */
     };
 
     var text = function(_text) {
@@ -549,8 +554,8 @@ var yodatepicker = function(options) {
         },
         /* jshint maxstatements: 25 */
 
+        /* jshint maxstatements: false */
         show: function() {
-            var tbody_node;
             var yo_id = 'yo-' + cfg.dp_id_name;
             var root_node = document.getElementById(cfg.dp_id_name);
             var multi_cal = (cfg.months_to_display > 1) ? '-multi' : '';
@@ -565,7 +570,6 @@ var yodatepicker = function(options) {
                 .appendChild(element('table', {id: yo_id, klass: 'yo-content'}))
                 .appendChild(element('tbody')).appendChild(element('tr'))
                 .appendChild(element('td'));
-
 
             this.create_month_calendar({
                 td_node: td_node,
@@ -650,7 +654,9 @@ var yodatepicker = function(options) {
                          '.onclick = function() { select_date(' +
                           mmtmp + ',' + ddtmp + ',' + yytmp + '); };';
                 if(document.getElementById(t_id)) {
+                    /* jshint evil: true */
                     eval(s);
+                    /* jshint evil: false */
                 }
             }
 
@@ -668,13 +674,16 @@ var yodatepicker = function(options) {
                          '.onclick = function() ' + '{ select_date(' +
                          mmtmp + ',' + ddtmp + ',' + yytmp + '); };';
                 if(document.getElementById(t_id)) {
+                    /* jshint evil: true */
                     eval(s);
+                    /* jshint evil: false */
                 }
             }
 
             return true;
         }
     };
+        /* jshint maxstatements: 25 */
 
     return _yodatepicker;
 };

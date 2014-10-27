@@ -18,42 +18,6 @@ var element = function(_name, _attrs) {
     return(node);
 };
 
-/* jshint maxstatements: false */
-var build_dom = function() {
-    console.log('--> build_dom() fired!');
-
-    var dp_id_name = 'dp_start_date';
-
-    var root_node = document.getElementById(dp_id_name);
-    var tbody_node, tbody_tr_node;
-    var yo_id = 'yo-' + dp_id_name;
-
-    if(!root_node) { console.log('root_node is invalid'); return; }
-
-    tbody_node = root_node.appendChild(element('div', {id: dp_id_name, klass: 'yo-container'}))
-                      .appendChild(element('table', {id: yo_id, klass: 'yo-content'}))
-                      .appendChild(element('tbody'))
-                      .appendChild(element('tr'))
-                      .appendChild(element('td'))
-                      .appendChild(element('table', {klass: 'yo-calendar'}))
-                      .appendChild(element('tbody'));
-
-
-    create_title_header(tbody_node);
-
-    create_dow_header(tbody_node);
-
-    create_week(tbody_node);
-
-    // create the days
-    for(var week = 1; week <=4; week++) {
-        var tbody_tr_node = tbody_node.appendChild(element('tr'));
-        for(var day = 1; day <=7; day++) {
-            create_day(tbody_tr_node, day*week, '', 'yo-datepicker-day');
-        }
-    }
-};
-
 var create_day = function(tbody_tr_node, content, _id, _klass) {
     tbody_tr_node.appendChild(element('td', {klass: _klass, id: _id}))
                .appendChild(text(content));
@@ -156,5 +120,40 @@ var create_dow_header = function(tbody_node) {
     tbody_tr_node.appendChild(element('td', {klass: 'yo-calendar-dow-title'}))
                .appendChild(text('S'));  // Saturday
 };
-/* jshint maxstatements: 20 */
 
+/* jshint unused: false */
+function build_dom() {
+    console.log('--> build_dom() fired!');
+
+    var dp_id_name = 'dp_start_date';
+
+    var root_node = document.getElementById(dp_id_name);
+    var tbody_node, tbody_tr_node;
+    var yo_id = 'yo-' + dp_id_name;
+
+    if(!root_node) { console.log('root_node is invalid'); return; }
+
+    tbody_node = root_node.appendChild(element('div', {id: dp_id_name, klass: 'yo-container'}))
+                      .appendChild(element('table', {id: yo_id, klass: 'yo-content'}))
+                      .appendChild(element('tbody'))
+                      .appendChild(element('tr'))
+                      .appendChild(element('td'))
+                      .appendChild(element('table', {klass: 'yo-calendar'}))
+                      .appendChild(element('tbody'));
+
+
+    create_title_header(tbody_node);
+
+    create_dow_header(tbody_node);
+
+    create_week(tbody_node);
+
+    // create the days
+    for(var week = 1; week <=4; week++) {
+        var tbody_tr_node = tbody_node.appendChild(element('tr'));
+        for(var day = 1; day <=7; day++) {
+            create_day(tbody_tr_node, day*week, '', 'yo-datepicker-day');
+        }
+    }
+}
+/* jshint unused: true */
