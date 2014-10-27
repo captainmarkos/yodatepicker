@@ -16,9 +16,6 @@ module.exports = function(grunt) {
                       'app/js/{,*/}*.js']
             }
         },
-        nodeunit: {
-            files: ['test/**/*_test.js']
-        },
         // Test settings
         karma: {
             unit: {
@@ -35,22 +32,17 @@ module.exports = function(grunt) {
             jsTest: {
                 files: ['test/unit/*.js'],
                 tasks: ['jshint:all', 'karma']
-            },
-            lib_test: {
-                files: '<%= jshint.lib_test.src %>',
-                tasks: ['jshint:lib_test', 'nodeunit']
             }
         }
     });
 
     // These plugins provide necessary tasks.
-    grunt.loadNpmTasks('grunt-contrib-nodeunit');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
 
     // Default task.
-    grunt.registerTask('default', ['jshint', 'nodeunit']);
+    grunt.registerTask('default', ['jshint']);
 
     grunt.registerTask('test', 'runs jshint and karma',
         function(test) {
