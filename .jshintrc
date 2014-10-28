@@ -25,7 +25,7 @@
   "maxlen": false,
   "maxparams": 4,
   "maxdepth": 4,
-  "maxstatements": 25,
+  "maxstatements": 28,
   "globals": {
       "_": false,
       "$": false

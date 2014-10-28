@@ -1,0 +1,26 @@
+{
+  "name": "yodatepicker",
+  "version": "1.0.0",
+  "description": "A simple datapicker with zero dependencies.",
+  "homepage": "https://github.com/captainmarkos/yodatepicker",
+  "authors": [
+    "captainmarkos@gmail.com"
+  ],
+  "license": "MIT",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:captainmarkos/yodatepicker.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "app/vendor"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "google-code-prettify": "~1.0.3"
+  }
+}

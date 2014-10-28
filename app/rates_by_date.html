@@ -4,28 +4,78 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <script type="text/javascript" src="js/yodatepicker.js"></script>
-<link type="text/css" rel="stylesheet" href="styles/yodatepicker.css" />
-<link type="text/css" rel="stylesheet" href="styles/yodatepicker-multi.css" />
+<link type="text/css" rel="stylesheet" href="styles/rates-calendar.css" />
 <script type="text/javascript">
 
-    // The onDateSelected and onClose parameters are callback functions.
+    // Perhaps some repsonse form some an API.
+    var response = [
+        { rate: { date: '2014-11-12', price: '12.00' }},
+        { rate: { date: '2014-11-13', price: '13.00' }},
+        { rate: { date: '2014-11-14', price: '14.00' }},
+        { rate: { date: '2014-11-15', price: '209.00' }},
+        { rate: { date: '2014-11-16', price: '209.00' }},
+        { rate: { date: '2014-11-17', price: '209.00' }},
+        { rate: { date: '2014-11-18', price: '209.00' }},
+        { rate: { date: '2014-11-19', price: '209.00' }},
+        { rate: { date: '2014-11-20', price: '209.00' }},
+        { rate: { date: '2014-11-21', price: '209.00' }},
+        { rate: { date: '2014-11-22', price: '209.00' }},
+        { rate: { date: '2014-11-23', price: '209.00' }},
+        { rate: { date: '2014-11-24', price: '209.00' }},
+        { rate: { date: '2014-11-25', price: '209.00' }},
+        { rate: { date: '2014-11-26', price: '209.00' }},
+        { rate: { date: '2014-11-27', price: '209.00' }},
+        { rate: { date: '2014-11-28', price: '28.00' }},
+        { rate: { date: '2014-11-29', price: '29.00' }},
+        { rate: { date: '2014-11-30', price: '30.00' }},
+        { rate: { date: '2014-12-01', price: '1.00' }},
+        { rate: { date: '2014-12-02', price: '2.00' }},
+        { rate: { date: '2014-12-03', price: '3.00' }},
+        { rate: { date: '2014-12-04', price: '4.00' }}
+    ];
 
-    var checkin_datepicker = yodatepicker({
-        dp_id_name: 'dp_start_date',           // selector id where to display the datepicker
-        id_name: 'start_date',                 // selector id where to populate a selected date
-        max_date: '1Y',
-        min_date: '0',
-        locale: 'en',
-        close_button: true                    // display a close button
-    });
+    /* The yodatepicker needs it in this format:
+    var cell_content = [
+        { '10_28_2014': '209.00' },
+        { '10_29_2014': '189.00' },
+        { '10_30_2014': '169.00' },
+        { '11_1_2014' : '169.00' },
+        { '11_2_2014' : '169.00' },
+        { '11_3_2014' : '169.00' },
+        { '11_4_2014' : '169.00' },
+        { '11_5_2014' : '169.00' },
+        { '11_6_2014' : '169.00' }
+    ];
+    */
 
-    var checkout_datepicker = yodatepicker({
-        dp_id_name: 'dp_end_date',             // selector id where to display the datepicker
-        id_name: 'end_date',                   // selector id where to populate a selected date
-        locale: 'en',
-        min_date: new Date('09/15/2014'),
-        onDateSelected: function() {alert("onDateSelected callback");}
-    });
+    var convert_to_yo_cell_format = function(response) {
+        var key, value, data = [];
+        for(var i = 0; i < response.length; i++) {
+            // NOTE: The key must be a string representing the date
+            // that the value is to used.  The format of key is:
+            // Date.getMonth() + '_' + Date.getDate() + '_' + Date.getFullYear()
+            //
+            try {
+                // The rate date from the response should be YYYY-MM-DD format.
+                var parts = response[i].rate.date.split('-');
+                var rate_date = new Date(parts[0], (parts[1] -1), parts[2]);
+
+                key = rate_date.getMonth() + '_' + rate_date.getDate() + '_' +
+                      rate_date.getFullYear();
+                value = response[i].rate.price;
+
+                data[i] = {};
+                data[i][key] = add_rate_style(value);
+            } catch(e) {
+                console.log(e.toString());
+            }
+        }
+        return data;
+    };
+
+    var add_rate_style = function(value) {
+        return '<div class="yo-rate-item">$' + value + '</div>';
+    };
 
     var double_datepicker = yodatepicker({
         dp_id_name: 'dp_price_calendar',
@@ -34,7 +84,8 @@
         close_onselect: false,      // display the calendar all the time
         max_date: '3M',
         min_date: new Date(),
-        locale: 'en'
+        locale: 'en',
+        cell_content: convert_to_yo_cell_format(response)
     });
 
 </script>
@@ -88,57 +139,7 @@ That's right, not even jQuery is used.  Just good ol' fashion javascript!
 
 <br />
 <br />
-<table>
-    <tr>
-        <td>
-            <div style="display: inline;" class="myfont1">
-            Check In:</div>
-        </td>
-        <td style="padding-right: 20px;">
-            <input type="text" name="start_date" id="start_date" value="mm/dd/yyyy" size="12" />
-            <img class="jrdp_calendar_icon" src="images/icon_calendar.gif" onclick="checkin_datepicker.show();" />
-            <div class="yo-container" id="dp_start_date"></div>
-        </td>
-        <td>
-            <pre class="prettyprint lang-js" style="background-color: #ffffff;">
-var checkin_datepicker = yodatepicker({
-    dp_id_name: 'dp_start_date', // selector id where to display the datepicker
-    id_name: 'start_date',       // selector id where to populate a selected date
-    max_date: '1Y',
-    min_date: '0',
-    locale: 'en'
-});
-            </pre>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div style="display: inline;" class="myfont1">
-            Check Out:</div>
-        </td>
-        <td style="padding-right: 20px;">
-            <input type="text" name="end_date" id="end_date" value="mm/dd/yyyy" size="12" />
-            <img class="jrdp_calendar_icon" src="images/icon_calendar.gif" onclick="checkout_datepicker.show();" />
-            <div class="yo-container" id="dp_end_date"></div>
-        </td>
-        <td>
-            <pre class="prettyprint lang-js" style="background-color: #ffffff;">
-var checkout_datepicker = yodatepicker({
-    dp_id_name: 'dp_end_date',
-    id_name: 'end_date',
-    locale: 'en',
-    min_date: new Date('09/15/2014'),  // min date that can be selected
-    onDateSelected: function() {alert("onDateSelected callback");}
-});
-            </pre>
-        </td>
-    </tr>
-</table>
 
-
-<br /><br />
-<hr style="height: 1px; color: #cd0000;" />
-<br />
 <center>
     <div id="dp_price_calendar"></div>
     <br />

@@ -1,26 +1,5 @@
 'use strict';
 
-// USAGE:
-//
-// var options = {
-//     dp_id_name: 'mydiv_id',
-//     id_name: 'id_name',
-//     locale: 'en',
-//     onDateSelected: function() {},
-//     onClose: function() {},
-//     months_to_display: 1,
-//     close_onselect: boolean,
-//     max_date: '1Y',
-//     min_date: '1Y'
-// }
-//
-// var checkin_datepicker = yodatepicker(options);
-// var checkout_datepicker = yodatepicker(options);
-//
-// <img src="images/icon_calendar.gif" onclick="checkin_datepicker.show();" />
-// <img src="images/icon_calendar.gif" onclick="checkout_datepicker.show();" />
-//
-
 /* jshint unused: false */
 var yodatepicker = function(options) {
 /* jshint unused: true */
@@ -66,6 +45,11 @@ var yodatepicker = function(options) {
             // Min date user can scroll backward to.
             min_date: get_min_date((opts.min_date || '*')),
 
+            // An array of objects with dates as the key and the content
+            // as the value where the value is the content to be included
+            // for that date.
+            cell_content: opts.cell_content || [],
+
             // The current date.
             currdate: new Date()
         };
@@ -109,31 +93,54 @@ var yodatepicker = function(options) {
         total_days: 0,
         offset: 0,
 
+        more_content: function(key) {
+            // Returns the content for a cell if it is present.
+            // Otherwise return an empty string.
+            //
+            // TODO: look into making more efficient and faster.
+            // Perhaps a binary search?  See here:
+            // http://en.wikipedia.org/wiki/Binary_search_algorithm#Numerical_difficulties
+
+            for(var i = 0; i < cfg.cell_content.length; i++) {
+                if(cfg.cell_content[i][key]) {
+                    return cfg.cell_content[i][key];
+                }
+            }
+            return '';
+        },
+
         markup: function(params) {
             var tr_node = params.tr_node;
             var td_class = 'yo-datepicker-day-empty' + params.multi_cal;
 
             if(this.offset >= this.first_dow) {
                 var tmp_date = new Date(this.year, this.month, this.day);
-                var content = this.day;
-                var td_id = params.yo_id + '_' +
-                            this.month+ '_' + this.day + '_' + this.year;
+                var key = this.month + '_' + this.day + '_' + this.year;
+                var td_id = params.yo_id + '_' + key;
 
                 if(tmp_date.valueOf() > cfg.max_date.valueOf()) {
                     td_class = 'yo-datepicker-day-noselect' + params.multi_cal;
-                    _yodatepicker.create_day(tr_node, content, td_id, td_class);
+                    _yodatepicker.create_day(tr_node, this.day, td_id, td_class);
                 }
                 else if(tmp_date.valueOf() < cfg.min_date.valueOf()) {
                     td_class = 'yo-datepicker-day-noselect' + params.multi_cal;
-                    _yodatepicker.create_day(tr_node, content, td_id, td_class);
+                    _yodatepicker.create_day(tr_node, this.day, td_id, td_class);
                 }
                 else if(tmp_date.valueOf() === cfg.today.valueOf()) {
                     td_class = 'yo-datepicker-day-current' + params.multi_cal;
-                    _yodatepicker.create_day(tr_node, content, td_id, td_class);
+                    _yodatepicker.create_day(tr_node, this.day, td_id, td_class);
+                    var tmp_elem = document.getElementById(td_id);
+                    if(tmp_elem) {
+                        tmp_elem.innerHTML += this.more_content(key);
+                    }
                 }
                 else {
                     td_class = 'yo-datepicker-day' + params.multi_cal;
-                    _yodatepicker.create_day(tr_node, content, td_id, td_class);
+                    _yodatepicker.create_day(tr_node, this.day, td_id, td_class);
+                    var tmp_elem = document.getElementById(td_id);
+                    if(tmp_elem) {
+                        tmp_elem.innerHTML += this.more_content(key);
+                    }
                 }
 
                 if(this.day >= this.total_days) { this.first_dow = 999; }
@@ -198,7 +205,7 @@ var yodatepicker = function(options) {
     };
 
     var text = function(_text) {
-        // Create and set a text nodel and return it.
+        // Create and set a text node and return it.
         var node = document.createTextNode(_text);
         return node;
     };
