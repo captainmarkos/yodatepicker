@@ -50,6 +50,9 @@ var yodatepicker = function(options) {
             // for that date.
             cell_content: opts.cell_content || [],
 
+            // Sets the day of week name: single_name, short_name, full_name.
+            dow_heading: opts.dow_heading || 'single_name',
+
             // The current date.
             currdate: new Date()
         };
@@ -63,7 +66,7 @@ var yodatepicker = function(options) {
         cfg.month_names = get_month_names(cfg.locale);
 
         // array of day of week names
-        cfg.day_names = get_dow_names(cfg.locale);
+        cfg.day_names = get_dow_names(cfg.locale, cfg.dow_heading);
 
         // Keeps track of the month the datepicker is on and will
         // not go past the min_date month (if set).
@@ -258,17 +261,80 @@ var yodatepicker = function(options) {
         return(yr % 400 === 0) || (yr % 4 === 0 && yr % 100 !== 0);
     };
 
-    var get_dow_names = function(locale) {
-        if(locale === undefined || locale === null) { locale = 'en'; }
-
-        if(locale === 'es' || locale === 'fr') {
-            return(['D', 'L', 'M', 'M', 'J', 'V', 'S']);
+    var get_dow_names = function(locale, dow_heading) {
+        var names = [];
+        switch(dow_heading) {
+            case 'single_name':
+                names = dow_single_names(locale);
+                break;
+            case 'short_name':
+                names = dow_short_names(locale);
+                break;
+            case 'full_name':
+                names = dow_full_names(locale);
+                break;
+            default:
+                names = dow_single_names(locale);
         }
-        else if(locale === 'de') {
-            return(['S', 'M', 'D', 'M', 'D', 'F', 'S']);
-        }
+        return names;
+    };
 
-        return(['S', 'M', 'T', 'W', 'T', 'F', 'S']);
+    var dow_single_names = function(locale) {
+        var names = [];
+        switch(locale) {
+            case 'es':
+                names = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+                break;
+            case 'fr':
+                names = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+                break;
+            case 'de':
+                names = ['S', 'M', 'D', 'M', 'D', 'F', 'S'];
+                break;
+            default:
+                names = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+        }
+        return names;
+    };
+
+    var dow_short_names = function(locale) {
+        var names = [];
+        switch(locale) {
+            case 'es':
+                names = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
+                break;
+            case 'fr':
+                names = ['Dim', 'Lu', 'Ma', 'Me', 'Jeu', 'Vend', 'Sam'];
+                break;
+            case 'de':
+                names = ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'];
+                break;
+            default:
+                names = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        }
+        return names;
+    };
+
+    var dow_full_names = function(locale) {
+        var names = [];
+        switch(locale) {
+            case 'es':
+                names = ['Domingo', 'Lunes', 'Martes', 'Miercoles',
+                         'Jueves', 'Viernes', 'Sabado'];
+                break;
+            case 'fr':
+                names = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi',
+                         'Jeudi', 'Vendredi', 'Samedi'];
+                break;
+            case 'de':
+                names = ['zondag', 'maandag', 'dinsdag', 'woensdag',
+                         'donderdag', 'vrijdag', 'zaterdag'];
+                break;
+            default:
+                names = ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
+                         'Thursday', 'Friday', 'Saturday'];
+        }
+        return names;
     };
 
     var get_month_names = function(locale) {
@@ -443,12 +509,12 @@ var yodatepicker = function(options) {
             return true;
         },
 
-        create_dow_header: function(tbody_node) {
+        create_dow_header: function(params) {
             // Creates the day-of-week header for yodatepicker.
             try {
-                if(!tbody_node) { throw new YoException(tbody_node); }
-                var tr = tbody_node.appendChild(element('tr'));
-                var td_class = 'yo-calendar-dow-title';
+                if(!params.tbody) { throw new YoException(params.tbody); }
+                var tr = params.tbody.appendChild(element('tr'));
+                var td_class = 'yo-calendar-dow-title' + params.multi_cal;
                 for(var i = 0; i < cfg.day_names.length; i++) {
                     tr.appendChild(element('td', {klass: td_class}))
                       .appendChild(text(cfg.day_names[i]));
@@ -536,7 +602,10 @@ var yodatepicker = function(options) {
                     yo_id: params.yo_id
                 });
 
-                this.create_dow_header(tbody_node);
+                this.create_dow_header({
+                    tbody: tbody_node,
+                    multi_cal: params.multi_cal
+                });
 
                 var weeks_created = 0;
                 for(var j = 0; j < 6; j++) {
