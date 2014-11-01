@@ -150,15 +150,17 @@ That's right, not even jQuery is used.  Just good ol' fashion javascript!
 </center>
 
 <pre class="prettyprint lang-js" style="background-color: #ffffff;">
-var double_datepicker = yodatepicker({
-    dp_id_name: 'dp_price_calendar',
-    id_name: 'price_calendar',
-    months_to_display: 2,       // display two months
-    close_onselect: false,      // display the calendar all the time
-    max_date: '3M',             // max date that can be selected = today + 3 months
-    min_date: new Date(),       // min date that can be selected = today
-    locale: 'en'
-});
+    var double_datepicker = yodatepicker({
+        dp_id_name: 'dp_price_calendar',
+        id_name: 'price_calendar',
+        dow_heading: 'short_name',
+        months_to_display: 2,       // display two months
+        close_onselect: false,      // display the calendar all the time
+        max_date: '3M',             // max date that can be selected = today + 3 months
+        min_date: new Date(),       // min date that can be selected = today
+        locale: 'en',
+        cell_content: convert_to_yo_cell_format(response)
+    });
 </pre>
 <br />
 
