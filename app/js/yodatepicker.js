@@ -53,6 +53,19 @@ var yodatepicker = function(options) {
             // Sets the day of week name: single_name, short_name, full_name.
             dow_heading: opts.dow_heading || 'single_name',
 
+            // Tells yodatepicker that the user wants to use a date range.
+            // The first date selected will become the begin date and then
+            // the second date selected will become the end date.
+            date_range: opts.date_range || false,
+
+            // If using date_range then this is the element id where to
+            // populate the selected start date.
+            begin_id_name: opts.begin_id_name || '',
+
+            // If using date_range then this is the element id where to
+            // populate the selected end date.
+            end_id_name: opts.end_id_name || '',
+
             // The current date.
             currdate: new Date()
         };
@@ -85,7 +98,30 @@ var yodatepicker = function(options) {
         // Limit the number of months to display for a multi-month datepicker.
         cfg.months_to_display = (cfg.months_to_display > cfg.MAX_CALENDARS) ?
                                cfg.MAX_CALENDARS : cfg.months_to_display;
+
+        // This feature is only applicable when close_onselect is false and
+        // months_to_display is greater than 1.
+        cfg.date_range = (cfg.close_onselect === false &&
+                          cfg.months_to_display > 1) ? cfg.date_range : false;
+
+        // Indicator for which date the user is selecting when date_range on.
+        cfg.begin_end = cfg.date_range ? {begin: true, end: false} : null;
+
         return cfg;
+    };
+
+    var toggle_begin_end = function() {
+        if(cfg.date_range) {
+            if(cfg.begin_end.begin) {
+                cfg.begin_end.begin = false;
+                cfg.begin_end.end = true;
+            } else {
+                cfg.begin_end.begin = true;
+                cfg.begin_end.end = false;
+            }
+            return true;
+        }
+        return false;
     };
 
     var citem = {
@@ -159,7 +195,14 @@ var yodatepicker = function(options) {
     var close_datepicker = function() {
         if(cfg.close_onselect) {
             document.getElementById(cfg.dp_id_name).innerHTML = '';
-            if(cfg.id_name !== '') {
+
+            if(cfg.id_name !== '' || cfg.begin_end) {
+                var elem = cfg.id_name;
+                if(cfg.date_range) {
+                    if(cfg.begin_end.begin) { elem = cfg.begin_id_name; }
+                    else                    { elem = cfg.end_id_name; }
+                }
+
                 /* jshint evil: true */
                 eval('document.getElementById("' + cfg.id_name + '").focus();');
                 /* jshint evil: false */
@@ -172,9 +215,9 @@ var yodatepicker = function(options) {
     /* jshint unused: false */
     var select_date = function(_mm, _dd, _yy) {
         try {
-            var the_month, the_day;
+            var the_month, the_day, elem;
             if(_mm === undefined || _dd === undefined || _yy === undefined) {
-                throw new YoException('undefined paramter');
+                throw new YoException('undefined paramter(s)');
             }
 
             _mm++;    // Note: _mm is the month number 0 - 11 so always add 1.
@@ -185,17 +228,25 @@ var yodatepicker = function(options) {
             if(_dd < 10) { the_day = '0' + _dd;  }
             else         { the_day = _dd.toString();   }
 
-            /* jshint evil: true */
-            if(cfg.id_name !== '') {
+            if(cfg.id_name !== '' || cfg.begin_end) {
+                if(cfg.date_range) {
+                    if(cfg.begin_end.begin) {
+                        elem = cfg.begin_id_name;
+                        document.getElementById(cfg.end_id_name).value = '';
+                    } else { elem = cfg.end_id_name; }
+                    toggle_begin_end();
+                } else { elem = cfg.id_name; }
+
+                /* jshint evil: true */
                 if(cfg.locale === 'en') {
-                    eval('document.getElementById("' + cfg.id_name +
+                    eval('document.getElementById("' + elem +
                          '").value = the_month + "/" + the_day + "/" + _yy');
                 } else {
-                    eval('document.getElementById("' + cfg.id_name +
+                    eval('document.getElementById("' + elem +
                          '").value = the_day + "/" + the_month + "/" + _yy');
                 }
+                /* jshint evil: false */
             }
-            /* jshint evil: false */
 
             if(cfg.ondateselected_callback) { cfg.ondateselected_callback(); }
             close_datepicker();

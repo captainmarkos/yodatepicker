@@ -9,9 +9,9 @@
 
     // Perhaps some repsonse form some an API.
     var response = [
-        { rate: { date: '2014-11-12', price: '12.00' }},
-        { rate: { date: '2014-11-13', price: '13.00' }},
-        { rate: { date: '2014-11-14', price: '14.00' }},
+        { rate: { date: '2014-11-12', price: '120.00' }},
+        { rate: { date: '2014-11-13', price: '130.00' }},
+        { rate: { date: '2014-11-14', price: '140.00' }},
         { rate: { date: '2014-11-15', price: '209.00' }},
         { rate: { date: '2014-11-16', price: '209.00' }},
         { rate: { date: '2014-11-17', price: '209.00' }},
@@ -25,13 +25,13 @@
         { rate: { date: '2014-11-25', price: '209.00' }},
         { rate: { date: '2014-11-26', price: '209.00' }},
         { rate: { date: '2014-11-27', price: '209.00' }},
-        { rate: { date: '2014-11-28', price: '28.00' }},
-        { rate: { date: '2014-11-29', price: '29.00' }},
-        { rate: { date: '2014-11-30', price: '30.00' }},
-        { rate: { date: '2014-12-01', price: '1.00' }},
-        { rate: { date: '2014-12-02', price: '2.00' }},
-        { rate: { date: '2014-12-03', price: '3.00' }},
-        { rate: { date: '2014-12-04', price: '4.00' }}
+        { rate: { date: '2014-11-28', price: '280.00' }},
+        { rate: { date: '2014-11-29', price: '290.00' }},
+        { rate: { date: '2014-11-30', price: '300.00' }},
+        { rate: { date: '2014-12-01', price: '100.00' }},
+        { rate: { date: '2014-12-02', price: '200.00' }},
+        { rate: { date: '2014-12-03', price: '300.00' }},
+        { rate: { date: '2014-12-04', price: '400.00' }}
     ];
 
     /* The yodatepicker needs it in this format:
@@ -40,11 +40,7 @@
         { '10_29_2014': '189.00' },
         { '10_30_2014': '169.00' },
         { '11_1_2014' : '169.00' },
-        { '11_2_2014' : '169.00' },
-        { '11_3_2014' : '169.00' },
-        { '11_4_2014' : '169.00' },
-        { '11_5_2014' : '169.00' },
-        { '11_6_2014' : '169.00' }
+        { '11_2_2014' : '169.00' }
     ];
     */
 
@@ -79,7 +75,9 @@
 
     var double_datepicker = yodatepicker({
         dp_id_name: 'dp_price_calendar',
-        id_name: 'price_calendar',
+        date_range: true,
+        begin_id_name: 'price_calendar_start',
+        end_id_name: 'price_calendar_end',
         dow_heading: 'short_name',
         months_to_display: 2,       // display two months
         close_onselect: false,      // display the calendar all the time
@@ -145,19 +143,22 @@ That's right, not even jQuery is used.  Just good ol' fashion javascript!
     <div id="dp_price_calendar"></div>
     <br />
     <br />
-    Check-In: <input type="text" id="price_calendar" value="" />
+    Check-In: <input type="text" id="price_calendar_start" value="" />
+    Check-Out: <input type="text" id="price_calendar_end" value="" />
     <script type="text/javascript">double_datepicker.show();</script>
 </center>
 
 <pre class="prettyprint lang-js" style="background-color: #ffffff;">
     var double_datepicker = yodatepicker({
         dp_id_name: 'dp_price_calendar',
-        id_name: 'price_calendar',
+        date_range: true,
+        begin_id_name: 'price_calendar_start',
+        end_id_name: 'price_calendar_end',
         dow_heading: 'short_name',
         months_to_display: 2,       // display two months
         close_onselect: false,      // display the calendar all the time
-        max_date: '3M',             // max date that can be selected = today + 3 months
-        min_date: new Date(),       // min date that can be selected = today
+        max_date: '3M',
+        min_date: new Date(),
         locale: 'en',
         cell_content: convert_to_yo_cell_format(response)
     });
