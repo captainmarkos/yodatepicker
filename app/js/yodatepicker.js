@@ -132,17 +132,29 @@ var yodatepicker = function(options) {
         total_days: 0,
         offset: 0,
 
-        more_content: function(key) {
+        jrs_more_content: function(key) {
             // Returns the content for a cell if it is present.
-            // Otherwise return an empty string.
+            // Otherwise return an alternate string.
             //
-            // TODO: look into making more efficient and faster.
-            // Perhaps a binary search?  See here:
-            // http://en.wikipedia.org/wiki/Binary_search_algorithm#Numerical_difficulties
+            // NOTE: key is formatted like '0_25_2015' so here we'll
+            // reformat that to look like '2015-01-25'.
+            //
 
+            var items = key.split('_');
+            if(!items) { return ''; }
+
+            items[0] = parseInt(items[0], 10) +1;
+            var key_month = (items[0] < 10) ? ('0' + items[0]) : items[0];
+            var key_day = (items[1] < 10) ? ('0' + items[1]) : items[1];
+            var content_date = items[2] + '-' + key_month + '-' + key_day;
+
+            // NOTE: This loop is inefficient, however for our immediate
+            // purposes, cell_content is only going to have 365 elements
+            // which is one year of rates.
             for(var i = 0; i < cfg.cell_content.length; i++) {
-                if(cfg.cell_content[i][key]) {
-                    return cfg.cell_content[i][key];
+                if(cfg.cell_content[i].date === content_date) {
+                    var value = cfg.cell_content[i].price;
+                    return '<div class="yo-rate-item">$' + value + '</div>';
                 }
             }
             return '';
@@ -170,7 +182,7 @@ var yodatepicker = function(options) {
                     _yodatepicker.create_day(tr_node, this.day, td_id, td_class);
                     var tmp_elem = document.getElementById(td_id);
                     if(tmp_elem) {
-                        tmp_elem.innerHTML += this.more_content(key);
+                        tmp_elem.innerHTML += this.jrs_more_content(key);
                     }
                 }
                 else {
@@ -178,7 +190,7 @@ var yodatepicker = function(options) {
                     _yodatepicker.create_day(tr_node, this.day, td_id, td_class);
                     var tmp_elem = document.getElementById(td_id);
                     if(tmp_elem) {
-                        tmp_elem.innerHTML += this.more_content(key);
+                        tmp_elem.innerHTML += this.jrs_more_content(key);
                     }
                 }
 
