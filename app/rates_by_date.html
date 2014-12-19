@@ -35,10 +35,18 @@
             month = month < 10 ? ('0' + month) : month;
         var day = (d.getDate() < 10) ? ('0' + d.getDate()) : d.getDate();
 
-        response.push({
-            date: year + '-' + month + '-' + day,
-            price: price.toString() + '.99'
-        });
+        // create some no availability
+        if(i > 10 && i < 20) {
+            response.push({
+                date: year + '-' + month + '-' + day,
+                price: ''
+            });
+        } else {
+            response.push({
+                date: year + '-' + month + '-' + day,
+                price: price.toString() + '.99'
+            });
+        }
 
         price++;
     }

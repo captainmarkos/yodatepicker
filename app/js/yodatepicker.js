@@ -141,7 +141,8 @@ var yodatepicker = function(options) {
             //
 
             var items = key.split('_');
-            if(!items) { return ''; }
+            var no_availability = '<div class="yo-rate-item">N/A</div>';
+            if(!items) { return no_availability; }
 
             items[0] = parseInt(items[0], 10) +1;
             var key_month = (items[0] < 10) ? ('0' + items[0]) : items[0];
@@ -154,10 +155,11 @@ var yodatepicker = function(options) {
             for(var i = 0; i < cfg.cell_content.length; i++) {
                 if(cfg.cell_content[i].date === content_date) {
                     var value = cfg.cell_content[i].price;
+                    if(!value) { return no_availability; }
                     return '<div class="yo-rate-item">$' + value + '</div>';
                 }
             }
-            return '';
+            return no_availability;
         },
 
         markup: function(params) {
