@@ -5,6 +5,7 @@
 
 <script type="text/javascript" src="js/yodatepicker.js"></script>
 <link type="text/css" rel="stylesheet" href="styles/rates-calendar.css" />
+<link type="text/css" rel="stylesheet" href="vendor/fontawesome/css/font-awesome.css" />
 <script type="text/javascript">
 
     // Some helper functions so I can make an array of dates.
@@ -71,6 +72,8 @@
         max_date: '1Y',
         min_date: new Date(),
         locale: 'en',
+        prev_fa_class: 'fa fa-chevron-left',
+        next_fa_class: 'fa fa-chevron-right',
         cell_content: response
     });
 

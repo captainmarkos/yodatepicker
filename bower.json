@@ -19,7 +19,9 @@
     "test",
     "app/vendor"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "fontawesome": "~4.2.0"
+  },
   "devDependencies": {
     "google-code-prettify": "~1.0.3"
   }

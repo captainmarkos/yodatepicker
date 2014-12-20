@@ -48,7 +48,7 @@ var yodatepicker = function(options) {
             // An array of objects with dates as the key and the content
             // as the value where the value is the content to be included
             // for that date.
-            cell_content: opts.cell_content || [],
+            cell_content: opts.cell_content || null,
 
             // Sets the day of week name: single_name, short_name, full_name.
             dow_heading: opts.dow_heading || 'single_name',
@@ -67,7 +67,11 @@ var yodatepicker = function(options) {
             end_id_name: opts.end_id_name || '',
 
             // The current date.
-            currdate: new Date()
+            currdate: new Date(),
+
+            // CSS class used for previous and next navigation (fontawesome).
+            prev_fa_class: opts.prev_fa_class || '',
+            next_fa_class: opts.next_fa_class || ''
         };
 
         // TODO: Clean up this below.
@@ -183,7 +187,7 @@ var yodatepicker = function(options) {
                     td_class = 'yo-datepicker-day-current' + params.multi_cal;
                     _yodatepicker.create_day(tr_node, this.day, td_id, td_class);
                     var tmp_elem = document.getElementById(td_id);
-                    if(tmp_elem) {
+                    if(tmp_elem && cfg.cell_content) {
                         tmp_elem.innerHTML += this.jrs_more_content(key);
                     }
                 }
@@ -191,7 +195,7 @@ var yodatepicker = function(options) {
                     td_class = 'yo-datepicker-day' + params.multi_cal;
                     _yodatepicker.create_day(tr_node, this.day, td_id, td_class);
                     var tmp_elem = document.getElementById(td_id);
-                    if(tmp_elem) {
+                    if(tmp_elem && cfg.cell_content) {
                         tmp_elem.innerHTML += this.jrs_more_content(key);
                     }
                 }
@@ -551,9 +555,17 @@ var yodatepicker = function(options) {
                 var prev_style = 'yo-previous-month' + params.multi_cal;
                 var prev_id = yo_id + '-prev-month' + params.multi_cal + '-' +
                               params.calendar_number;
-                tr.appendChild(element('td', {klass: prev_style, colspan: '1'}))
-                  .appendChild(element('span', {id: prev_id}))
-                  .appendChild(text('<'));
+                if(cfg.prev_fa_class) {
+                    tr.appendChild(element('td', {klass: prev_style, colspan: '1'}))
+                      .appendChild(element('span', {id: prev_id}))
+                      .appendChild(element('i', {klass: cfg.prev_fa_class}));
+                } else {
+                    tr.appendChild(element('td', {klass: prev_style, colspan: '1'}))
+                      .appendChild(element('span', {id: prev_id}))
+                      .appendChild(text('<'));
+                }
+//<i class="fa fa-chevron-left"></i>
+
 
                 // month name element
                 var text_style = 'yo-calendar-month' + params.multi_cal;
@@ -564,9 +576,15 @@ var yodatepicker = function(options) {
                 var next_style = 'yo-next-month' + params.multi_cal;
                 var next_id = yo_id + '-next-month' + params.multi_cal + '-' +
                               params.calendar_number;
-                tr.appendChild(element('td', {klass: next_style, colspan: '1'}))
-                  .appendChild(element('span', {id: next_id}))
-                  .appendChild(text('>'));
+                if(cfg.next_fa_class) {
+                    tr.appendChild(element('td', {klass: next_style, colspan: '1'}))
+                      .appendChild(element('span', {id: next_id}))
+                      .appendChild(element('i', {klass: cfg.next_fa_class}));
+                } else {
+                    tr.appendChild(element('td', {klass: next_style, colspan: '1'}))
+                      .appendChild(element('span', {id: next_id}))
+                      .appendChild(text('>'));
+                }
             } catch(e) {
                 console.log(e.toString());
                 return false;

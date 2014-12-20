@@ -6,6 +6,7 @@
 <script type="text/javascript" src="js/yodatepicker.js"></script>
 <link type="text/css" rel="stylesheet" href="styles/yodatepicker.css" />
 <link type="text/css" rel="stylesheet" href="styles/yodatepicker-multi.css" />
+<link type="text/css" rel="stylesheet" href="vendor/fontawesome/css/font-awesome.css" />
 <script type="text/javascript">
 
     // The onDateSelected and onClose parameters are callback functions.
@@ -34,7 +35,9 @@
         close_onselect: false,      // display the calendar all the time
         max_date: '3M',
         min_date: new Date(),
-        locale: 'en'
+        locale: 'en',
+        prev_fa_class: 'fa fa-chevron-left',
+        next_fa_class: 'fa fa-chevron-right'
     });
 
 </script>
