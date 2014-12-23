@@ -71,7 +71,17 @@ var yodatepicker = function(options) {
 
             // CSS class used for previous and next navigation (fontawesome).
             prev_fa_class: opts.prev_fa_class || '',
-            next_fa_class: opts.next_fa_class || ''
+            next_fa_class: opts.next_fa_class || '',
+
+            // Custom colors for certain items.
+            prev_month_nav_color: opts.prev_month_nav_color || '',
+            next_month_nav_color: opts.next_month_nav_color || '',
+
+            // These four options go together for hovering.
+            day_mouseover_bgcolor: opts.day_mouseover_bgcolor || '',
+            day_mouseover_fgcolor: opts.day_mouseover_fgcolor || '',
+            day_mouseleave_bgcolor: opts.day_mouseleave_bgcolor || '',
+            day_mouseleave_fgcolor: opts.day_mouseleave_fgcolor || ''
         };
 
         // TODO: Clean up this below.
@@ -564,8 +574,6 @@ var yodatepicker = function(options) {
                       .appendChild(element('span', {id: prev_id}))
                       .appendChild(text('<'));
                 }
-//<i class="fa fa-chevron-left"></i>
-
 
                 // month name element
                 var text_style = 'yo-calendar-month' + params.multi_cal;
@@ -713,6 +721,62 @@ var yodatepicker = function(options) {
         },
         /* jshint maxstatements: 25 */
 
+        set_custom_nav_colors: function() {
+            if(cfg.prev_month_nav_color) {
+                var klass_name = 'yo-previous-month-multi';
+                var items = document.getElementsByClassName(klass_name);
+                for(var i = 0; i < items.length; i++) {
+                    items[i].style.color = cfg.prev_month_nav_color;
+                }
+            }
+
+            if(cfg.next_month_nav_color) {
+                var klass_name = 'yo-next-month-multi';
+                var items = document.getElementsByClassName(klass_name);
+                for(var i = 0; i < items.length; i++) {
+                    items[i].style.color = cfg.next_month_nav_color;
+                }
+            }
+        },
+
+        /* jshint loopfunc: true */
+        set_custom_day_colors: function() {
+            var klass_cell = 'yo-datepicker-day-multi';
+            var klass_item = 'yo-rate-item';
+            if(cfg.day_mouseover_bgcolor && cfg.day_mouseover_fgcolor) {
+                // when mouseover this element change colors
+                var items = document.getElementsByClassName(klass_cell);
+                for(var i = 0; i < items.length; i++) {
+                    items[i].onmouseover = function(event) {
+                        var id = event.srcElement.id;
+                        if(!id) { id = event.srcElement.parentElement.id; }
+                        var elem = document.getElementById(id);
+                        if(!elem) { return; }
+                        var day_item = elem.getElementsByClassName(klass_item);
+                        day_item[0].style.color = cfg.day_mouseover_fgcolor;
+                        elem.style.backgroundColor = cfg.day_mouseover_bgcolor;
+                    };
+                }
+            }
+
+            if(cfg.day_mouseleave_bgcolor && cfg.day_mouseleave_fgcolor) {
+                // when mouseleave this element change colors
+                var items = document.getElementsByClassName(klass_cell);
+                for(var i = 0; i < items.length; i++) {
+                    items[i].onmouseleave = function(event) {
+                        var id = event.srcElement.id;
+                        if(!id) { id = event.srcElement.parentElement.id; }
+                        var elem = document.getElementById(id);
+                        if(!elem) { return; }
+                        var day_item = elem.getElementsByClassName(klass_item);
+                        day_item[0].style.color = cfg.day_mouseleave_fgcolor;
+                        elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
+                    };
+                }
+             }
+        },
+        /* jshint loopfunc: false */
+
         /* jshint maxstatements: false */
         show: function() {
             var yo_id = 'yo-' + cfg.dp_id_name;
@@ -735,6 +799,9 @@ var yodatepicker = function(options) {
                 yo_id: yo_id,
                 multi_cal: multi_cal
             });
+
+            this.set_custom_nav_colors();
+            this.set_custom_day_colors();
 
             // Attach event listeners for the previous and next buttons.
             var prev_month_id = yo_id + '-prev-month' + multi_cal + '-';
