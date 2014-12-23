@@ -565,6 +565,7 @@ var yodatepicker = function(options) {
                 var prev_style = 'yo-previous-month' + params.multi_cal;
                 var prev_id = yo_id + '-prev-month' + params.multi_cal + '-' +
                               params.calendar_number;
+
                 if(cfg.prev_fa_class) {
                     tr.appendChild(element('td', {klass: prev_style, colspan: '1'}))
                       .appendChild(element('span', {id: prev_id}))
@@ -592,6 +593,16 @@ var yodatepicker = function(options) {
                     tr.appendChild(element('td', {klass: next_style, colspan: '1'}))
                       .appendChild(element('span', {id: next_id}))
                       .appendChild(text('>'));
+                }
+
+                // suppress inner nav buttons
+                if(params.calendar_number > 0) {
+                    prev_id = 'yo-previous-month-multi';
+                    document.getElementsByClassName(prev_id)[1].innerHTML = '';
+                    document.getElementsByClassName(prev_id)[1].style.cursor = 'default';
+                    next_id = 'yo-next-month-multi';
+                    document.getElementsByClassName(next_id)[0].innerHTML = '';
+                    document.getElementsByClassName(next_id)[0].style.cursor = 'default';
                 }
             } catch(e) {
                 console.log(e.toString());
@@ -812,12 +823,19 @@ var yodatepicker = function(options) {
             // Attach event listeners for the previous and next buttons.
             var prev_month_id = yo_id + '-prev-month' + multi_cal + '-';
             var next_month_id = yo_id + '-next-month' + multi_cal + '-';
+            var elem;
             for(var x = 0; x < cfg.months_to_display; x++) {
-                document.getElementById(prev_month_id + x).onclick = month_dec;
-                document.getElementById(next_month_id + x).onclick = month_inc;
+                elem = document.getElementById(prev_month_id + x);
+                if(elem) {
+                    elem.onclick = month_dec;
+                    elem.style.display = 'block';
+                }
 
-                document.getElementById(prev_month_id + x).style.display = 'block';
-                document.getElementById(next_month_id + x).style.display = 'block';
+                elem = document.getElementById(next_month_id + x);
+                if(elem) {
+                    elem.onclick = month_inc;
+                    elem.style.display = 'block';
+                }
             }
 
             // Attach event listeners to the following events so that the
