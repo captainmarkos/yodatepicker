@@ -760,8 +760,14 @@ var yodatepicker = function(options) {
             }
 
             if(cfg.day_mouseleave_bgcolor && cfg.day_mouseleave_fgcolor) {
+                // initialize (override) the foreground colors
+                var items = document.getElementsByClassName(klass_item);
+                for(var i = 0; i < items.length; i++) {
+                    items[i].style.color = cfg.day_mouseleave_fgcolor;
+                }
+
                 // when mouseleave this element change colors
-                var items = document.getElementsByClassName(klass_cell);
+                items = document.getElementsByClassName(klass_cell);
                 for(var i = 0; i < items.length; i++) {
                     items[i].onmouseleave = function(event) {
                         var id = event.srcElement.id;
