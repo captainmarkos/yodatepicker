@@ -42,6 +42,11 @@
                 date: year + '-' + month + '-' + day,
                 price: ''
             });
+        } else if(i > 2 && i < 6) {
+            response.push({
+                date: year + '-' + month + '-' + day,
+                price: '-1'
+            });
         } else {
             response.push({
                 date: year + '-' + month + '-' + day,

@@ -154,9 +154,16 @@ var yodatepicker = function(options) {
             // reformat that to look like '2015-01-25'.
             //
 
+            var rate_item = function(value) {
+                var rate = parseFloat(value.toString());
+                if(isNaN(rate) || rate < 1) {
+                    return '<div class="yo-rate-item">N/A</div>';
+                }
+                return '<div class="yo-rate-item">$' + value + '</div>';
+            };
+
             var items = key.split('_');
-            var no_availability = '<div class="yo-rate-item">N/A</div>';
-            if(!items) { return no_availability; }
+            if(!items) { return rate_item(-1); }
 
             items[0] = parseInt(items[0], 10) +1;
             var key_month = (items[0] < 10) ? ('0' + items[0]) : items[0];
@@ -169,11 +176,10 @@ var yodatepicker = function(options) {
             for(var i = 0; i < cfg.cell_content.length; i++) {
                 if(cfg.cell_content[i].date === content_date) {
                     var value = cfg.cell_content[i].price;
-                    if(!value) { return no_availability; }
-                    return '<div class="yo-rate-item">$' + value + '</div>';
+                    return rate_item(value);
                 }
             }
-            return no_availability;
+            return rate_item(-1);  // N/A
         },
 
         markup: function(params) {
