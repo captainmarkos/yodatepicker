@@ -3,7 +3,7 @@
   "description": "A simple datapicker with zero dependencies.",
   "version": "1.0.0",
   "license": "MIT",
-  "homepage": "https://github.com/captainmarkos/yodatepicker",
+  "homepage": "https://github.com/jackrabbit/yodatepicker",
   "private": false,
   "authors": [
     "mark@jackrabbitsystems.com"
