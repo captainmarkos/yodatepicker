@@ -56,13 +56,13 @@ var yodatepicker = function(options) {
             // Tells yodatepicker that the user wants to use a date range.
             // The first date selected will become the begin date and then
             // the second date selected will become the end date.
-            use_date_range: opts.use_date_range || false,
+            date_range: opts.date_range || false,
 
-            // If use_date_range then this is the element id where to
+            // If using date_range then this is the element id where to
             // populate the selected start date.
             begin_id_name: opts.begin_id_name || '',
 
-            // If use_date_range then this is the element id where to
+            // If using date_range then this is the element id where to
             // populate the selected end date.
             end_id_name: opts.end_id_name || '',
 
@@ -77,12 +77,9 @@ var yodatepicker = function(options) {
             prev_month_nav_color: opts.prev_month_nav_color || '',
             next_month_nav_color: opts.next_month_nav_color || '',
 
-            // These options go together for hovering.
-            rate_mouseover_fgcolor: opts.rate_mouseover_fgcolor || '',
+            // These four options go together for hovering.
             day_mouseover_bgcolor: opts.day_mouseover_bgcolor || '',
             day_mouseover_fgcolor: opts.day_mouseover_fgcolor || '',
-
-            rate_mouseleave_fgcolor: opts.rate_mouseleave_fgcolor || '',
             day_mouseleave_bgcolor: opts.day_mouseleave_bgcolor || '',
             day_mouseleave_fgcolor: opts.day_mouseleave_fgcolor || ''
         };
@@ -118,17 +115,17 @@ var yodatepicker = function(options) {
 
         // This feature is only applicable when close_onselect is false and
         // months_to_display is greater than 1.
-        cfg.use_date_range = (cfg.close_onselect === false &&
-                          cfg.months_to_display > 1) ? cfg.use_date_range : false;
+        cfg.date_range = (cfg.close_onselect === false &&
+                          cfg.months_to_display > 1) ? cfg.date_range : false;
 
-        // Indicator for which date is active / set when use_date_range.
-        cfg.begin_end = cfg.use_date_range ? {begin: true, end: false} : null;
+        // Indicator for which date the user is selecting when date_range on.
+        cfg.begin_end = cfg.date_range ? {begin: true, end: false} : null;
 
         return cfg;
     };
 
     var toggle_begin_end = function() {
-        if(cfg.use_date_range) {
+        if(cfg.date_range) {
             if(cfg.begin_end.begin) {
                 cfg.begin_end.begin = false;
                 cfg.begin_end.end = true;
@@ -235,7 +232,7 @@ var yodatepicker = function(options) {
 
             if(cfg.id_name !== '' || cfg.begin_end) {
                 var elem = cfg.id_name;
-                if(cfg.use_date_range) {
+                if(cfg.date_range) {
                     if(cfg.begin_end.begin) { elem = cfg.begin_id_name; }
                     else                    { elem = cfg.end_id_name; }
                 }
@@ -249,179 +246,40 @@ var yodatepicker = function(options) {
         }
     };
 
-    /* jshint loopfunc: true */
-
-    var rate_available = function(elem) {
-        if(!elem.innerHTML) { return false; }
-
-        var rate_val = elem.innerHTML;
-        if(!rate_val || rate_val === 'N/A') {
-            return false;
-        }
-        return true;
-    };
-
-    var yo_rate_item = function(js_date) {
-        // The current date needs to be in a format that will work
-        // with this "yo-dp_price_calendar_2_18_2015".
-        var day_id = 'yo-dp_price_calendar_' + js_date;
-        var day_elem = document.getElementById(day_id);
-        if(!day_elem) { return false; }
-
-        var rate_class = 'yo-rate-item';
-        var rate_elem = day_elem.getElementsByClassName(rate_class);
-        if(!rate_elem) { return false; }
-
-        return rate_elem[0];
-    };
-
-    /* jshint loopfunc: true */
-    var highlight_selected_dates = function(start_date, stop_date) {
-        if(!start_date || !stop_date) { return false; }
-        var td_item = 'yo-datepicker-day-multi';
-        var rate_item = 'yo-rate-item';
-
-        var items = document.getElementsByClassName(td_item);
-        for(var i = 0; i < items.length; i++) {
-            var id_date = items[i].id.replace('yo-dp_price_calendar_', '');
-            var curr_date = raw2date(id_date);
-            var elem = document.getElementById(items[i].id);
-
-            // if the current date is between start and stop dates
-            if(curr_date >= start_date && curr_date <= stop_date) {
-                // change colors to hover colors
-                elem.style.color = cfg.day_mouseover_fgcolor;
-                elem.style.backgroundColor = cfg.day_mouseover_bgcolor;
-                // yo-rate-item
-                var item = elem.getElementsByClassName(rate_item);
-                item[0].style.color = cfg.rate_mouseover_fgcolor;
-
-                elem.onmouseleave = function() {
-                    // leave hover colors on
-                    this.style.color = cfg.day_mouseover_fgcolor;
-                    this.style.backgroundColor = cfg.day_mouseover_bgcolor;
-                    // yo-rate-item
-                    var item = this.getElementsByClassName(rate_item);
-                    item[0].style.color = cfg.rate_mouseover_fgcolor;
-                };
-            } else {
-                // change back to original
-                elem.style.color = cfg.day_mouseleave_fgcolor;
-                elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
-                elem.onmouseleave = function() {
-                    this.style.color = cfg.day_mouseleave_fgcolor;
-                    this.style.backgroundColor = cfg.day_mouseleave_bgcolor;
-                    // yo-rate-item
-                    var item = this.getElementsByClassName(rate_item);
-                    item[0].style.color = cfg.rate_mouseleave_fgcolor;
-                };
-            }
-        }
-    };
-    /* jshint loopfunc: false */
-
-    var reset_date_inputs = function() {
-        cfg.begin_end = { begin: true, end: false };
-
-        var start_elem = document.getElementById(cfg.begin_id_name);
-        start_elem.value = '';
-        var stop_elem = document.getElementById(cfg.end_id_name);
-        stop_elem.value = '';
-        /* jshint evil: true */
-        //eval('document.getElementById("' + elem + '").value=""');
-        /* jshint evil: false */
-
-    };
-
-    var date_input_element = function() {
-        var elem = '';
-        if(cfg.use_date_range) {
-            if(cfg.begin_end.begin) {
-                elem = cfg.begin_id_name;
-                document.getElementById(cfg.end_id_name).value = '';
-            } else {
-                elem = cfg.end_id_name;
-            }
-        } else {
-            elem = cfg.id_name;
-        }
-        return elem;
-    };
-
-    var raw2date = function(raw_date) {
-        // Take a raw_formatted date like 3_12_2015 and
-        // returns a javascript Date object.
-        var pieces = raw_date.split('_');
-        return new Date(pieces[2], pieces[0], pieces[1]);
-    };
-
-    var set_start_date_colors = function(js_date) {
-        var day_elem = document.getElementById('yo-dp_price_calendar_' + js_date);
-        day_elem.style.color = cfg.day_mouseover_fgcolor;
-        day_elem.style.backgroundColor = cfg.day_mouseover_bgcolor;
-        day_elem.onmouseleave = function() {
-            this.style.color = cfg.day_mouseover_fgcolor;
-            this.style.backgroundColor = cfg.day_mouseover_bgcolor;
-            var rate_elem = yo_rate_item(js_date);
-            rate_elem.style.color = cfg.rate_mouseover_fgcolor;
-        };
-    };
-
     /* jshint unused: false */
     var select_date = function(_mm, _dd, _yy) {
         try {
+            var the_month, the_day, elem;
             if(_mm === undefined || _dd === undefined || _yy === undefined) {
                 throw new YoException('undefined paramter(s)');
             }
 
-            var js_date = _mm + '_' + _dd + '_' + _yy;
+            _mm++;    // Note: _mm is the month number 0 - 11 so always add 1.
 
-            // If cfg.id_name has a value then we have a single calendar
-            // datepicker.  Otherwise we have a multi-month calendar and
-            // cfg.begin_end is an object that idicates what date is being
-            // selected, either the begin date or the end date.
+            if(_mm < 10) { the_month = '0' + _mm; }
+            else         { the_month = _mm.toString(); }
+
+            if(_dd < 10) { the_day = '0' + _dd;  }
+            else         { the_day = _dd.toString();   }
+
             if(cfg.id_name !== '' || cfg.begin_end) {
-                var elem = date_input_element();
+                if(cfg.date_range) {
+                    if(cfg.begin_end.begin) {
+                        elem = cfg.begin_id_name;
+                        document.getElementById(cfg.end_id_name).value = '';
+                    } else { elem = cfg.end_id_name; }
+                    toggle_begin_end();
+                } else { elem = cfg.id_name; }
 
-                if(cfg.begin_end && cfg.begin_end.end) {
-                    var start_date = raw2date(cfg.begin_end.begin_date_raw);
-                    var stop_date = raw2date(js_date);
-                    // do this check before we set end_date_raw
-                    if(stop_date < start_date) {
-                        console.log('end date cannot be < start date');
-                        return;
-                    } else if(start_date.getTime() == stop_date.getTime()) {
-                        // user clicked a stop_date same as the start_date
-                        // clear the start_date
-                        reset_date_inputs();
-                        return;
-                    }
-
-                    var rate_elem = yo_rate_item(js_date);
-                    if(!rate_available(rate_elem)) {
-                        console.log('selecting this day is not an option');
-                        return;
-                    }
-
-                    cfg.begin_end.end_date_raw = js_date;
-                    stop_date = raw2date(cfg.begin_end.end_date_raw);
-                    highlight_selected_dates(start_date, stop_date);
+                /* jshint evil: true */
+                if(cfg.locale === 'en') {
+                    eval('document.getElementById("' + elem +
+                         '").value = the_month + "/" + the_day + "/" + _yy');
+                } else {
+                    eval('document.getElementById("' + elem +
+                         '").value = the_day + "/" + the_month + "/" + _yy');
                 }
-
-                if(cfg.begin_end.begin) {
-                    if(cfg.begin_end.begin_date_raw) {
-                        // set colors back original values
-                        _yodatepicker.set_custom_day_colors();
-                    }
-                    // set the colors for the start date just selected
-                    set_start_date_colors(js_date);
-
-                    cfg.begin_end.begin_date_raw = js_date;
-                    cfg.begin_end.end_date_raw = '';
-                }
-                if(cfg.use_date_range) { toggle_begin_end(); }
-
-                put_date_DOM(elem, _mm, _dd, _yy);
+                /* jshint evil: false */
             }
 
             if(cfg.ondateselected_callback) { cfg.ondateselected_callback(); }
@@ -432,23 +290,6 @@ var yodatepicker = function(options) {
         }
         return true;
     /* jshint unused: true */
-    };
-
-    var put_date_DOM = function(elem, _mm, _dd, _yy) {
-        _mm++;    // Note: _mm is the month number 0 - 11 so always add 1.
-
-        var the_month = (_mm < 10) ? '0' + _mm : _mm.toString();
-        var the_day   = (_dd < 10) ? '0' + _dd : _dd.toString();
-
-        /* jshint evil: true */
-        if(cfg.locale === 'en') {
-            eval('document.getElementById("' + elem + '").value=' +
-                 'the_month + "/" + the_day + "/" + _yy');
-        } else {
-            eval('document.getElementById("' + elem + '").value=' +
-                 'the_day + "/" + the_month + "/" + _yy');
-        }
-        /* jshint evil: false */
     };
 
     var text = function(_text) {
@@ -693,7 +534,7 @@ var yodatepicker = function(options) {
 
     // This object is returned and represents the public properties and methods.
     var _yodatepicker = {
-        version: 'yo-yo',
+        version: 'yo-da',
 
         hide: function() {
             close_datepicker();
@@ -917,55 +758,42 @@ var yodatepicker = function(options) {
 
         /* jshint loopfunc: true */
         set_custom_day_colors: function() {
-            var td_item = 'yo-datepicker-day-multi';
-            var rate_item = 'yo-rate-item';
-
+            var klass_cell = 'yo-datepicker-day-multi';
+            var klass_item = 'yo-rate-item';
             if(cfg.day_mouseover_bgcolor && cfg.day_mouseover_fgcolor) {
                 // when mouseover this element change colors
-                var items = document.getElementsByClassName(td_item);
+                var items = document.getElementsByClassName(klass_cell);
                 for(var i = 0; i < items.length; i++) {
-                    var elem = document.getElementById(items[i].id);
-                    elem.style.color = cfg.day_mouseleave_fgcolor;
-                    elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
-                    // yo-rate-item
-                    var item = elem.getElementsByClassName(rate_item);
-                    item[0].style.color = cfg.rate_mouseleave_fgcolor;
-                    // Mouse over event: setup colors
                     items[i].onmouseover = function(event) {
                         var id = event.srcElement.id;
                         if(!id) { id = event.srcElement.parentElement.id; }
-                        var el = document.getElementById(id);
-                        if(!el) { return; }
-                        el.style.color = cfg.day_mouseover_fgcolor;
-                        el.style.backgroundColor = cfg.day_mouseover_bgcolor;
-                        // yo-rate-item
-                        var item = el.getElementsByClassName(rate_item);
-                        item[0].style.color = cfg.rate_mouseover_fgcolor;
+                        var elem = document.getElementById(id);
+                        if(!elem) { return; }
+                        var day_item = elem.getElementsByClassName(klass_item);
+                        day_item[0].style.color = cfg.day_mouseover_fgcolor;
+                        elem.style.backgroundColor = cfg.day_mouseover_bgcolor;
                     };
                 }
             }
 
             if(cfg.day_mouseleave_bgcolor && cfg.day_mouseleave_fgcolor) {
-                // yo-rate-item: setup foreground color on all elements
-                var items = document.getElementsByClassName(rate_item);
+                // initialize (override) the foreground colors
+                var items = document.getElementsByClassName(klass_item);
                 for(var i = 0; i < items.length; i++) {
-                    items[i].style.color = cfg.rate_mouseleave_fgcolor;
+                    items[i].style.color = cfg.day_mouseleave_fgcolor;
                 }
 
                 // when mouseleave this element change colors
-                items = document.getElementsByClassName(td_item);
+                items = document.getElementsByClassName(klass_cell);
                 for(var i = 0; i < items.length; i++) {
-                    // Mouse leave event: setup colors
                     items[i].onmouseleave = function(event) {
                         var id = event.srcElement.id;
                         if(!id) { id = event.srcElement.parentElement.id; }
                         var elem = document.getElementById(id);
                         if(!elem) { return; }
-                        elem.style.color = cfg.day_mouseleave_fgcolor;
+                        var day_item = elem.getElementsByClassName(klass_item);
+                        day_item[0].style.color = cfg.day_mouseleave_fgcolor;
                         elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
-                        // yo-rate-item
-                        var item = elem.getElementsByClassName(rate_item);
-                        item[0].style.color = cfg.rate_mouseleave_fgcolor;
                     };
                 }
              }
