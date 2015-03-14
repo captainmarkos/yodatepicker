@@ -263,8 +263,8 @@ var yodatepicker = function(options) {
 
     var yo_rate_item = function(js_date) {
         // The current date needs to be in a format that will work
-        // with this "yo-dp_price_calendar_2_18_2015".
-        var day_id = 'yo-dp_price_calendar_' + js_date;
+        // with this "yo-" + dp_id_name + "_2_18_2015"
+        var day_id = 'yo-' + cfg.dp_id_name + '_' + js_date;
         var day_elem = document.getElementById(day_id);
         if(!day_elem) { return false; }
 
@@ -283,7 +283,7 @@ var yodatepicker = function(options) {
 
         var items = document.getElementsByClassName(td_item);
         for(var i = 0; i < items.length; i++) {
-            var id_date = items[i].id.replace('yo-dp_price_calendar_', '');
+            var id_date = items[i].id.replace('yo-' + cfg.dp_id_name + '_', '');
             var curr_date = raw2date(id_date);
             var elem = document.getElementById(items[i].id);
 
@@ -356,7 +356,8 @@ var yodatepicker = function(options) {
     };
 
     var set_start_date_colors = function(js_date) {
-        var day_elem = document.getElementById('yo-dp_price_calendar_' + js_date);
+        var id_name = 'yo-' + cfg.dp_id_name + '_' + js_date;
+        var day_elem = document.getElementById(id_name);
         day_elem.style.color = cfg.day_mouseover_fgcolor;
         day_elem.style.backgroundColor = cfg.day_mouseover_bgcolor;
         day_elem.onmouseleave = function() {
@@ -380,6 +381,7 @@ var yodatepicker = function(options) {
             // datepicker.  Otherwise we have a multi-month calendar and
             // cfg.begin_end is an object that idicates what date is being
             // selected, either the begin date or the end date.
+
             if(cfg.id_name !== '' || cfg.begin_end) {
                 var elem = date_input_element();
 
@@ -399,7 +401,7 @@ var yodatepicker = function(options) {
 
                     var rate_elem = yo_rate_item(js_date);
                     if(!rate_available(rate_elem)) {
-                        console.log('selecting this day is not an option');
+                        console.log('no availability on this day');
                         return;
                     }
 
@@ -408,7 +410,7 @@ var yodatepicker = function(options) {
                     highlight_selected_dates(start_date, stop_date);
                 }
 
-                if(cfg.begin_end.begin) {
+                if(cfg.begin_end && cfg.begin_end.begin) {
                     if(cfg.begin_end.begin_date_raw) {
                         // set colors back original values
                         _yodatepicker.set_custom_day_colors();
@@ -925,6 +927,7 @@ var yodatepicker = function(options) {
                 var items = document.getElementsByClassName(td_item);
                 for(var i = 0; i < items.length; i++) {
                     var elem = document.getElementById(items[i].id);
+                    if(!elem) { continue; }
                     elem.style.color = cfg.day_mouseleave_fgcolor;
                     elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
                     // yo-rate-item
