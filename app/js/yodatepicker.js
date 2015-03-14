@@ -360,6 +360,9 @@ var yodatepicker = function(options) {
         var day_elem = document.getElementById(id_name);
         day_elem.style.color = cfg.day_mouseover_fgcolor;
         day_elem.style.backgroundColor = cfg.day_mouseover_bgcolor;
+        var rate_elem = yo_rate_item(js_date);
+        rate_elem.style.color = cfg.rate_mouseover_fgcolor;
+
         day_elem.onmouseleave = function() {
             this.style.color = cfg.day_mouseover_fgcolor;
             this.style.backgroundColor = cfg.day_mouseover_bgcolor;
