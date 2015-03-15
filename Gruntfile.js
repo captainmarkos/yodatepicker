@@ -16,6 +16,16 @@ module.exports = function(grunt) {
                       'app/js/{,*/}*.js']
             }
         },
+
+        // minify
+        uglify: {
+            my_target: {
+                files: {
+                   'app/js/yodatepicker.min.js': ['app/js/yodatepicker.js']
+                }
+            }
+        },
+
         // Test settings
         karma: {
             unit: {
@@ -40,6 +50,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     // Default task.
     grunt.registerTask('default', ['jshint']);
@@ -58,4 +69,10 @@ module.exports = function(grunt) {
             }
         }
     );
+
+    grunt.registerTask('build', 'runs uglify', function() {
+        grunt.task.run([
+            'uglify'
+        ]);
+    });
 };
