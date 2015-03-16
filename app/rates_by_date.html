@@ -68,11 +68,11 @@
 
     var double_datepicker = yodatepicker({
         dp_id_name: 'dp_price_calendar',
-        date_range: true,
+        months_to_display: 2,       // display two months
+        use_date_range: true,
         begin_id_name: 'price_calendar_start',
         end_id_name: 'price_calendar_end',
         dow_heading: 'short_name',
-        months_to_display: 2,       // display two months
         close_onselect: false,      // display the calendar all the time
         max_date: '1Y',
         min_date: new Date(),
@@ -82,10 +82,15 @@
         cell_content: response,
         prev_month_nav_color: '#00ff00',
         next_month_nav_color: '#00ff00',
-        day_mouseover_bgcolor: '#ffff00',
-        day_mouseover_fgcolor: '#ff0000',
-        day_mouseleave_bgcolor: '#ffffff',
-        day_mouseleave_fgcolor: '#00ff00'
+
+        // hover
+        rate_mouseover_fgcolor: '#cd0000',  /* same as .yo-rate-item:hover */
+        day_mouseover_bgcolor:  '#ffffff',
+        day_mouseover_fgcolor:  '#ff00ff',
+
+        rate_mouseleave_fgcolor: '#0000cd', /* same as .yo-rate-item */
+        day_mouseleave_bgcolor: '#f3e1a5',  /* same as .yo-datepicker-day-multi */
+        day_mouseleave_fgcolor: '#000000'   /* same as .yo-datepicker-day-multi */
     });
 
 </script>
@@ -134,7 +139,7 @@ body { background-color: #f0f0f0; }
 <br />
 
 <div class="bigtext">
-That's right, not even jQuery is used.  Just good ol' fashion javascript!
+yodatepicker
 </div>
 
 <br />
