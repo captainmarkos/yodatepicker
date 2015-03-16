@@ -56,13 +56,13 @@ var yodatepicker = function(options) {
             // Tells yodatepicker that the user wants to use a date range.
             // The first date selected will become the begin date and then
             // the second date selected will become the end date.
-            date_range: opts.date_range || false,
+            use_date_range: opts.use_date_range || false,
 
-            // If using date_range then this is the element id where to
+            // If use_date_range then this is the element id where to
             // populate the selected start date.
             begin_id_name: opts.begin_id_name || '',
 
-            // If using date_range then this is the element id where to
+            // If use_date_range then this is the element id where to
             // populate the selected end date.
             end_id_name: opts.end_id_name || '',
 
@@ -77,9 +77,12 @@ var yodatepicker = function(options) {
             prev_month_nav_color: opts.prev_month_nav_color || '',
             next_month_nav_color: opts.next_month_nav_color || '',
 
-            // These four options go together for hovering.
+            // These options go together for hovering.
+            rate_mouseover_fgcolor: opts.rate_mouseover_fgcolor || '',
             day_mouseover_bgcolor: opts.day_mouseover_bgcolor || '',
             day_mouseover_fgcolor: opts.day_mouseover_fgcolor || '',
+
+            rate_mouseleave_fgcolor: opts.rate_mouseleave_fgcolor || '',
             day_mouseleave_bgcolor: opts.day_mouseleave_bgcolor || '',
             day_mouseleave_fgcolor: opts.day_mouseleave_fgcolor || ''
         };
@@ -115,23 +118,23 @@ var yodatepicker = function(options) {
 
         // This feature is only applicable when close_onselect is false and
         // months_to_display is greater than 1.
-        cfg.date_range = (cfg.close_onselect === false &&
-                          cfg.months_to_display > 1) ? cfg.date_range : false;
+        cfg.use_date_range = (cfg.close_onselect === false &&
+                          cfg.months_to_display > 1) ? cfg.use_date_range : false;
 
-        // Indicator for which date the user is selecting when date_range on.
-        cfg.begin_end = cfg.date_range ? {begin: true, end: false} : null;
+        // Indicator for which date is active / set when use_date_range.
+        cfg.date_range = cfg.use_date_range ? {start: true, stop: false} : null;
 
         return cfg;
     };
 
-    var toggle_begin_end = function() {
-        if(cfg.date_range) {
-            if(cfg.begin_end.begin) {
-                cfg.begin_end.begin = false;
-                cfg.begin_end.end = true;
+    var toggle_date_range = function() {
+        if(cfg.use_date_range) {
+            if(cfg.date_range.start) {
+                cfg.date_range.start = false;
+                cfg.date_range.stop = true;
             } else {
-                cfg.begin_end.begin = true;
-                cfg.begin_end.end = false;
+                cfg.date_range.start = true;
+                cfg.date_range.stop = false;
             }
             return true;
         }
@@ -230,10 +233,10 @@ var yodatepicker = function(options) {
         if(cfg.close_onselect) {
             document.getElementById(cfg.dp_id_name).innerHTML = '';
 
-            if(cfg.id_name !== '' || cfg.begin_end) {
+            if(cfg.id_name !== '' || cfg.date_range) {
                 var elem = cfg.id_name;
-                if(cfg.date_range) {
-                    if(cfg.begin_end.begin) { elem = cfg.begin_id_name; }
+                if(cfg.use_date_range) {
+                    if(cfg.date_range.start) { elem = cfg.begin_id_name; }
                     else                    { elem = cfg.end_id_name; }
                 }
 
@@ -246,40 +249,202 @@ var yodatepicker = function(options) {
         }
     };
 
+    /* jshint loopfunc: true */
+
+    var rate_available = function(elem) {
+        if(!elem.innerHTML) { return false; }
+
+        var rate_val = elem.innerHTML;
+        if(!rate_val || rate_val === 'N/A') {
+            return false;
+        }
+        return true;
+    };
+
+    var yo_rate_item = function(js_date) {
+        // The current date needs to be in a format that will work
+        // with this "yo-" + dp_id_name + "_2_18_2015"
+        var day_id = 'yo-' + cfg.dp_id_name + '_' + js_date;
+        var day_elem = document.getElementById(day_id);
+        if(!day_elem) { return false; }
+
+        var rate_class = 'yo-rate-item';
+        var rate_elem = day_elem.getElementsByClassName(rate_class);
+        if(!rate_elem) { return false; }
+
+        return rate_elem[0];
+    };
+
+    /* jshint loopfunc: true */
+    var highlight_selected_dates = function(start_date, stop_date) {
+        if(!start_date || !stop_date) { return false; }
+        var td_item = 'yo-datepicker-day-multi';
+        var rate_item = 'yo-rate-item';
+
+        var items = document.getElementsByClassName(td_item);
+        for(var i = 0; i < items.length; i++) {
+            var id_date = items[i].id.replace('yo-' + cfg.dp_id_name + '_', '');
+            var curr_date = raw2date(id_date);
+            var elem = document.getElementById(items[i].id);
+
+            // if the current date is between start and stop dates
+            if(curr_date >= start_date && curr_date <= stop_date) {
+                // change colors to hover colors
+                elem.style.color = cfg.day_mouseover_fgcolor;
+                elem.style.backgroundColor = cfg.day_mouseover_bgcolor;
+                // yo-rate-item
+                var item = elem.getElementsByClassName(rate_item);
+                item[0].style.color = cfg.rate_mouseover_fgcolor;
+
+                elem.onmouseleave = function() {
+                    // leave hover colors on
+                    this.style.color = cfg.day_mouseover_fgcolor;
+                    this.style.backgroundColor = cfg.day_mouseover_bgcolor;
+                    // yo-rate-item
+                    var item = this.getElementsByClassName(rate_item);
+                    item[0].style.color = cfg.rate_mouseover_fgcolor;
+                };
+            } else {
+                // change back to original
+                elem.style.color = cfg.day_mouseleave_fgcolor;
+                elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
+                elem.onmouseleave = function() {
+                    this.style.color = cfg.day_mouseleave_fgcolor;
+                    this.style.backgroundColor = cfg.day_mouseleave_bgcolor;
+                    // yo-rate-item
+                    var item = this.getElementsByClassName(rate_item);
+                    item[0].style.color = cfg.rate_mouseleave_fgcolor;
+                };
+            }
+        }
+    };
+    /* jshint loopfunc: false */
+
+    var reset_date_inputs = function() {
+        cfg.date_range = { start: true, stop: false };
+
+        var start_elem = document.getElementById(cfg.begin_id_name);
+        start_elem.value = '';
+        var stop_elem = document.getElementById(cfg.end_id_name);
+        stop_elem.value = '';
+    };
+
+    var date_input_element = function() {
+        var elem = '';
+        if(cfg.use_date_range) {
+            if(cfg.date_range.start) {
+                elem = cfg.begin_id_name;
+                document.getElementById(cfg.end_id_name).value = '';
+            } else {
+                elem = cfg.end_id_name;
+            }
+        } else {
+            elem = cfg.id_name;
+        }
+        return elem;
+    };
+
+    var raw2date = function(raw_date) {
+        // Take a raw_formatted date like 3_12_2015 and
+        // returns a javascript Date object.
+        var pieces = raw_date.split('_');
+        return new Date(pieces[2], pieces[0], pieces[1]);
+    };
+
+    var highlight_date = function(js_date, toggle) {
+        toggle = (toggle) ? toggle : false;
+        var id_name = 'yo-' + cfg.dp_id_name + '_' + js_date;
+        var day_elem = document.getElementById(id_name);
+        if(toggle === true) {
+            // toggle true: highlight the start date with the mouseover colors
+            day_elem.style.color = cfg.day_mouseover_fgcolor;
+            day_elem.style.backgroundColor = cfg.day_mouseover_bgcolor;
+            var rate_elem = yo_rate_item(js_date);
+            rate_elem.style.color = cfg.rate_mouseover_fgcolor;
+
+            day_elem.onmouseleave = function() {
+                this.style.color = cfg.day_mouseover_fgcolor;
+                this.style.backgroundColor = cfg.day_mouseover_bgcolor;
+                var rate_elem = yo_rate_item(js_date);
+                rate_elem.style.color = cfg.rate_mouseover_fgcolor;
+            };
+        } else {
+            // toggle false: start date back to original colors
+            day_elem.style.color = cfg.day_mouseleave_fgcolor;
+            day_elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
+            var rate_elem = yo_rate_item(js_date);
+            rate_elem.style.color = cfg.rate_mouseleave_fgcolor;
+
+            day_elem.onmouseleave = function() {
+                this.style.color = cfg.day_mouseleave_fgcolor;
+                this.style.backgroundColor = cfg.day_mouseleave_bgcolor;
+                var rate_elem = yo_rate_item(js_date);
+                rate_elem.style.color = cfg.rate_mouseleave_fgcolor;
+            };
+        }
+    };
+
     /* jshint unused: false */
     var select_date = function(_mm, _dd, _yy) {
         try {
-            var the_month, the_day, elem;
             if(_mm === undefined || _dd === undefined || _yy === undefined) {
                 throw new YoException('undefined paramter(s)');
             }
 
-            _mm++;    // Note: _mm is the month number 0 - 11 so always add 1.
+            var js_date = _mm + '_' + _dd + '_' + _yy;
 
-            if(_mm < 10) { the_month = '0' + _mm; }
-            else         { the_month = _mm.toString(); }
+            // If cfg.id_name has a value then we have a single calendar
+            // datepicker.  Otherwise we have a multi-month calendar and
+            // cfg.date_range is an object that idicates what date is being
+            // selected, either the begin date or the end date.
 
-            if(_dd < 10) { the_day = '0' + _dd;  }
-            else         { the_day = _dd.toString();   }
+            if(cfg.id_name !== '' || cfg.date_range) {
+                var elem = date_input_element();
 
-            if(cfg.id_name !== '' || cfg.begin_end) {
-                if(cfg.date_range) {
-                    if(cfg.begin_end.begin) {
-                        elem = cfg.begin_id_name;
-                        document.getElementById(cfg.end_id_name).value = '';
-                    } else { elem = cfg.end_id_name; }
-                    toggle_begin_end();
-                } else { elem = cfg.id_name; }
+                if(cfg.date_range && cfg.date_range.stop) {
+                    var start_date = raw2date(cfg.date_range.start_date_raw);
+                    var stop_date = raw2date(js_date);
+                    // do this check before we set stop_date_raw
+                    if(stop_date < start_date) {
+                        console.log('end date cannot be < start date');
+                        return;
+                    } else if(start_date.getTime() === stop_date.getTime()) {
+                        // user clicked a stop_date same as the start_date
 
-                /* jshint evil: true */
-                if(cfg.locale === 'en') {
-                    eval('document.getElementById("' + elem +
-                         '").value = the_month + "/" + the_day + "/" + _yy');
-                } else {
-                    eval('document.getElementById("' + elem +
-                         '").value = the_day + "/" + the_month + "/" + _yy');
+                        // set start date highlight off
+                        highlight_date(cfg.date_range.start_date_raw, false);
+
+                        // clear the start_date
+                        reset_date_inputs();
+
+                        return;
+                    }
+                    /*
+                    var rate_elem = yo_rate_item(js_date);
+                    if(!rate_available(rate_elem)) {
+                        console.log('no availability on this day');
+                        return;
+                    }
+                    */
+                    cfg.date_range.stop_date_raw = js_date;
+                    stop_date = raw2date(cfg.date_range.stop_date_raw);
+                    highlight_selected_dates(start_date, stop_date);
                 }
-                /* jshint evil: false */
+
+                if(cfg.date_range && cfg.date_range.start) {
+                    if(cfg.date_range.start_date_raw) {
+                        // set colors back original values
+                        _yodatepicker.set_custom_day_colors();
+                    }
+                    // set the colors for the start date just selected
+                    highlight_date(js_date, true);
+
+                    cfg.date_range.start_date_raw = js_date;
+                    cfg.date_range.stop_date_raw = '';
+                }
+                if(cfg.use_date_range) { toggle_date_range(); }
+
+                put_date_DOM(elem, _mm, _dd, _yy);
             }
 
             if(cfg.ondateselected_callback) { cfg.ondateselected_callback(); }
@@ -290,6 +455,23 @@ var yodatepicker = function(options) {
         }
         return true;
     /* jshint unused: true */
+    };
+
+    var put_date_DOM = function(elem, _mm, _dd, _yy) {
+        _mm++;    // Note: _mm is the month number 0 - 11 so always add 1.
+
+        var the_month = (_mm < 10) ? '0' + _mm : _mm.toString();
+        var the_day   = (_dd < 10) ? '0' + _dd : _dd.toString();
+
+        /* jshint evil: true */
+        if(cfg.locale === 'en') {
+            eval('document.getElementById("' + elem + '").value=' +
+                 'the_month + "/" + the_day + "/" + _yy');
+        } else {
+            eval('document.getElementById("' + elem + '").value=' +
+                 'the_day + "/" + the_month + "/" + _yy');
+        }
+        /* jshint evil: false */
     };
 
     var text = function(_text) {
@@ -328,6 +510,15 @@ var yodatepicker = function(options) {
         if(cfg.mn < 11) { cfg.mn++; }
         else { cfg.mn = 0; cfg.yy++; }
         _yodatepicker.show();
+
+        if(cfg.date_range) {
+            var start_raw = cfg.date_range.start_date_raw;
+            var stop_raw = cfg.date_range.stop_date_raw;
+            if(!start_raw || !stop_raw) { return; }
+            var start_date = raw2date(start_raw);
+            var stop_date = raw2date(stop_raw);
+            highlight_selected_dates(start_date, stop_date, true);
+        }
     };
 
     var month_dec = function() {
@@ -340,6 +531,15 @@ var yodatepicker = function(options) {
         if(cfg.mn > 0) { cfg.mn--; }
         else { cfg.mn = 11; cfg.yy--; }
         _yodatepicker.show();
+
+        if(cfg.date_range) {
+            var start_raw = cfg.date_range.start_date_raw;
+            var stop_raw = cfg.date_range.stop_date_raw;
+            if(!start_raw || !stop_raw) { return; }
+            var start_date = raw2date(start_raw);
+            var stop_date = raw2date(stop_raw);
+            highlight_selected_dates(start_date, stop_date, true);
+        }
     };
 
     var leap_year = function(yr) {
@@ -534,7 +734,7 @@ var yodatepicker = function(options) {
 
     // This object is returned and represents the public properties and methods.
     var _yodatepicker = {
-        version: 'yo-da',
+        version: 'yo-yo',
 
         hide: function() {
             close_datepicker();
@@ -674,7 +874,6 @@ var yodatepicker = function(options) {
             return true;
         },
 
-        /* jshint maxstatements: false */
         create_month_calendar: function(params) {
             var tbody_node = false;
             for(var i = 0; i < cfg.months_to_display; i++) {
@@ -736,7 +935,6 @@ var yodatepicker = function(options) {
             }
             return tbody_node;
         },
-        /* jshint maxstatements: 25 */
 
         set_custom_nav_colors: function() {
             if(cfg.prev_month_nav_color) {
@@ -758,49 +956,62 @@ var yodatepicker = function(options) {
 
         /* jshint loopfunc: true */
         set_custom_day_colors: function() {
-            var klass_cell = 'yo-datepicker-day-multi';
-            var klass_item = 'yo-rate-item';
+            var td_item = 'yo-datepicker-day-multi';
+            var rate_item = 'yo-rate-item';
+
             if(cfg.day_mouseover_bgcolor && cfg.day_mouseover_fgcolor) {
                 // when mouseover this element change colors
-                var items = document.getElementsByClassName(klass_cell);
+                var items = document.getElementsByClassName(td_item);
                 for(var i = 0; i < items.length; i++) {
+                    var elem = document.getElementById(items[i].id);
+                    if(!elem) { continue; }
+                    elem.style.color = cfg.day_mouseleave_fgcolor;
+                    elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
+                    // yo-rate-item
+                    var item = elem.getElementsByClassName(rate_item);
+                    item[0].style.color = cfg.rate_mouseleave_fgcolor;
+                    // Mouse over event: setup colors
                     items[i].onmouseover = function(event) {
                         var id = event.srcElement.id;
                         if(!id) { id = event.srcElement.parentElement.id; }
-                        var elem = document.getElementById(id);
-                        if(!elem) { return; }
-                        var day_item = elem.getElementsByClassName(klass_item);
-                        day_item[0].style.color = cfg.day_mouseover_fgcolor;
-                        elem.style.backgroundColor = cfg.day_mouseover_bgcolor;
+                        var el = document.getElementById(id);
+                        if(!el) { return; }
+                        el.style.color = cfg.day_mouseover_fgcolor;
+                        el.style.backgroundColor = cfg.day_mouseover_bgcolor;
+                        // yo-rate-item
+                        var item = el.getElementsByClassName(rate_item);
+                        item[0].style.color = cfg.rate_mouseover_fgcolor;
                     };
                 }
             }
 
             if(cfg.day_mouseleave_bgcolor && cfg.day_mouseleave_fgcolor) {
-                // initialize (override) the foreground colors
-                var items = document.getElementsByClassName(klass_item);
+                // yo-rate-item: setup foreground color on all elements
+                var items = document.getElementsByClassName(rate_item);
                 for(var i = 0; i < items.length; i++) {
-                    items[i].style.color = cfg.day_mouseleave_fgcolor;
+                    items[i].style.color = cfg.rate_mouseleave_fgcolor;
                 }
 
                 // when mouseleave this element change colors
-                items = document.getElementsByClassName(klass_cell);
+                items = document.getElementsByClassName(td_item);
                 for(var i = 0; i < items.length; i++) {
+                    // Mouse leave event: setup colors
                     items[i].onmouseleave = function(event) {
                         var id = event.srcElement.id;
                         if(!id) { id = event.srcElement.parentElement.id; }
                         var elem = document.getElementById(id);
                         if(!elem) { return; }
-                        var day_item = elem.getElementsByClassName(klass_item);
-                        day_item[0].style.color = cfg.day_mouseleave_fgcolor;
+                        elem.style.color = cfg.day_mouseleave_fgcolor;
                         elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
+                        // yo-rate-item
+                        var item = elem.getElementsByClassName(rate_item);
+                        item[0].style.color = cfg.rate_mouseleave_fgcolor;
                     };
                 }
              }
         },
         /* jshint loopfunc: false */
 
-        /* jshint maxstatements: false */
         show: function() {
             var yo_id = 'yo-' + cfg.dp_id_name;
             var root_node = document.getElementById(cfg.dp_id_name);
@@ -939,7 +1150,6 @@ var yodatepicker = function(options) {
             return true;
         }
     };
-        /* jshint maxstatements: 25 */
 
     return _yodatepicker;
 };
