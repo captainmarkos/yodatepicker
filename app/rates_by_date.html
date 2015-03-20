@@ -65,6 +65,12 @@
         { date: '2014-12-14', price: '140.00' }
     ];
     */
+    var current_date = new Date();
+    var current_year = current_date.getFullYear();
+    var current_day = current_date.getDate();
+    var current_month = current_date.getMonth() + 1;
+    var start_date = new Date(current_year, current_month, current_day);
+    var stop_date = new Date(current_year, current_month, current_day + 5);
 
     var double_datepicker = yodatepicker({
         dp_id_name: 'dp_price_calendar',
@@ -90,7 +96,10 @@
 
         rate_mouseleave_fgcolor: '#0000cd', /* same as .yo-rate-item */
         day_mouseleave_bgcolor: '#f3e1a5',  /* same as .yo-datepicker-day-multi */
-        day_mouseleave_fgcolor: '#000000'   /* same as .yo-datepicker-day-multi */
+        day_mouseleave_fgcolor: '#000000',   /* same as .yo-datepicker-day-multi */
+
+        current_start_date: start_date,
+        current_stop_date: stop_date
     });
 
 </script>
