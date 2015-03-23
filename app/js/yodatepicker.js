@@ -729,6 +729,8 @@ var yodatepicker = function(options) {
                     };
                 } else {
                     // change back to original
+                    var item = elem.getElementsByClassName(rate_item);
+                    item[0].style.color = cfg.rate_mouseleave_fgcolor;
                     elem.style.color = cfg.day_mouseleave_fgcolor;
                     elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
                     elem.onmouseleave = function() {
