@@ -103,8 +103,10 @@ var yodatepicker = function(options) {
 
         // Keeps track of the month the datepicker is on and will
         // not go past the min_date month (if set).
-        cfg.mn = (cfg.currdate.getTime() < cfg.min_date.getTime()) ?
-                 cfg.min_date.getMonth() : cfg.currdate.getMonth();
+        var dp_display_date = cfg.current_start_date ?
+                              cfg.current_start_date : cfg.currdate;
+        cfg.mn = (dp_display_date.getTime() < cfg.min_date.getTime()) ?
+                 cfg.min_date.getMonth() : dp_display_date.getMonth();
 
         // Keeps track of the year the datepicker is on and will
         // not go past the min_date year (if set).
@@ -703,6 +705,7 @@ var yodatepicker = function(options) {
             if(!start_date || !stop_date) { return false; }
             var td_item = 'yo-datepicker-day-multi';
             var rate_item = 'yo-rate-item';
+            var curr_item = 'yo-datepicker-day-current-multi';
 
             var items = document.getElementsByClassName(td_item);
             for(var i = 0; i < items.length; i++) {
@@ -736,6 +739,46 @@ var yodatepicker = function(options) {
                     elem.onmouseleave = function() {
                         this.style.color = cfg.day_mouseleave_fgcolor;
                         this.style.backgroundColor = cfg.day_mouseleave_bgcolor;
+                        // yo-rate-item
+                        var item = this.getElementsByClassName(rate_item);
+                        item[0].style.color = cfg.rate_mouseleave_fgcolor;
+                    };
+                }
+            }
+
+            // Adding/removing highlight from day-current
+            var elem_curr = document.getElementsByClassName(curr_item)[0];
+            if(elem_curr) {
+                var id_date = elem_curr.id.replace('yo-' + cfg.dp_id_name + '_', '');
+                var curr_date = raw2date(id_date);
+
+                if(curr_date >= start_date && curr_date <= stop_date) {
+                    // yo-rate-item
+                    var item = elem_curr.getElementsByClassName(rate_item);
+                    item[0].style.color = cfg.rate_mouseover_fgcolor;
+
+                    elem_curr.style.color = cfg.day_mouseover_fgcolor;
+                    elem_curr.style.backgroundColor = cfg.day_mouseover_bgcolor;
+                    elem_curr.onmouseleave = function() {
+                        // leave hover colors on
+                        this.style.color = cfg.day_mouseover_fgcolor;
+                        this.style.backgroundColor = cfg.day_mouseover_bgcolor;
+
+                        // yo-rate-item
+                        var item = this.getElementsByClassName(rate_item);
+                        item[0].style.color = cfg.rate_mouseover_fgcolor;
+                    };
+                } else {
+                    // change back to original
+                    var item = elem_curr.getElementsByClassName(rate_item);
+                    item[0].style.color = cfg.rate_mouseleave_fgcolor;
+
+                    elem_curr.style.color = cfg.day_mouseleave_fgcolor;
+                    elem_curr.style.backgroundColor = cfg.day_mouseleave_bgcolor;
+                    elem_curr.onmouseleave = function() {
+                        this.style.color = cfg.day_mouseleave_fgcolor;
+                        this.style.backgroundColor = cfg.day_mouseleave_bgcolor;
+
                         // yo-rate-item
                         var item = this.getElementsByClassName(rate_item);
                         item[0].style.color = cfg.rate_mouseleave_fgcolor;
@@ -963,6 +1006,7 @@ var yodatepicker = function(options) {
         set_custom_day_colors: function() {
             var td_item = 'yo-datepicker-day-multi';
             var rate_item = 'yo-rate-item';
+            var curr_item = 'yo-datepicker-day-current-multi';
 
             if(cfg.day_mouseover_bgcolor && cfg.day_mouseover_fgcolor) {
                 // when mouseover this element change colors
@@ -988,6 +1032,27 @@ var yodatepicker = function(options) {
                         item[0].style.color = cfg.rate_mouseover_fgcolor;
                     };
                 }
+
+                // changing colors of day-current on mouseover
+                var elem_curr = document.getElementsByClassName(curr_item)[0];
+                if(elem_curr) {
+                    elem_curr.style.color = cfg.day_mouseleave_fgcolor;
+                    elem_curr.style.backgroundColor = cfg.day_mouseleave_bgcolor;
+                    elem_curr.onmouseover = function(event) {
+                        var id = event.srcElement.id;
+                        if(!id) { id = event.srcElement.parentElement.id; }
+
+                        var el = document.getElementById(id);
+                        if(el) {
+                            el.style.color = cfg.day_mouseover_fgcolor;
+                            el.style.backgroundColor = cfg.day_mouseover_bgcolor;
+                        }
+
+                        // yo-rate-item
+                        var item = el.getElementsByClassName(rate_item);
+                        item[0].style.color = cfg.rate_mouseover_fgcolor;
+                    };
+                }
             }
 
             if(cfg.day_mouseleave_bgcolor && cfg.day_mouseleave_fgcolor) {
@@ -1008,6 +1073,25 @@ var yodatepicker = function(options) {
                         if(!elem) { return; }
                         elem.style.color = cfg.day_mouseleave_fgcolor;
                         elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
+                        // yo-rate-item
+                        var item = elem.getElementsByClassName(rate_item);
+                        item[0].style.color = cfg.rate_mouseleave_fgcolor;
+                    };
+                }
+
+                // changing colors of day-current on mouseleave
+                var elem_curr = document.getElementsByClassName(curr_item)[0];
+                if(elem_curr) {
+                    elem_curr.onmouseleave = function(event) {
+                        var id = event.srcElement.id;
+                        if(!id) { id = event.srcElement.parentElement.id; }
+
+                        var elem = document.getElementById(id);
+                        if(elem) {
+                            elem.style.color = cfg.day_mouseleave_fgcolor;
+                            elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
+                        }
+
                         // yo-rate-item
                         var item = elem.getElementsByClassName(rate_item);
                         item[0].style.color = cfg.rate_mouseleave_fgcolor;
@@ -1145,7 +1229,7 @@ var yodatepicker = function(options) {
                 var mmtmp = items[items.length -3];
                 var ddtmp = items[items.length -2];
                 var yytmp = items[items.length -1];
-                var t_id = yo_id + mmtmp + '_' + ddtmp + '_' + yytmp;
+                var t_id = yo_id + '_' + mmtmp + '_' + ddtmp + '_' + yytmp;
                 var s  = 'document.getElementById("' + t_id + '")' +
                          '.onclick = function() ' + '{ select_date(' +
                          mmtmp + ',' + ddtmp + ',' + yytmp + '); };';

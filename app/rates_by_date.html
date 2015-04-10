@@ -68,9 +68,10 @@
     var current_date = new Date();
     var current_year = current_date.getFullYear();
     var current_day = current_date.getDate();
-    var current_month = current_date.getMonth() + 1;
+    var current_month = current_date.getMonth();
     var start_date = new Date(current_year, current_month, current_day);
     var stop_date = new Date(current_year, current_month, current_day + 5);
+    var min_date = new Date(current_year, current_month, current_day);
 
     var double_datepicker = yodatepicker({
         dp_id_name: 'dp_price_calendar',
@@ -81,7 +82,7 @@
         dow_heading: 'short_name',
         close_onselect: false,      // display the calendar all the time
         max_date: '1Y',
-        min_date: new Date(),
+        min_date: min_date,
         locale: 'en',
         prev_fa_class: 'fa fa-chevron-left',
         next_fa_class: 'fa fa-chevron-right',
