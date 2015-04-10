@@ -392,7 +392,7 @@ var yodatepicker = function(options) {
                 }
 
                 if(cfg.date_range && cfg.date_range.start) {
-                    if(cfg.date_range.start_date_raw) {
+                    if(cfg.date_range.start) {
                         // set colors back original values
                         _yodatepicker.set_custom_day_colors();
                     }
