@@ -40,31 +40,43 @@
         if(i > 10 && i < 20) {
             response.push({
                 date: year + '-' + month + '-' + day,
-                price: ''
+                data: ''
             });
         } else if(i > 2 && i < 6) {
             response.push({
                 date: year + '-' + month + '-' + day,
-                price: '-1'
+                data: 'N/A'
             });
         } else {
             response.push({
                 date: year + '-' + month + '-' + day,
-                price: price.toString() + '.99'
+                data: '$' + price.toString() + '.99'
             });
         }
 
         price++;
     }
 
-    /*
     // Perhaps some repsonse form some an API.
-    var response = [
-        { date: '2014-12-12', price: '120.00' },
-        { date: '2014-12-13', price: '130.00' },
-        { date: '2014-12-14', price: '140.00' }
-    ];
-    */
+    // var response = [
+    //     { date: '2015-05-20', price: '3 Events' },
+    //     { date: '2015-05-21', price: '$4' },
+    //     { date: '2015-05-22', price: 'shinans' },
+    //     { date: '2015-05-23', price: 'shinans' },
+    //     { date: '2015-05-24', price: '$2' },
+    //     { date: '2015-05-25', price: '-1' },
+    //     { date: '2015-05-26', price: '-1' },
+    //     { date: '2015-05-26', price: '4 Events' },
+    //     { date: '2015-05-26', price: '5 Events' }
+    // ];
+
+    var current_date = new Date();
+    var current_year = current_date.getFullYear();
+    var current_day = current_date.getDate();
+    var current_month = current_date.getMonth();
+    var start_date = new Date(current_year, current_month, current_day);
+    var stop_date = new Date(current_year, current_month, current_day + 5);
+    var min_date = new Date(current_year, current_month, current_day);
 
     var double_datepicker = yodatepicker({
         dp_id_name: 'dp_price_calendar',
@@ -75,7 +87,7 @@
         dow_heading: 'short_name',
         close_onselect: false,      // display the calendar all the time
         max_date: '1Y',
-        min_date: new Date(),
+        min_date: min_date,
         locale: 'en',
         prev_fa_class: 'fa fa-chevron-left',
         next_fa_class: 'fa fa-chevron-right',
@@ -90,7 +102,10 @@
 
         rate_mouseleave_fgcolor: '#0000cd', /* same as .yo-rate-item */
         day_mouseleave_bgcolor: '#f3e1a5',  /* same as .yo-datepicker-day-multi */
-        day_mouseleave_fgcolor: '#000000'   /* same as .yo-datepicker-day-multi */
+        day_mouseleave_fgcolor: '#000000',   /* same as .yo-datepicker-day-multi */
+
+        current_start_date: start_date,
+        current_stop_date: stop_date
     });
 
 </script>
