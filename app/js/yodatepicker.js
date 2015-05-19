@@ -162,18 +162,14 @@ var yodatepicker = function(options) {
             // reformat that to look like '2015-01-25'.
             //
 
-            var rate_item = function(value) {
-                var rate = parseFloat(value.toString());
-                if(isNaN(rate) || rate < 1) {
-                    return '<div class="yo-rate-item">N/A</div>';
-                }
-                return '<div class="yo-rate-item">$' + value + '</div>';
+            var custom_item = function(value) {
+                return '<div class="yo-rate-item">' + value + '</div>';
             };
 
             var items = key.split('_');
-            if(!items) { return rate_item(-1); }
+            if(!items) { return custom_item('N/A'); }
 
-            items[0] = parseInt(items[0], 10) +1;
+            items[0] = parseInt(items[0], 10) + 1;
             var key_month = (items[0] < 10) ? ('0' + items[0]) : items[0];
             var key_day = (items[1] < 10) ? ('0' + items[1]) : items[1];
             var content_date = items[2] + '-' + key_month + '-' + key_day;
@@ -183,11 +179,11 @@ var yodatepicker = function(options) {
             // which is one year of rates.
             for(var i = 0; i < cfg.cell_content.length; i++) {
                 if(cfg.cell_content[i].date === content_date) {
-                    var value = cfg.cell_content[i].price;
-                    return rate_item(value);
+                    var value = cfg.cell_content[i].data;
+                    return custom_item(value);
                 }
             }
-            return rate_item(-1);  // N/A
+            return custom_item('N/A');  // N/A
         },
 
         markup: function(params) {
@@ -851,10 +847,10 @@ var yodatepicker = function(options) {
 
                 // suppress inner nav buttons
                 if(params.calendar_number > 0) {
-                    prev_id = 'yo-previous-month-multi';
+                    prev_id = 'yo-previous-month' + params.multi_cal;
                     document.getElementsByClassName(prev_id)[1].innerHTML = '';
                     document.getElementsByClassName(prev_id)[1].style.cursor = 'default';
-                    next_id = 'yo-next-month-multi';
+                    next_id = 'yo-next-month' + params.multi_cal;
                     document.getElementsByClassName(next_id)[0].innerHTML = '';
                     document.getElementsByClassName(next_id)[0].style.cursor = 'default';
                 }
@@ -984,9 +980,9 @@ var yodatepicker = function(options) {
             return tbody_node;
         },
 
-        set_custom_nav_colors: function() {
+        set_custom_nav_colors: function(css_ext) {
             if(cfg.prev_month_nav_color) {
-                var klass_name = 'yo-previous-month-multi';
+                var klass_name = 'yo-previous-month' + css_ext;
                 var items = document.getElementsByClassName(klass_name);
                 for(var i = 0; i < items.length; i++) {
                     items[i].style.color = cfg.prev_month_nav_color;
@@ -994,7 +990,7 @@ var yodatepicker = function(options) {
             }
 
             if(cfg.next_month_nav_color) {
-                var klass_name = 'yo-next-month-multi';
+                var klass_name = 'yo-next-month' + css_ext;
                 var items = document.getElementsByClassName(klass_name);
                 for(var i = 0; i < items.length; i++) {
                     items[i].style.color = cfg.next_month_nav_color;
@@ -1003,10 +999,10 @@ var yodatepicker = function(options) {
         },
 
         /* jshint loopfunc: true */
-        set_custom_day_colors: function() {
-            var td_item = 'yo-datepicker-day-multi';
+        set_custom_day_colors: function(css_ext) {
+            var td_item = 'yo-datepicker-day' + css_ext;
             var rate_item = 'yo-rate-item';
-            var curr_item = 'yo-datepicker-day-current-multi';
+            var curr_item = 'yo-datepicker-day-current' + css_ext;
 
             if(cfg.day_mouseover_bgcolor && cfg.day_mouseover_fgcolor) {
                 // when mouseover this element change colors
@@ -1104,7 +1100,7 @@ var yodatepicker = function(options) {
         show: function() {
             var yo_id = 'yo-' + cfg.dp_id_name;
             var root_node = document.getElementById(cfg.dp_id_name);
-            var multi_cal = (cfg.months_to_display > 1) ? '-multi' : '';
+            var css_ext = (cfg.months_to_display > 1) ? '-multi' : '';
 
             if(!root_node) { throw new YoException(root_node); }
 
@@ -1120,19 +1116,19 @@ var yodatepicker = function(options) {
             this.create_month_calendar({
                 td_node: td_node,
                 yo_id: yo_id,
-                multi_cal: multi_cal
+                multi_cal: css_ext
             });
 
-            this.set_custom_nav_colors();
-            this.set_custom_day_colors();
+            this.set_custom_nav_colors(css_ext);
+            this.set_custom_day_colors(css_ext);
 
             this.highlight_selected_dates(
                 cfg.current_start_date, cfg.current_stop_date
             );
 
             // Attach event listeners for the previous and next buttons.
-            var prev_month_id = yo_id + '-prev-month' + multi_cal + '-';
-            var next_month_id = yo_id + '-next-month' + multi_cal + '-';
+            var prev_month_id = yo_id + '-prev-month' + css_ext + '-';
+            var next_month_id = yo_id + '-next-month' + css_ext + '-';
             var elem;
             for(var x = 0; x < cfg.months_to_display; x++) {
                 elem = document.getElementById(prev_month_id + x);
@@ -1200,7 +1196,7 @@ var yodatepicker = function(options) {
             // Bind event listeners to each day for the onclick event.
             // Get an array of elements by the class name so we can get
             // each element id name to bind the onclick handler.
-            var day_selectors = 'yo-datepicker-day' + multi_cal;
+            var day_selectors = 'yo-datepicker-day' + css_ext;
             var day_tds = document.getElementsByClassName(day_selectors);
             for(var y = 0; y < day_tds.length; y++) {
                 // string to match: 'yo-rates_calendar_id_9_22_2014'
@@ -1222,7 +1218,7 @@ var yodatepicker = function(options) {
 
             // The current day node will have a different class name so
             // we get that and bind the onclick handler.
-            var selector = 'yo-datepicker-day-current' + multi_cal;
+            var selector = 'yo-datepicker-day-current' + css_ext;
             var curr_day_td = document.getElementsByClassName(selector);
             if(curr_day_td.length > 0) {
                 var items = curr_day_td[0].id.split('_');

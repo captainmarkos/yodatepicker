@@ -40,31 +40,36 @@
         if(i > 10 && i < 20) {
             response.push({
                 date: year + '-' + month + '-' + day,
-                price: ''
+                data: ''
             });
         } else if(i > 2 && i < 6) {
             response.push({
                 date: year + '-' + month + '-' + day,
-                price: '-1'
+                data: 'N/A'
             });
         } else {
             response.push({
                 date: year + '-' + month + '-' + day,
-                price: price.toString() + '.99'
+                data: '$' + price.toString() + '.99'
             });
         }
 
         price++;
     }
 
-    /*
     // Perhaps some repsonse form some an API.
-    var response = [
-        { date: '2014-12-12', price: '120.00' },
-        { date: '2014-12-13', price: '130.00' },
-        { date: '2014-12-14', price: '140.00' }
-    ];
-    */
+    // var response = [
+    //     { date: '2015-05-20', price: '3 Events' },
+    //     { date: '2015-05-21', price: '$4' },
+    //     { date: '2015-05-22', price: 'shinans' },
+    //     { date: '2015-05-23', price: 'shinans' },
+    //     { date: '2015-05-24', price: '$2' },
+    //     { date: '2015-05-25', price: '-1' },
+    //     { date: '2015-05-26', price: '-1' },
+    //     { date: '2015-05-26', price: '4 Events' },
+    //     { date: '2015-05-26', price: '5 Events' }
+    // ];
+
     var current_date = new Date();
     var current_year = current_date.getFullYear();
     var current_day = current_date.getDate();
