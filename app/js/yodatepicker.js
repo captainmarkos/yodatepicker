@@ -50,6 +50,10 @@ var yodatepicker = function(options) {
             // for that date.
             cell_content: opts.cell_content || null,
 
+            // if set to true will ignore normal price configurations and pass
+            // the data through as is
+            use_custom_content: opts.use_custom_content || false,
+
             // Sets the day of week name: single_name, short_name, full_name.
             dow_heading: opts.dow_heading || 'single_name',
 
@@ -162,12 +166,21 @@ var yodatepicker = function(options) {
             // reformat that to look like '2015-01-25'.
             //
 
-            var custom_item = function(value) {
-                return '<div class="yo-rate-item">' + value + '</div>';
+            var build_item = function(value) {
+                if(!cfg.use_custom_content) {
+                    var rate = parseFloat(value.toString());
+                    console.log('rate: ' + rate);
+                    if(isNaN(rate) || rate < 1 ) {
+                        return '<div class="yo-rate-item">N/A</div>';
+                    }
+                    return '<div class="yo-rate-item">$' + value + '</div>';
+                } else {
+                    return '<div class="yo-rate-item">' + value + '</div>';
+                }
             };
 
             var items = key.split('_');
-            if(!items) { return custom_item('N/A'); }
+            if(!items) { return build_item('N/A'); }
 
             items[0] = parseInt(items[0], 10) + 1;
             var key_month = (items[0] < 10) ? ('0' + items[0]) : items[0];
@@ -180,10 +193,13 @@ var yodatepicker = function(options) {
             for(var i = 0; i < cfg.cell_content.length; i++) {
                 if(cfg.cell_content[i].date === content_date) {
                     var value = cfg.cell_content[i].data;
-                    return custom_item(value);
+                    return build_item(value);
                 }
             }
-            return custom_item('N/A');  // N/A
+            if(cfg.use_custom_content)
+                return build_item('');  // N/A
+            else
+                return build_item('N/A');
         },
 
         markup: function(params) {
@@ -1152,7 +1168,7 @@ var yodatepicker = function(options) {
             // Event onmouseover is set to disable onmousedown so that when
             // mouseover the datepicker, mousedown doesn't close it.
             document.getElementById(yo_id).onmouseover = function(e) {
-                // IE 7-8 does not support event.currentTarget but does 
+                // IE 7-8 does not support event.currentTarget but does
                 // so for event.srcElement;
                 var elem, elem_id, ev = e || window.event;
 

@@ -27,48 +27,48 @@
 
     // Create a year's worth of data.
     var dateArray = getDates(new Date(), (new Date()).addDays(365));
-    var response = [];
-    var price = 1;
-    for(i = 0; i < dateArray.length; i ++ ) {
-        var d = dateArray[i];
-        var year = d.getFullYear();
-        var month = d.getMonth() +1;
-            month = month < 10 ? ('0' + month) : month;
-        var day = (d.getDate() < 10) ? ('0' + d.getDate()) : d.getDate();
+    // var response = [];
+    // var price = 1;
+    // for(i = 0; i < dateArray.length; i ++ ) {
+    //     var d = dateArray[i];
+    //     var year = d.getFullYear();
+    //     var month = d.getMonth() +1;
+    //         month = month < 10 ? ('0' + month) : month;
+    //     var day = (d.getDate() < 10) ? ('0' + d.getDate()) : d.getDate();
 
-        // create some no availability
-        if(i > 10 && i < 20) {
-            response.push({
-                date: year + '-' + month + '-' + day,
-                data: ''
-            });
-        } else if(i > 2 && i < 6) {
-            response.push({
-                date: year + '-' + month + '-' + day,
-                data: 'N/A'
-            });
-        } else {
-            response.push({
-                date: year + '-' + month + '-' + day,
-                data: '$' + price.toString() + '.99'
-            });
-        }
+    //     // create some no availability
+    //     if(i > 10 && i < 20) {
+    //         response.push({
+    //             date: year + '-' + month + '-' + day,
+    //             data: ''
+    //         });
+    //     } else if(i > 2 && i < 6) {
+    //         response.push({
+    //             date: year + '-' + month + '-' + day,
+    //             data: 'N/A'
+    //         });
+    //     } else {
+    //         response.push({
+    //             date: year + '-' + month + '-' + day,
+    //             data: price.toString() + '.99'
+    //         });
+    //     }
 
-        price++;
-    }
+    //     price++;
+    // }
 
-    // Perhaps some repsonse form some an API.
-    // var response = [
-    //     { date: '2015-05-20', price: '3 Events' },
-    //     { date: '2015-05-21', price: '$4' },
-    //     { date: '2015-05-22', price: 'shinans' },
-    //     { date: '2015-05-23', price: 'shinans' },
-    //     { date: '2015-05-24', price: '$2' },
-    //     { date: '2015-05-25', price: '-1' },
-    //     { date: '2015-05-26', price: '-1' },
-    //     { date: '2015-05-26', price: '4 Events' },
-    //     { date: '2015-05-26', price: '5 Events' }
-    // ];
+   //Perhaps some repsonse form some an API.
+    var response = [
+        { date: '2015-06-20', data: '3 Events' },
+        { date: '2015-06-21', data: '$4' },
+        { date: '2015-06-22', data: 'shinans' },
+        { date: '2015-06-23', data: 'shinans' },
+        { date: '2015-06-24', data: '$2' },
+        { date: '2015-06-25', data: '' },
+        { date: '2015-06-26', data: '-1' },
+        { date: '2015-06-26', data: '4 Events' },
+        { date: '2015-06-26', data: '5 Events' }
+    ];
 
     var current_date = new Date();
     var current_year = current_date.getFullYear();
@@ -92,6 +92,7 @@
         prev_fa_class: 'fa fa-chevron-left',
         next_fa_class: 'fa fa-chevron-right',
         cell_content: response,
+        use_custom_content: true,
         prev_month_nav_color: '#00ff00',
         next_month_nav_color: '#00ff00',
 
