@@ -164,17 +164,16 @@ var yodatepicker = function(options) {
             //
             // NOTE: key is formatted like '0_25_2015' so here we'll
             // reformat that to look like '2015-01-25'.
-            //
 
             var build_item = function(value) {
                 if(!cfg.use_custom_content) {
                     var rate = parseFloat(value.toString());
-                    console.log('rate: ' + rate);
                     if(isNaN(rate) || rate < 1 ) {
                         return '<div class="yo-rate-item">N/A</div>';
                     }
                     return '<div class="yo-rate-item">$' + value + '</div>';
-                } else {
+                } 
+                else {
                     return '<div class="yo-rate-item">' + value + '</div>';
                 }
             };
@@ -197,7 +196,7 @@ var yodatepicker = function(options) {
                 }
             }
             if(cfg.use_custom_content)
-                return build_item('');  // N/A
+                return build_item('');
             else
                 return build_item('N/A');
         },
