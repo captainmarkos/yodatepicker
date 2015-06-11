@@ -195,10 +195,11 @@ var yodatepicker = function(options) {
                     return build_item(value);
                 }
             }
-            if(cfg.use_custom_content)
+            if(cfg.use_custom_content) {
                 return build_item('');
-            else
+            } else {
                 return build_item('N/A');
+            }
         },
 
         markup: function(params) {
@@ -368,7 +369,6 @@ var yodatepicker = function(options) {
             // datepicker.  Otherwise we have a multi-month calendar and
             // cfg.date_range is an object that idicates what date is being
             // selected, either the begin date or the end date.
-
             if(cfg.id_name !== '' || cfg.date_range) {
                 var elem = date_input_element();
 
@@ -387,16 +387,9 @@ var yodatepicker = function(options) {
 
                         // clear the start_date
                         reset_date_inputs();
+                        return;
+                    }
 
-                        return;
-                    }
-                    /*
-                    var rate_elem = yo_rate_item(js_date);
-                    if(!rate_available(rate_elem)) {
-                        console.log('no availability on this day');
-                        return;
-                    }
-                    */
                     cfg.date_range.stop_date_raw = js_date;
                     stop_date = raw2date(cfg.date_range.stop_date_raw);
                     _yodatepicker.highlight_selected_dates(start_date, stop_date);
@@ -414,7 +407,6 @@ var yodatepicker = function(options) {
                     cfg.date_range.stop_date_raw = '';
                 }
                 if(cfg.use_date_range) { toggle_date_range(); }
-
                 put_date_DOM(elem, _mm, _dd, _yy);
             }
 
@@ -429,6 +421,7 @@ var yodatepicker = function(options) {
     };
 
     var put_date_DOM = function(elem, _mm, _dd, _yy) {
+        if(!elem) { return; }
         _mm++;    // Note: _mm is the month number 0 - 11 so always add 1.
 
         var the_month = (_mm < 10) ? '0' + _mm : _mm.toString();
@@ -1029,7 +1022,9 @@ var yodatepicker = function(options) {
                     elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
                     // yo-rate-item
                     var item = elem.getElementsByClassName(rate_item);
-                    item[0].style.color = cfg.rate_mouseleave_fgcolor;
+                    if(item[0]) {
+                        item[0].style.color = cfg.rate_mouseleave_fgcolor;
+                    }
                     // Mouse over event: setup colors
                     items[i].onmouseover = function(event) {
                         var id = event.srcElement.id;
@@ -1040,7 +1035,9 @@ var yodatepicker = function(options) {
                         el.style.backgroundColor = cfg.day_mouseover_bgcolor;
                         // yo-rate-item
                         var item = el.getElementsByClassName(rate_item);
-                        item[0].style.color = cfg.rate_mouseover_fgcolor;
+                        if(item[0]) {
+                            item[0].style.color = cfg.rate_mouseover_fgcolor;
+                        }
                     };
                 }
 
@@ -1061,7 +1058,9 @@ var yodatepicker = function(options) {
 
                         // yo-rate-item
                         var item = el.getElementsByClassName(rate_item);
-                        item[0].style.color = cfg.rate_mouseover_fgcolor;
+                        if(item[0]) {
+                            item[0].style.color = cfg.rate_mouseover_fgcolor;
+                        }
                     };
                 }
             }
@@ -1086,7 +1085,9 @@ var yodatepicker = function(options) {
                         elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
                         // yo-rate-item
                         var item = elem.getElementsByClassName(rate_item);
-                        item[0].style.color = cfg.rate_mouseleave_fgcolor;
+                        if(item[0]) {
+                            item[0].style.color = cfg.rate_mouseleave_fgcolor;
+                        }
                     };
                 }
 
@@ -1105,7 +1106,9 @@ var yodatepicker = function(options) {
 
                         // yo-rate-item
                         var item = elem.getElementsByClassName(rate_item);
-                        item[0].style.color = cfg.rate_mouseleave_fgcolor;
+                        if(item[0]) {
+                            item[0].style.color = cfg.rate_mouseleave_fgcolor;
+                        }
                     };
                 }
              }
