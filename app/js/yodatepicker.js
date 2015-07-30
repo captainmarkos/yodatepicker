@@ -172,7 +172,7 @@ var yodatepicker = function(options) {
                         return '<div class="yo-rate-item">N/A</div>';
                     }
                     return '<div class="yo-rate-item">$' + value + '</div>';
-                } 
+                }
                 else {
                     return '<div class="yo-rate-item">' + value + '</div>';
                 }
@@ -712,6 +712,13 @@ var yodatepicker = function(options) {
             var curr_item = 'yo-datepicker-day-current-multi';
 
             var items = document.getElementsByClassName(td_item);
+
+            if(cfg.months_to_display === 1) {
+                td_item = 'yo-datepicker-day';
+                curr_item = 'yo-datepicker-day-current';
+                items = document.getElementsByClassName(td_item);
+            }
+
             for(var i = 0; i < items.length; i++) {
                 var id_date = items[i].id.replace('yo-' + cfg.dp_id_name + '_', '');
                 var curr_date = raw2date(id_date);
