@@ -723,6 +723,8 @@ var yodatepicker = function(options) {
                 var id_date = items[i].id.replace('yo-' + cfg.dp_id_name + '_', '');
                 var curr_date = raw2date(id_date);
                 var elem = document.getElementById(items[i].id);
+                var item = elem.getElementsByClassName(rate_item);
+                if(!item) { continue; }
 
                 // if the current date is between start and stop dates
                 if(curr_date >= start_date && curr_date <= stop_date) {
@@ -730,7 +732,6 @@ var yodatepicker = function(options) {
                     elem.style.color = cfg.day_mouseover_fgcolor;
                     elem.style.backgroundColor = cfg.day_mouseover_bgcolor;
                     // yo-rate-item
-                    var item = elem.getElementsByClassName(rate_item);
                     item[0].style.color = cfg.rate_mouseover_fgcolor;
 
                     elem.onmouseleave = function() {
@@ -738,12 +739,12 @@ var yodatepicker = function(options) {
                         this.style.color = cfg.day_mouseover_fgcolor;
                         this.style.backgroundColor = cfg.day_mouseover_bgcolor;
                         // yo-rate-item
-                        var item = this.getElementsByClassName(rate_item);
-                        item[0].style.color = cfg.rate_mouseover_fgcolor;
+                        var r_item = this.getElementsByClassName(rate_item);
+                        if(!r_item) { return; }
+                        r_item[0].style.color = cfg.rate_mouseover_fgcolor;
                     };
                 } else {
                     // change back to original
-                    var item = elem.getElementsByClassName(rate_item);
                     item[0].style.color = cfg.rate_mouseleave_fgcolor;
                     elem.style.color = cfg.day_mouseleave_fgcolor;
                     elem.style.backgroundColor = cfg.day_mouseleave_bgcolor;
@@ -751,8 +752,9 @@ var yodatepicker = function(options) {
                         this.style.color = cfg.day_mouseleave_fgcolor;
                         this.style.backgroundColor = cfg.day_mouseleave_bgcolor;
                         // yo-rate-item
-                        var item = this.getElementsByClassName(rate_item);
-                        item[0].style.color = cfg.rate_mouseleave_fgcolor;
+                        var r_item = this.getElementsByClassName(rate_item);
+                        if(!r_item) { return; }
+                        r_item[0].style.color = cfg.rate_mouseleave_fgcolor;
                     };
                 }
             }
@@ -762,12 +764,12 @@ var yodatepicker = function(options) {
             if(elem_curr) {
                 var id_date = elem_curr.id.replace('yo-' + cfg.dp_id_name + '_', '');
                 var curr_date = raw2date(id_date);
+                var item = elem_curr.getElementsByClassName(rate_item);
+                if(!item) { return; }
 
                 if(curr_date >= start_date && curr_date <= stop_date) {
                     // yo-rate-item
-                    var item = elem_curr.getElementsByClassName(rate_item);
                     item[0].style.color = cfg.rate_mouseover_fgcolor;
-
                     elem_curr.style.color = cfg.day_mouseover_fgcolor;
                     elem_curr.style.backgroundColor = cfg.day_mouseover_bgcolor;
                     elem_curr.onmouseleave = function() {
@@ -776,14 +778,13 @@ var yodatepicker = function(options) {
                         this.style.backgroundColor = cfg.day_mouseover_bgcolor;
 
                         // yo-rate-item
-                        var item = this.getElementsByClassName(rate_item);
-                        item[0].style.color = cfg.rate_mouseover_fgcolor;
+                        var r_item = this.getElementsByClassName(rate_item);
+                        if(!r_item) { return; }
+                        r_item[0].style.color = cfg.rate_mouseover_fgcolor;
                     };
                 } else {
                     // change back to original
-                    var item = elem_curr.getElementsByClassName(rate_item);
                     item[0].style.color = cfg.rate_mouseleave_fgcolor;
-
                     elem_curr.style.color = cfg.day_mouseleave_fgcolor;
                     elem_curr.style.backgroundColor = cfg.day_mouseleave_bgcolor;
                     elem_curr.onmouseleave = function() {
@@ -791,8 +792,9 @@ var yodatepicker = function(options) {
                         this.style.backgroundColor = cfg.day_mouseleave_bgcolor;
 
                         // yo-rate-item
-                        var item = this.getElementsByClassName(rate_item);
-                        item[0].style.color = cfg.rate_mouseleave_fgcolor;
+                        var r_item = this.getElementsByClassName(rate_item);
+                        if(!r_item) { return; }
+                        r_item[0].style.color = cfg.rate_mouseleave_fgcolor;
                     };
                 }
             }
