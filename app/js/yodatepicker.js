@@ -114,8 +114,8 @@ var yodatepicker = function(options) {
 
         // Keeps track of the year the datepicker is on and will
         // not go past the min_date year (if set).
-        cfg.yy = (cfg.currdate.getTime() < cfg.min_date.getTime()) ?
-                 cfg.min_date.getFullYear() : cfg.currdate.getFullYear();
+        cfg.yy = (dp_display_date.getTime() < cfg.min_date.getTime()) ?
+                 cfg.min_date.getFullYear() : dp_display_date.getFullYear();
 
         // Set flag, tiggers the datepicker to close on selecting a day.
         cfg.close_onselect = (cfg.close_onselect === undefined) ?
