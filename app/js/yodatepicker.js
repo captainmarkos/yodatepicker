@@ -51,8 +51,8 @@ var yodatepicker = function(options) {
             cell_content: opts.cell_content || null,
 
             // if set to true will ignore normal price configurations and pass
-            // the data through as is
-            use_custom_content: opts.use_custom_content || false,
+             // the data through as is
+             use_custom_content: opts.use_custom_content || false,
 
             // Sets the day of week name: single_name, short_name, full_name.
             dow_heading: opts.dow_heading || 'single_name',
@@ -128,8 +128,8 @@ var yodatepicker = function(options) {
 
         // This feature is only applicable when close_onselect is false and
         // months_to_display is greater than 1.
-        cfg.use_date_range = (cfg.close_onselect === false &&
-                          cfg.months_to_display > 1) ? cfg.use_date_range : false;
+        //cfg.use_date_range = (cfg.close_onselect === false &&
+        //                  cfg.months_to_display > 1) ? cfg.use_date_range : false;
 
         // Indicator for which date is active / set when use_date_range.
         cfg.date_range = cfg.use_date_range ? {start: true, stop: false} : null;
@@ -248,23 +248,15 @@ var yodatepicker = function(options) {
     };
 
     var close_datepicker = function() {
-        if(cfg.close_onselect) {
-            document.getElementById(cfg.dp_id_name).innerHTML = '';
+        if(!cfg.close_onselect) { return; }
 
-            if(cfg.id_name !== '' || cfg.date_range) {
-                var elem = cfg.id_name;
-                if(cfg.use_date_range) {
-                    if(cfg.date_range.start) { elem = cfg.begin_id_name; }
-                    else                    { elem = cfg.end_id_name; }
-                }
-
-                /* jshint evil: true */
-                eval('document.getElementById("' + cfg.id_name + '").focus();');
-                /* jshint evil: false */
-            }
-
-            if(cfg.onclose_callback) { cfg.onclose_callback(); }
+        // Close the datepicker by setting innerHTML to empty string.
+        var dp_elem = document.getElementById(cfg.dp_id_name);
+        if(dp_elem && dp_elem.innerHTML) {
+            dp_elem.innerHTML = '';
         }
+
+        if(cfg.onclose_callback) { cfg.onclose_callback(); }
     };
 
     /* jshint loopfunc: true */
@@ -413,7 +405,12 @@ var yodatepicker = function(options) {
             }
 
             if(cfg.ondateselected_callback) { cfg.ondateselected_callback(); }
-            close_datepicker();
+
+            if(!cfg.use_date_range && cfg.close_onselect) {
+                close_datepicker();
+            } else if(cfg.use_date_range && cfg.date_range.start_date_raw && cfg.date_range.stop_date_raw && cfg.close_onselect) {
+                close_datepicker();
+            }
         } catch(e) {
             console.log(e.toString());
             return false;

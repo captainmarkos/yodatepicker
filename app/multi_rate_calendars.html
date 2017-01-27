@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<script type="text/javascript" src="js/yodatepicker.js"></script>
+<link type="text/css" rel="stylesheet" href="styles/rates-calendar.css" />
+<link type="text/css" rel="stylesheet" href="vendor/fontawesome/css/font-awesome.css" />
+<script type="text/javascript">
+
+    // Some helper functions so I can make an array of dates.
+    Date.prototype.addDays = function(days) {
+        var dat = new Date(this.valueOf())
+        dat.setDate(dat.getDate() + days);
+        return dat;
+    }
+
+    function getDates(startDate, stopDate) {
+        var dateArray = [];
+        var currentDate = startDate;
+        while(currentDate <= stopDate) {
+            dateArray.push( new Date (currentDate) )
+            currentDate = currentDate.addDays(1);
+        }
+        return dateArray;
+    }
+
+    // Create a year's worth of data.
+    var dateArray = getDates(new Date(), (new Date()).addDays(365));
+    var response = [];
+    var price = 1;
+    for(i = 0; i < dateArray.length; i ++ ) {
+        var d = dateArray[i];
+        var year = d.getFullYear();
+        var month = d.getMonth() +1;
+            month = month < 10 ? ('0' + month) : month;
+
+        var day = (d.getDate() < 10) ? ('0' + d.getDate()) : d.getDate();
+        // create some no availability
+        if(i > 10 && i < 20) {
+            response.push({
+                date: year + '-' + month + '-' + day,
+                data: ''
+            });
+        } else if(i > 2 && i < 6) {
+            response.push({
+                date: year + '-' + month + '-' + day,
+                data: 'N/A'
+            });
+        } else {
+            response.push({
+                date: year + '-' + month + '-' + day,
+                data: price.toString() + '.99'
+            });
+        }
+
+        price++;
+    }
+
+    //console.log('--> example response:');
+    //console.log(response);
+
+    var current_date = new Date();
+    var current_year = current_date.getFullYear();
+    var current_day = current_date.getDate();
+    var current_month = current_date.getMonth();
+    var start_date = new Date(current_year, current_month, current_day);
+    var stop_date = new Date(current_year, current_month, current_day + 5);
+    var min_date = new Date(current_year, current_month, current_day);
+
+    var options = {
+        dp_id_name: 'checkin-rate-cal-1',
+        begin_id_name: 'checkin-date-1',
+        end_id_name: 'checkout-date-1',
+
+        months_to_display: 1,
+        use_date_range: true,
+
+        dow_heading: 'short_name',
+        close_onselect: true,
+        max_date: '1Y',
+        min_date: min_date,
+        locale: 'en',
+        prev_fa_class: 'fa fa-chevron-left',
+        next_fa_class: 'fa fa-chevron-right',
+        cell_content: response,
+
+        prev_month_nav_color: '#00ff00',
+        next_month_nav_color: '#00ff00',
+
+        // hover
+        rate_mouseover_fgcolor: '#cd0000',  /* same as .yo-rate-item:hover */
+        day_mouseover_bgcolor:  '#ffffff',
+        day_mouseover_fgcolor:  '#ff00ff',
+
+        rate_mouseleave_fgcolor: '#0000cd', /* same as .yo-rate-item */
+        day_mouseleave_bgcolor: '#f3e1a5',  /* same as .yo-datepicker-day-multi */
+        day_mouseleave_fgcolor: '#000000',   /* same as .yo-datepicker-day-multi */
+
+        current_start_date: start_date,
+        current_stop_date: stop_date
+    };
+    
+    options.dp_id_name = 'checkin-rate-cal-1';
+    options.begin_id_name = 'checkin-date-1';
+    options.end_id_name = 'checkout-date-1';
+    var dp1 = yodatepicker(options);
+
+    options.dp_id_name = 'checkin-rate-cal-2';
+    options.begin_id_name = 'checkin-date-2';
+    options.end_id_name = 'checkout-date-2';
+    var dp2 = yodatepicker(options);
+
+    options.dp_id_name = 'checkin-rate-cal-3';
+    options.begin_id_name = 'checkin-date-3';
+    options.end_id_name = 'checkout-date-3';
+    var dp3 = yodatepicker(options);
+
+
+</script>
+
+<title>yodatepicker</title>
+<style>
+a { text-decoration: none; color: #0000ff; }
+
+a:hover { text-decoration: underline; color: #cd0000; }
+
+hr { background-color: #cd0000; width: 100%; height: 1px; }
+
+.myfont1 {
+    font-family: Verdana, Arial, sans-serif;
+    font-size: .9em;
+}
+
+.biggertext {
+    font-family: verdana, arial;
+    font-size: 1.2em;
+    color: #0000ff;
+    font-weight: normal;
+}
+
+.bigtext {
+    font-family: verdana, arial;
+    font-size: .9em;
+    color: #0000ff;
+    font-weight: normal;
+}
+
+body { background-color: #f0f0f0; }
+
+.button {
+    background-color: #0088ff;
+    width: 120px;
+    height: 25px;
+    padding-top: 10px;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<center>
+    <h2 class="biggertext">yodatepicker</h2>
+    <span class="myfont1">Multiple date pickers</span>
+</center>
+<hr style="height: 1px; color: #cd0000;" />
+<br />
+
+<div class="bigtext">
+yodatepicker
+</div>
+
+<br />
+<br />
+
+<table style="width: 600px;" border=1>
+    <tr>
+        <td style="vertical-align: top;">
+            <img style="height: 100px;"
+                 src="http://www.sanjose.org/media/790278/holiodayinnsiliconvalley.jpg" />
+        </td>
+        <td style="vertical-align: top;">
+            Beautifully decorated contemporary beach decor condo with resort style amenities.
+            Newly furnished, spacious and clean with washer and dryer in unit. Walk across the
+            street to the ocean!
+        </td>
+        <td style="vertical-align: top; text-align: center;">
+            <div class="button" onclick="dp1.show();">VIEW RATES</div>
+            Check-In: <input type="text" id="checkin-date-1" value="" />
+            <br />
+            Check-Out: <input type="text" id="checkout-date-1" value="" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <!-- This is where the datepicker is going to display -->
+            <div id="checkin-rate-cal-1"></div>
+        </td>
+    </tr>
+
+    
+    <tr>
+        <td style="vertical-align: top;">
+            <img style="height: 100px;"
+                 src="http://www.sanjose.org/media/790278/holiodayinnsiliconvalley.jpg" />
+        </td>
+        <td style="vertical-align: top;">
+            Beautifully decorated contemporary beach decor condo with resort style amenities.
+            Newly furnished, spacious and clean with washer and dryer in unit. Walk across the
+            street to the ocean!
+        </td>
+        <td style="vertical-align: top; text-align: center;">
+            <div class="button" onclick="dp2.show();">VIEW RATES</div>
+            Check-In: <input type="text" id="checkin-date-2" value="" />
+            <br />
+            Check-Out: <input type="text" id="checkout-date-2" value="" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <!-- This is where the datepicker is going to display -->
+            <div id="checkin-rate-cal-2"></div>
+        </td>
+    </tr>
+
+
+    <tr>
+        <td style="vertical-align: top;">
+            <img style="height: 100px;"
+                 src="http://www.sanjose.org/media/790278/holiodayinnsiliconvalley.jpg" />
+        </td>
+        <td style="vertical-align: top;">
+            Beautifully decorated contemporary beach decor condo with resort style amenities.
+            Newly furnished, spacious and clean with washer and dryer in unit. Walk across the
+            street to the ocean!
+        </td>
+        <td style="vertical-align: top; text-align: center;">
+            <div class="button" onclick="dp3.show();">VIEW RATES</div>
+            Check-In: <input type="text" id="checkin-date-3" value="" />
+            <br />
+            Check-Out: <input type="text" id="checkout-date-3" value="" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <!-- This is where the datepicker is going to display -->
+            <div id="checkin-rate-cal-3"></div>
+        </td>
+    </tr>
+
+</table>
+
+
+<br />
+<br />
+</body>
+</html>
