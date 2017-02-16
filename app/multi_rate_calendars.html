@@ -57,8 +57,8 @@
         price++;
     }
 
-    console.log('--> example response:');
-    console.log(response);
+    //console.log('--> example response:');
+    //console.log(response);
 
     var current_date = new Date();
     var current_year = current_date.getFullYear();
@@ -68,21 +68,23 @@
     var stop_date = new Date(current_year, current_month, current_day + 5);
     var min_date = new Date(current_year, current_month, current_day);
 
-    var double_datepicker = yodatepicker({
-        dp_id_name: 'dp_price_calendar',
-        months_to_display: 2,       // display two months
+    var options = {
+        dp_id_name: 'checkin-rate-cal-1',
+        begin_id_name: 'checkin-date-1',
+        end_id_name: 'checkout-date-1',
+
+        months_to_display: 1,
         use_date_range: true,
-        begin_id_name: 'price_calendar_start',
-        end_id_name: 'price_calendar_end',
+
         dow_heading: 'short_name',
-        close_onselect: false,      // display the calendar all the time
+        close_onselect: true,
         max_date: '1Y',
         min_date: min_date,
         locale: 'en',
         prev_fa_class: 'fa fa-chevron-left',
         next_fa_class: 'fa fa-chevron-right',
         cell_content: response,
-        //use_custom_content: true,
+
         prev_month_nav_color: '#00ff00',
         next_month_nav_color: '#00ff00',
 
@@ -97,10 +99,25 @@
 
         current_start_date: start_date,
         current_stop_date: stop_date
-    });
+    };
+    
+    options.dp_id_name = 'checkin-rate-cal-1';
+    options.begin_id_name = 'checkin-date-1';
+    options.end_id_name = 'checkout-date-1';
+    var dp1 = yodatepicker(options);
+
+    options.dp_id_name = 'checkin-rate-cal-2';
+    options.begin_id_name = 'checkin-date-2';
+    options.end_id_name = 'checkout-date-2';
+    var dp2 = yodatepicker(options);
+
+    options.dp_id_name = 'checkin-rate-cal-3';
+    options.begin_id_name = 'checkin-date-3';
+    options.end_id_name = 'checkout-date-3';
+    var dp3 = yodatepicker(options);
+
 
 </script>
-<script src="vendor/google-code-prettify/bin/run_prettify.min.js"></script>
 
 <title>yodatepicker</title>
 <style>
@@ -131,6 +148,13 @@ hr { background-color: #cd0000; width: 100%; height: 1px; }
 
 body { background-color: #f0f0f0; }
 
+.button {
+    background-color: #0088ff;
+    width: 120px;
+    height: 25px;
+    padding-top: 10px;
+}
+
 </style>
 </head>
 
@@ -139,7 +163,7 @@ body { background-color: #f0f0f0; }
 
 <center>
     <h2 class="biggertext">yodatepicker</h2>
-    <span class="myfont1">A simple datepicker with *NO* dependancies.</span>
+    <span class="myfont1">Multiple date pickers</span>
 </center>
 <hr style="height: 1px; color: #cd0000;" />
 <br />
@@ -151,63 +175,83 @@ yodatepicker
 <br />
 <br />
 
-<center>
-    <div id="dp_price_calendar"></div>
-    <br />
-    <br />
-    Check-In: <input type="text" id="price_calendar_start" value="" />
-    Check-Out: <input type="text" id="price_calendar_end" value="" />
-    <script type="text/javascript">double_datepicker.show();</script>
-</center>
+<table style="width: 600px;" border=1>
+    <tr>
+        <td style="vertical-align: top;">
+            <img style="height: 100px;"
+                 src="http://www.sanjose.org/media/790278/holiodayinnsiliconvalley.jpg" />
+        </td>
+        <td style="vertical-align: top;">
+            Beautifully decorated contemporary beach decor condo with resort style amenities.
+            Newly furnished, spacious and clean with washer and dryer in unit. Walk across the
+            street to the ocean!
+        </td>
+        <td style="vertical-align: top; text-align: center;">
+            <div class="button" onclick="dp1.show();">VIEW RATES</div>
+            Check-In: <input type="text" id="checkin-date-1" value="" />
+            <br />
+            Check-Out: <input type="text" id="checkout-date-1" value="" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <!-- This is where the datepicker is going to display -->
+            <div id="checkin-rate-cal-1"></div>
+        </td>
+    </tr>
 
-<pre class="prettyprint lang-js" style="background-color: #ffffff;">
-    var double_datepicker = yodatepicker({
-        dp_id_name: 'dp_price_calendar',
-        date_range: true,
-        begin_id_name: 'price_calendar_start',
-        end_id_name: 'price_calendar_end',
-        dow_heading: 'short_name',
-        months_to_display: 2,       // display two months
-        close_onselect: false,      // display the calendar all the time
-        max_date: '1Y',
-        min_date: new Date(),
-        locale: 'en',
-        cell_content: response
-    });
-</pre>
-<br />
+    
+    <tr>
+        <td style="vertical-align: top;">
+            <img style="height: 100px;"
+                 src="http://www.sanjose.org/media/790278/holiodayinnsiliconvalley.jpg" />
+        </td>
+        <td style="vertical-align: top;">
+            Beautifully decorated contemporary beach decor condo with resort style amenities.
+            Newly furnished, spacious and clean with washer and dryer in unit. Walk across the
+            street to the ocean!
+        </td>
+        <td style="vertical-align: top; text-align: center;">
+            <div class="button" onclick="dp2.show();">VIEW RATES</div>
+            Check-In: <input type="text" id="checkin-date-2" value="" />
+            <br />
+            Check-Out: <input type="text" id="checkout-date-2" value="" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <!-- This is where the datepicker is going to display -->
+            <div id="checkin-rate-cal-2"></div>
+        </td>
+    </tr>
 
-<!-- Usage & Options -->
 
-<div class="bigtext">Usage &amp; Options</div>
-<pre class="prettyprint lang-js" style="background-color: #ffffff;">
-&lt;script type="text/javascript" src="js/yodatepicker.js"&gt;&lt;/script&gt;
-&lt;link type="text/css" rel="stylesheet" href="styles/yodatepicker.css" /&gt;
-&lt;link type="text/css" rel="stylesheet" href="styles/yodatepicker-multi.css" /&gt;
+    <tr>
+        <td style="vertical-align: top;">
+            <img style="height: 100px;"
+                 src="http://www.sanjose.org/media/790278/holiodayinnsiliconvalley.jpg" />
+        </td>
+        <td style="vertical-align: top;">
+            Beautifully decorated contemporary beach decor condo with resort style amenities.
+            Newly furnished, spacious and clean with washer and dryer in unit. Walk across the
+            street to the ocean!
+        </td>
+        <td style="vertical-align: top; text-align: center;">
+            <div class="button" onclick="dp3.show();">VIEW RATES</div>
+            Check-In: <input type="text" id="checkin-date-3" value="" />
+            <br />
+            Check-Out: <input type="text" id="checkout-date-3" value="" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <!-- This is where the datepicker is going to display -->
+            <div id="checkin-rate-cal-3"></div>
+        </td>
+    </tr>
 
-&lt;script type="text/javascript"&gt;
+</table>
 
-var options = {
-    dp_id_name: 'div_id',              // Element id where to display yodatepicker
-    id_name: 'input_date',             // Element id where to put the selected date
-    locale: 'en',                      // Localization supported: en, es, fr
-    months_to_display: 2,              // Defaults to display one month
-    close_onselect: false,             // Boolean defaults to true; False sets yodatepicker to always display.
-    max_date: '1Y',                    // Max date that can be selected and scrolled forward to.
-    min_date: '3M',                    // Min date that can be selected and scrolled backward to.
-    onClose: function() { },           // Callback function fired when yodatepicker is closed.
-    onDateSelected: function() { }     // Callback function fired when a date is selected.
-};
-
-var my_datepicker = yodatepicker(options);
-
-&lt;/script&gt;
-</pre>
-
-<pre class="prettyprint lang-html" style="background-color: #ffffff;">
-&lt;input id="input_date" type="text" onclick="my_datepicker.show();" /&gt;
-&lt;div id="div_id"&gt;&lt;/div&gt;
-</pre>
 
 <br />
 <br />

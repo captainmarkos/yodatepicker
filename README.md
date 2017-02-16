@@ -3,11 +3,10 @@ yodatepicker
 Just another javascript datepicker with options.
 
 
-~/local/src/javascript/yodatepicker> date
 Wed Oct 22 20:40:08 EDT 2014
 
 
-Sample content to display content for dates:
+Example of data to display content for dates:
 
 
     // Perhaps some repsonse form some an API.
@@ -53,6 +52,8 @@ Sample content to display content for dates:
     });
 
 
+~> grunt test
+~> grunt build  // builds the min.js file
 
 
 

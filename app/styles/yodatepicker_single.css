@@ -19,17 +19,12 @@
     border: 1px solid #c3c3c3;
 }
 
-.yo-content tbody tr td {
-    padding: 0;
-}
-
 .yo-calendar {    /* .jrdp_calendar */
     /* main calendar style */
     border: 1px solid #5b5138;
-    width: 200px;
+    width: 400px;
     margin: 0;
     padding: 0;
-    border-spacing: 0;
 }
 
 .yo-calendar-title-bar {    /* .jrdp_calendar_month_tbar */
@@ -51,7 +46,7 @@
 .yo-previous-month {    /* .jrdp_calendar_month_prev */
     /* style for the previous button */
     font-family: Verdana, Geneva, sans-serif;
-    font-size: 13px;
+    font-size: 18px;
     font-style: normal;
     font-weight: bold;
     color: #343434;
@@ -65,7 +60,7 @@
 .yo-next-month {    /* .jrdp_calendar_month_next */
     /* style for the next button */
     font-family: Verdana, Geneva, sans-serif;
-    font-size: 13px;
+    font-size: 18px;
     font-style: normal;
     font-weight: bold;
     color: #343434;
@@ -85,7 +80,7 @@
     text-decoration: none;
     background-color: #343434;
     width: 20px;
-    height: 21px;
+    height: 30px;
     text-align: center;
     vertical-align: middle;
     border-bottom: 1px solid #C3C3C3;
@@ -117,7 +112,7 @@
     width: 24px;
     text-align: center;
     cursor: pointer;
-    line-height: 2em;
+    line-height: 4em;
 }
 
 .yo-datepicker-day:hover {    /* .jrdp_calendar_day1:hover */
@@ -136,7 +131,7 @@
     background-color: #ffffff;
     width: 20px;
     text-align: center;
-    line-height: 2em;
+    line-height: 4em;
 }
 
 .yo-datepicker-day-noselect:hover {    /* .jrdp_calendar_day1_noselect:hover*/

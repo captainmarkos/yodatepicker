@@ -39,7 +39,38 @@
     background-color: #d94867;
 }
 
+.yo-calendar-title-bar {    /* .jrdp_calendar_tbar_multi */
+    /* top title bar */
+    background-color: #d94867;
+}
+
+.yo-calendar{    /* .jrdp_calendar_multi */
+    /* main multi month style */
+    border: 1px solid #c0c0c0;
+    margin: 0;
+    padding: 0;
+    border-spacing: 0;
+    display: inline-block;
+}
+
+.yo-calendar-title-bar {    /* .jrdp_calendar_tbar_multi */
+    /* top title bar */
+    background-color: #d94867;
+}
+
 .yo-calendar-month-multi {    /* .jrdp_calendar_month_multi */
+    /* style for the month name */
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: normal;
+    color: #000000;
+    height: 30px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.yo-calendar-month {    /* .jrdp_calendar_month_multi */
     /* style for the month name */
     font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
@@ -81,7 +112,24 @@
     padding-right: 4px;
 }
 
+.yo-next-month {    /* .jrdp_calendar_month_next_multi */
+    /* style for the next button */
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: bold;
+    color: #000000;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    padding-right: 4px;
+}
+
 .yo-next-month-multi:hover {    /* .jrdp_calendar_month_next_multi:hover */
+    background-color: #00aa88;
+}
+
+.yo-next-month:hover {    /* .jrdp_calendar_month_next_multi:hover */
     background-color: #00aa88;
 }
 
@@ -100,7 +148,38 @@
     vertical-align: middle;
 }
 
+.yo-calendar-dow-title {    /* .jrdp_calendar_days_multi */
+    /* style for the day of the week abbrevations */
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: bold;
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #396221;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    vertical-align: middle;
+}
+
 .yo-datepicker-day-empty-multi {    /* .jrdp_calendar_day2_multi */
+    /* style for an empty cell */
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: .8em;
+    font-style: normal;
+    font-weight: normal;
+    color: #000000;
+    text-decoration: none;
+    background-color: #f3e1a5;
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #c0c0c0;
+}
+
+.yo-datepicker-day-empty {    /* .jrdp_calendar_day2_multi */
     /* style for an empty cell */
     font-family: Arial, Helvetica, sans-serif;
     font-size: .8em;
@@ -133,7 +212,29 @@
     border: 1px solid #c0c0c0;
 }
 
+.yo-datepicker-day {    /* .jrdp_calendar_day1_multi */
+    /* style for a cell that has a day and is selectable */
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: .8em;
+    font-style: normal;
+    font-weight: normal;
+    cursor: pointer;
+    color: #000000;
+    text-decoration: none;
+    background-color: #f3e1a5;
+    height: 50px;
+    width: 50px;
+    text-align: left;
+    vertical-align: top;
+    border: 1px solid #c0c0c0;
+}
+
 .yo-datepicker-day-multi:hover {    /* .jrdp_calendar_day1_multi:hover */
+    background-color: #ffff99;
+    cursor: pointer;
+}
+
+.yo-datepicker-day:hover {    /* .jrdp_calendar_day1_multi:hover */
     background-color: #ffff99;
     cursor: pointer;
 }
@@ -154,7 +255,27 @@
     border: 1px solid #c0c0c0;
 }
 
+.yo-datepicker-day-noselect {    /* .jrdp_calendar_day1_noselect_multi */
+    /* style for a cell that has a day and is not selectable */
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: .8em;
+    font-style: normal;
+    font-weight: normal;
+    color: #000000;
+    text-decoration: none;
+    background-color: #f3e1a5;
+    height: 50px;
+    width: 50px;
+    text-align: left;
+    vertical-align: top;
+    border: 1px solid #c0c0c0;
+}
+
 .yo-datepicker-day-noselect-multi:hover {    /* .jrdp_calendar_day1_noselect_multi:hover */
+    background-color: #c0c0c0;
+}
+
+.yo-datepicker-day-noselect:hover {    /* .jrdp_calendar_day1_noselect_multi:hover */
     background-color: #c0c0c0;
 }
 
@@ -175,7 +296,28 @@
     border: 1px solid #c0c0c0;
 }
 
+.yo-datepicker-day-current {    /* .jrdp_calendar_current_day_multi */
+    /* style for the current day */
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: .8em;
+    font-style: normal;
+    font-weight: normal;
+    cursor: pointer;
+    color: #000000;
+    text-decoration: none;
+    background-color: #b5dce5;
+    height: 50px;
+    width: 50px;
+    text-align: left;
+    vertical-align: top;
+    border: 1px solid #c0c0c0;
+}
+
 .yo-datepicker-day-current-multi:hover {    /* .jrdp_calendar_current_day_multi:hover */
+    background-color: #ffff99; cursor: pointer;
+}
+
+.yo-datepicker-day-current:hover {    /* .jrdp_calendar_current_day_multi:hover */
     background-color: #ffff99; cursor: pointer;
 }
 
