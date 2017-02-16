@@ -22,7 +22,8 @@ module.exports = function(grunt) {
         uglify: {
             my_target: {
                 files: {
-                   'app/js/yodatepicker.min.js': ['app/js/yodatepicker.js']
+                   'app/js/yodatepicker.min.js': ['app/js/yodatepicker.js'],
+                   'app/js/yojax.min.js': ['app/js/yojax.js']
                 }
             }
         },
