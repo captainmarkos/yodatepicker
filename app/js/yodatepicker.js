@@ -50,6 +50,9 @@ var yodatepicker = function(options) {
             // for that date.
             cell_content: opts.cell_content || null,
 
+            // A url to make a request for the cell content.
+            cell_content_url: opts.cell_content_url || null,
+
             // if set to true will ignore normal price configurations and pass
              // the data through as is
              use_custom_content: opts.use_custom_content || false,
@@ -723,7 +726,7 @@ var yodatepicker = function(options) {
                 var curr_date = raw2date(id_date);
                 var elem = document.getElementById(items[i].id);
                 var item = elem.getElementsByClassName(rate_item);
-                if(!item) { continue; }
+                if(!item || item.length < 1) { continue; }
 
                 // if the current date is between start and stop dates
                 if(curr_date >= start_date && curr_date <= stop_date) {
@@ -764,7 +767,7 @@ var yodatepicker = function(options) {
                 var id_date = elem_curr.id.replace('yo-' + cfg.dp_id_name + '_', '');
                 var curr_date = raw2date(id_date);
                 var item = elem_curr.getElementsByClassName(rate_item);
-                if(!item) { return; }
+                if(!item || item.length < 1) { return; }
 
                 if(curr_date >= start_date && curr_date <= stop_date) {
                     // yo-rate-item
@@ -1256,6 +1259,19 @@ var yodatepicker = function(options) {
                     eval(s);
                     /* jshint evil: false */
                 }
+            }
+
+            if(!cfg.cell_content && cfg.cell_content_url) {
+                if(typeof(YoJax) === 'undefined') {
+                    throw new YoException('YoJax is required');
+                }
+                /* global YoJax */
+                /* jshint latedef: false */
+                YoJax.get(cfg.cell_content_url, {}, function(_response) {
+                    var response = JSON.parse(_response);
+                    cfg.cell_content = response.data.rates;
+                    _yodatepicker.show();
+                });
             }
 
             return true;
