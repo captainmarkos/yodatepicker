@@ -633,6 +633,8 @@ var yodatepicker = function(options) {
         var month = date.getMonth();
         var year = date.getFullYear();
 
+        if(param_max_date instanceof Date) { return(param_max_date); }
+
         switch(param_max_date) {
             case '3M':
                 if((month + 3) > 11) { month = (month +3) % 12; year++; }
