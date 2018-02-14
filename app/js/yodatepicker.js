@@ -11,6 +11,13 @@ var yodatepicker = function(options) {
         };
     };
 
+    var FA_CURRENCY_ICONS = {
+        'USD': '<i class="fa fa-usd"></i>',
+        'CAD': '<i class="fa fa-dollar"></i>',
+        'EUR': '<i class="fa fa-eur"></i>',
+        'MXN': '<i class="fa fa-dollar"></i>'
+    };
+
     var configure = function(opts) {
         var cfg = {
             // Max months to display on a multi-month yodatepicker.
@@ -56,6 +63,8 @@ var yodatepicker = function(options) {
             // if set to true will ignore normal price configurations and pass
              // the data through as is
              use_custom_content: opts.use_custom_content || false,
+
+            currency_code: opts.currency_code || 'USD',
 
             // Sets the day of week name: single_name, short_name, full_name.
             dow_heading: opts.dow_heading || 'single_name',
@@ -175,7 +184,8 @@ var yodatepicker = function(options) {
                     if(isNaN(rate) || rate < 1 ) {
                         return '<div class="yo-rate-item">N/A</div>';
                     }
-                    return '<div class="yo-rate-item">$' + value + '</div>';
+                    var currency_icon = FA_CURRENCY_ICONS[cfg.currency_code];
+                    return '<div class="yo-rate-item">' + currency_icon + value + '</div>';
                 }
                 else {
                     return '<div class="yo-rate-item">' + value + '</div>';
