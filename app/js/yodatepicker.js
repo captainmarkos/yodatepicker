@@ -180,7 +180,8 @@ var yodatepicker = function(options) {
 
             var build_item = function(value) {
                 if(!cfg.use_custom_content) {
-                    var rate = parseFloat(value.toString());
+                    var rate = value ? parseFloat(value.toString()) : undefined;
+
                     if(isNaN(rate) || rate < 1 ) {
                         return '<div class="yo-rate-item">N/A</div>';
                     }
