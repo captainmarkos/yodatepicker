@@ -19,7 +19,7 @@ var yodatepicker = function(options) {
     };
 
     var configure = function(opts) {
-        var cfg = {
+        var conf = {
             // Max months to display on a multi-month yodatepicker.
             MAX_CALENDARS: 2,
 
@@ -108,46 +108,48 @@ var yodatepicker = function(options) {
         };
 
         // TODO: Clean up this below.
-        cfg.today = new Date(cfg.currdate.getFullYear(),
-                             cfg.currdate.getMonth(),
-                             cfg.currdate.getDate());
+        conf.today = new Date(conf.currdate.getFullYear(),
+                             conf.currdate.getMonth(),
+                             conf.currdate.getDate());
 
         // array of month names
-        cfg.month_names = get_month_names(cfg.locale);
+        conf.month_names = get_month_names(conf.locale);
 
         // array of day of week names
-        cfg.day_names = get_dow_names(cfg.locale, cfg.dow_heading);
+        conf.day_names = get_dow_names(conf.locale, conf.dow_heading);
 
         // Keeps track of the month the datepicker is on and will
         // not go past the min_date month (if set).
-        var dp_display_date = cfg.current_start_date ?
-                              cfg.current_start_date : cfg.currdate;
-        cfg.mn = (dp_display_date.getTime() < cfg.min_date.getTime()) ?
-                 cfg.min_date.getMonth() : dp_display_date.getMonth();
+        var dp_display_date = conf.current_start_date ?
+                              conf.current_start_date : conf.currdate;
+        conf.mn = (dp_display_date.getTime() < conf.min_date.getTime()) ?
+                 conf.min_date.getMonth() : dp_display_date.getMonth();
 
         // Keeps track of the year the datepicker is on and will
         // not go past the min_date year (if set).
-        cfg.yy = (dp_display_date.getTime() < cfg.min_date.getTime()) ?
-                 cfg.min_date.getFullYear() : dp_display_date.getFullYear();
+        conf.yy = (dp_display_date.getTime() < conf.min_date.getTime()) ?
+                 conf.min_date.getFullYear() : dp_display_date.getFullYear();
 
         // Set flag, tiggers the datepicker to close on selecting a day.
-        cfg.close_onselect = (cfg.close_onselect === undefined) ?
-                             true : cfg.close_onselect;
+        conf.close_onselect = (conf.close_onselect === undefined) ?
+                             true : conf.close_onselect;
 
         // Limit the number of months to display for a multi-month datepicker.
-        cfg.months_to_display = (cfg.months_to_display > cfg.MAX_CALENDARS) ?
-                               cfg.MAX_CALENDARS : cfg.months_to_display;
+        conf.months_to_display = (conf.months_to_display > conf.MAX_CALENDARS) ?
+                               conf.MAX_CALENDARS : conf.months_to_display;
 
         // This feature is only applicable when close_onselect is false and
         // months_to_display is greater than 1.
-        //cfg.use_date_range = (cfg.close_onselect === false &&
-        //                  cfg.months_to_display > 1) ? cfg.use_date_range : false;
+        //conf.use_date_range = (conf.close_onselect === false &&
+        //                  conf.months_to_display > 1) ? conf.use_date_range : false;
 
         // Indicator for which date is active / set when use_date_range.
-        cfg.date_range = cfg.use_date_range ? {start: true, stop: false} : null;
+        conf.date_range = conf.use_date_range ? {start: true, stop: false} : null;
 
-        return cfg;
+        return conf;
     };
+
+    var cfg = configure(options);
 
     var toggle_date_range = function() {
         if(cfg.use_date_range) {
@@ -709,8 +711,6 @@ var yodatepicker = function(options) {
         return(new Date(year, month, date.getDate()));
     };
 
-    var cfg = configure(options);
-
     // This object is returned and represents the public properties and methods.
     var _yodatepicker = {
         version: 'yo-yo',
@@ -817,7 +817,7 @@ var yodatepicker = function(options) {
 
         set_min_date: function(mdate) {
             // This will override the cfg.min_date param.
-            if(!mdate instanceof Date) { return false; }
+            if(!(mdate instanceof Date)) { return false; }
 
             cfg.min_date = mdate;
 
@@ -1280,6 +1280,7 @@ var yodatepicker = function(options) {
                 }
                 /* global YoJax */
                 /* jshint latedef: false */
+
                 YoJax.get(cfg.cell_content_url, {}, function(_response) {
                     var response = JSON.parse(_response);
                     cfg.cell_content = response.data.rates;

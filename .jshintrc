@@ -28,6 +28,7 @@
   "maxstatements": false,
   "globals": {
       "_": false,
-      "$": false
+      "$": false,
+      "JSON": true
   }
 }
