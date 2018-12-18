@@ -1,7 +1,7 @@
 {
   "name": "yodatepicker",
   "description": "A simple datapicker with zero dependencies.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "license": "MIT",
   "homepage": "https://github.com/simpleviewinc/jrs-yodatepicker",
   "private": false,
@@ -27,7 +27,6 @@
   "dependencies": {
   },
   "devDependencies": {
-    "google-code-prettify": "~1.0.3",
     "fontawesome": "~4.2.0"
   }
 }
