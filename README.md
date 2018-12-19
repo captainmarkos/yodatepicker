@@ -2,8 +2,8 @@
 
 ### Just another javascript datepicker with options.
 Yodatepicker is a javascript calendar that has zero dependencies. It was developed to be used as
-a datepicker / calendar and to work on any site with no conflicts with other javascript libs such
-as jquery.  
+a datepicker / calendar and to work on any site with no conflicts with other javascript libraries
+such as jquery.
 
 ### Example Usage
 Consider this scenario: You build a widget to be placed on a website. This widget has a datepicker
@@ -14,8 +14,25 @@ works.  Maybe you change the widget to use the client's version of jquery and it
 you just use a plain javascript datepicker and then you have no issues at all!  This is what we
 needed so yodatepicker it is!
 
-With yodatepicker you can create datepicker style calendars or regular static calendars.  Look in
-the 
+Here's a simple usage:
+```
+var checkin_datepicker = yodatepicker({
+    dp_id_name: 'dp_start_date', // selector id where to display the datepicker
+    id_name: 'start_date',       // selector id where to populate a selected date
+    max_date: '1Y'               // datepicker calendar will scroll 1 year
+});
+```
+
+```
+<div>
+    <input type="text" id="start_date" value="mm/dd/yyyy" />
+    <img src="images/icon_calendar.gif" onclick="checkin_datepicker.show();" />
+    <div id="dp_start_date"></div>
+</div>
+```
+With yodatepicker you can create datepicker style calendars or regular static calendars.  There
+are html files in the `app/` directory that have working examples of how to use yodatepicker.
+
 
 ### Supplying content for dates
 Yodatepicker can display content for given days on the calendar, for example hotel rates.
