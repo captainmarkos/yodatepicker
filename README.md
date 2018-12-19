@@ -1,16 +1,21 @@
 # yodatepicker
 
 ### Just another javascript datepicker with options.
+Yodatepicker is a javascript calendar that has zero dependencies. It was developed to be used as
+a datepicker / calendar and to work on any site with no conflicts with other javascript libs such
+as jquery.  
 
-### Tests
-Currently there is no test coverage for yodatepicker (hopefully this will change).
-Jshint is being used and can be evoked by running:
-```
-~> grunt test
-```
+### Example Usage
+Consider this scenario: You build a widget to be placed on a website. This widget has a datepicker
+and uses the jquery-ui datepicker.  The widget is given to the client to embed on their web page
+however the client's site uses jquery version x.  Your widget uses jquery version y and so you
+encounter jquery version conflicts.  Maybe the client's site doesn't use jquery in which case it
+works.  Maybe you change the widget to use the client's version of jquery and it works. Or maybe...
+you just use a plain javascript datepicker and then you have no issues at all!  This is what we
+needed so yodatepicker it is!
 
-### Minified javascript
-Running `grunt build` will generate the min.js files.
+With yodatepicker you can create datepicker style calendars or regular static calendars.  Look in
+the 
 
 ### Supplying content for dates
 Yodatepicker can display content for given days on the calendar, for example hotel rates.
@@ -36,4 +41,14 @@ var my_datepicker = yodatepicker({
     locale: 'en',
     cell_content: cell_content
 });
+```
+
+### Minified javascript
+Running `grunt build` will generate the min.js files.
+
+### Tests
+Currently there is no test coverage for yodatepicker (hopefully this will change).
+Jshint is being used and can be evoked by running:
+```
+~> grunt test
 ```
