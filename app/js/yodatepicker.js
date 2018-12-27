@@ -1,5 +1,7 @@
 'use strict';
 
+/* jshint latedef: false */
+
 /* jshint unused: false */
 var yodatepicker = function(options) {
 /* jshint unused: true */
@@ -19,7 +21,7 @@ var yodatepicker = function(options) {
     };
 
     var configure = function(opts) {
-        var cfg = {
+        var conf = {
             // Max months to display on a multi-month yodatepicker.
             MAX_CALENDARS: 2,
 
@@ -108,45 +110,45 @@ var yodatepicker = function(options) {
         };
 
         // TODO: Clean up this below.
-        cfg.today = new Date(cfg.currdate.getFullYear(),
-                             cfg.currdate.getMonth(),
-                             cfg.currdate.getDate());
+        conf.today = new Date(conf.currdate.getFullYear(),
+                             conf.currdate.getMonth(),
+                             conf.currdate.getDate());
 
         // array of month names
-        cfg.month_names = get_month_names(cfg.locale);
+        conf.month_names = get_month_names(conf.locale);
 
         // array of day of week names
-        cfg.day_names = get_dow_names(cfg.locale, cfg.dow_heading);
+        conf.day_names = get_dow_names(conf.locale, conf.dow_heading);
 
         // Keeps track of the month the datepicker is on and will
         // not go past the min_date month (if set).
-        var dp_display_date = cfg.current_start_date ?
-                              cfg.current_start_date : cfg.currdate;
-        cfg.mn = (dp_display_date.getTime() < cfg.min_date.getTime()) ?
-                 cfg.min_date.getMonth() : dp_display_date.getMonth();
+        var dp_display_date = conf.current_start_date ?
+                              conf.current_start_date : conf.currdate;
+        conf.mn = (dp_display_date.getTime() < conf.min_date.getTime()) ?
+                 conf.min_date.getMonth() : dp_display_date.getMonth();
 
         // Keeps track of the year the datepicker is on and will
         // not go past the min_date year (if set).
-        cfg.yy = (dp_display_date.getTime() < cfg.min_date.getTime()) ?
-                 cfg.min_date.getFullYear() : dp_display_date.getFullYear();
+        conf.yy = (dp_display_date.getTime() < conf.min_date.getTime()) ?
+                 conf.min_date.getFullYear() : dp_display_date.getFullYear();
 
         // Set flag, tiggers the datepicker to close on selecting a day.
-        cfg.close_onselect = (cfg.close_onselect === undefined) ?
-                             true : cfg.close_onselect;
+        conf.close_onselect = (conf.close_onselect === undefined) ?
+                             true : conf.close_onselect;
 
         // Limit the number of months to display for a multi-month datepicker.
-        cfg.months_to_display = (cfg.months_to_display > cfg.MAX_CALENDARS) ?
-                               cfg.MAX_CALENDARS : cfg.months_to_display;
+        conf.months_to_display = (conf.months_to_display > conf.MAX_CALENDARS) ?
+                               conf.MAX_CALENDARS : conf.months_to_display;
 
         // This feature is only applicable when close_onselect is false and
         // months_to_display is greater than 1.
-        //cfg.use_date_range = (cfg.close_onselect === false &&
-        //                  cfg.months_to_display > 1) ? cfg.use_date_range : false;
+        //conf.use_date_range = (conf.close_onselect === false &&
+        //                  conf.months_to_display > 1) ? conf.use_date_range : false;
 
         // Indicator for which date is active / set when use_date_range.
-        cfg.date_range = cfg.use_date_range ? {start: true, stop: false} : null;
+        conf.date_range = conf.use_date_range ? {start: true, stop: false} : null;
 
-        return cfg;
+        return conf;
     };
 
     var toggle_date_range = function() {
@@ -451,7 +453,7 @@ var yodatepicker = function(options) {
         /* jshint evil: false */
     };
 
-    var text = function(_text) {
+    var text_node = function(_text) {
         // Create and set a text node and return it.
         var node = document.createTextNode(_text);
         return node;
@@ -817,7 +819,7 @@ var yodatepicker = function(options) {
 
         set_min_date: function(mdate) {
             // This will override the cfg.min_date param.
-            if(!mdate instanceof Date) { return false; }
+            if(!(mdate instanceof Date)) { return false; }
 
             cfg.min_date = mdate;
 
@@ -854,13 +856,13 @@ var yodatepicker = function(options) {
                 } else {
                     tr.appendChild(element('td', {klass: prev_style, colspan: '1'}))
                       .appendChild(element('span', {id: prev_id}))
-                      .appendChild(text('<'));
+                      .appendChild(text_node('<'));
                 }
 
                 // month name element
                 var text_style = 'yo-calendar-month' + params.multi_cal;
                 tr.appendChild(element('td', {klass: text_style, colspan: '5'}))
-                  .appendChild(text(params.month + ' ' + params.year));
+                  .appendChild(text_node(params.month + ' ' + params.year));
 
                 // next month navigation element
                 var next_style = 'yo-next-month' + params.multi_cal;
@@ -873,7 +875,7 @@ var yodatepicker = function(options) {
                 } else {
                     tr.appendChild(element('td', {klass: next_style, colspan: '1'}))
                       .appendChild(element('span', {id: next_id}))
-                      .appendChild(text('>'));
+                      .appendChild(text_node('>'));
                 }
 
                 // suppress inner nav buttons
@@ -900,7 +902,7 @@ var yodatepicker = function(options) {
                 var td_class = 'yo-calendar-dow-title' + params.multi_cal;
                 for(var i = 0; i < cfg.day_names.length; i++) {
                     tr.appendChild(element('td', {klass: td_class}))
-                      .appendChild(text(cfg.day_names[i]));
+                      .appendChild(text_node(cfg.day_names[i]));
                 }
             } catch(e) {
                 console.log(e.toString());
@@ -918,7 +920,7 @@ var yodatepicker = function(options) {
                 var tr = tbody_node.appendChild(element('tr'));
                 for(var i = 0; i < 7; i++) {
                     tr.appendChild(element('td', {klass: td_class}))
-                      .appendChild(text(' '));
+                      .appendChild(text_node(' '));
                 }
             } catch(e) {
                 console.log(e.toString());
@@ -941,7 +943,7 @@ var yodatepicker = function(options) {
             // .yo-datepicker-day-noselect-multi  // day is not selectable
             try {
                 tr.appendChild(element('td', {klass: _klass, id: _id}))
-                  .appendChild(text(content));
+                  .appendChild(text_node(content));
             } catch(e) {
                 console.log(e.toString());
                 return false;
