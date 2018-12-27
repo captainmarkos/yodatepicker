@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<script type="text/javascript" src="js/yodatepicker.js"></script>
+<script type="text/javascript" src="js/yojax.js"></script>
+<link type="text/css" rel="stylesheet" href="styles/rates-calendar.css" />
+<link type="text/css" rel="stylesheet" href="vendor/fontawesome/css/font-awesome.css" />
+<script type="text/javascript">
+
+    var current_date = new Date();
+    var current_year = current_date.getFullYear();
+    var current_day = current_date.getDate();
+    var current_month = current_date.getMonth();
+    var min_date = new Date(current_year, current_month, current_day);
+
+    var rate_cal_datepicker = yodatepicker({
+        dp_id_name: 'rate-calendar',          // where the datepicker is displayed
+        begin_id_name: 'rate-cal-start-date', // where the selected start date is displayed
+        end_id_name: 'rate-cal-end-date',     // where the selected end date is displayed
+
+        months_to_display: 2,
+        use_date_range: true,
+
+        dow_heading: 'short_name',
+        close_onselect: false,      // display the calendar all the time
+        max_date: '1Y',
+        min_date: min_date,
+        locale: 'en',
+
+        cell_content_url: 'http://0.0.0.0:3000/hs4/api/v1/clones/visitphilly.bookdirect.net/lodgings/69207/rates.json?checkin=20170215&checkout=20180215&per_page=3655&auth_token=3bc8adfab13fb9117f53064a3a7a3107009ff58f6e0c5a4fb6e6c7be7b7',
+
+        prev_fa_class: 'fa fa-chevron-left',
+        next_fa_class: 'fa fa-chevron-right',
+
+        //use_custom_content: true,
+        prev_month_nav_color: '#00ff00',
+        next_month_nav_color: '#00ff00',
+
+        // hover
+        rate_mouseover_fgcolor: '#cd0000',  /* same as .yo-rate-item:hover */
+        day_mouseover_bgcolor:  '#ffffff',
+        day_mouseover_fgcolor:  '#ff00ff',
+
+        rate_mouseleave_fgcolor: '#0000cd', /* same as .yo-rate-item */
+        day_mouseleave_bgcolor: '#f3e1a5',  /* same as .yo-datepicker-day-multi */
+        day_mouseleave_fgcolor: '#000000'   /* same as .yo-datepicker-day-multi */
+    });
+
+
+</script>
+
+
+<title>yodatepicker</title>
+<style>
+a { text-decoration: none; color: #0000ff; }
+
+a:hover { text-decoration: underline; color: #cd0000; }
+
+hr { background-color: #cd0000; width: 100%; height: 1px; }
+
+.myfont1 {
+    font-family: Verdana, Arial, sans-serif;
+    font-size: .9em;
+}
+
+.biggertext {
+    font-family: verdana, arial;
+    font-size: 1.2em;
+    color: #0000ff;
+    font-weight: normal;
+}
+
+.bigtext {
+    font-family: verdana, arial;
+    font-size: .9em;
+    color: #0000ff;
+    font-weight: normal;
+}
+
+body { background-color: #f0f0f0; }
+
+</style>
+</head>
+
+
+<body>
+<center>
+    <h2 class="biggertext">yodatepicker</h2>
+    <span class="myfont1">Vanilla Javascript</span>
+</center>
+<hr style="height: 1px; color: #cd0000;" />
+<br />
+
+<div class="bigtext">
+yodatepicker
+</div>
+
+<br />
+<br />
+
+<center>
+    <div id="rate-calendar"></div>
+    <br />
+    <br />
+    Check-In: <input type="text" id="rate-cal-start-date" value="" />
+    Check-Out: <input type="text" id="rate-cal-end-date" value="" />
+    <script type="text/javascript">rate_cal_datepicker.show();</script>
+</center>
+
+
+<br />
+<br />
+</body>
+</html>

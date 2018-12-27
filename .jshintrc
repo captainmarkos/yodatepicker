@@ -23,10 +23,11 @@
   "trailing": true,
   "smarttabs": true,
   "maxlen": false,
-  "maxparams": 4,
+  "maxparams": 5,
   "maxdepth": 4,
   "maxstatements": false,
   "globals": {
+      "JSON": false,
       "_": false,
       "$": false
   }

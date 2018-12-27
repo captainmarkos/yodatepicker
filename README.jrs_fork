@@ -1,0 +1,21 @@
+This is a fork of of the repo: https://github.com/captainmarkos/yodatepicker
+
+
+Yodatepicker is registerd as a bower package so the bookdirect_responsive app
+can install it with bower.
+
+There are now 2 yodatepicker packages up on bower:
+
+1) yodatepicker git@github.com:jackrabbit/yodatepicker.git
+
+2) yodatepicker git@github.com:simpleviewinc/jrs-yodatepicker.git
+
+The first will be going away but is not unregistered at this time.
+
+Some notes:
+
+> bower uninstall yodatepicker --save
+> bower unregister yodatepicker git@github.com:jackrabbit/yodatepicker.git
+
+> bower register jrs-yodatepicker git@github.com:simpleviewinc/jrs-yodatepicker.git
+> bower install jrs-yodatepicker --save

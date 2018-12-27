@@ -9,7 +9,8 @@ module.exports = function(grunt) {
         jshint: {
             options: {
                 jshintrc: '.jshintrc',
-                reporter: require('jshint-stylish')
+                reporter: require('jshint-stylish'),
+                ignores: 'app/js/*.min.js'
             },
             all: {
                 src: ['Gruntfile.js',
@@ -21,7 +22,8 @@ module.exports = function(grunt) {
         uglify: {
             my_target: {
                 files: {
-                   'app/js/yodatepicker.min.js': ['app/js/yodatepicker.js']
+                   'app/js/yodatepicker.min.js': ['app/js/yodatepicker.js'],
+                   'app/js/yojax.min.js': ['app/js/yojax.js']
                 }
             }
         },

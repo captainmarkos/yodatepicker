@@ -1,17 +1,37 @@
 {
-  "engines": {
-    "node": ">= 0.10.0"
+  "name": "jrs-yodatepicker",
+  "version": "1.2.0",
+  "description": "Yet another datepicker with no dependencies.",
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "test"
   },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simpleviewinc/jrs-yodatepicker.git"
+  },
+  "keywords": [
+    "datepicker"
+  ],
+  "author": "Mark Brettin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/simpleviewinc/jrs-yodatepicker/issues"
+  },
+  "homepage": "https://github.com/simpleviewinc/jrs-yodatepicker#readme",
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-uglify": "^0.8.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-karma": "^0.9.0",
-    "jshint-stylish": "^1.0.0",
-    "karma": "^0.12.24",
-    "karma-jasmine": "^0.1.5",
-    "karma-phantomjs-launcher": "^0.1.4"
+    "grunt": "^1.0.3",
+    "grunt-contrib-jshint": "^2.0.0",
+    "grunt-contrib-uglify": "^4.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-karma": "^3.0.1",
+    "jshint-stylish": "^2.2.1",
+    "karma": "^3.1.4",
+    "karma-jasmine": "^2.0.1",
+    "karma-phantomjs-launcher": "^1.0.4"
   },
   "dependencies": {}
 }

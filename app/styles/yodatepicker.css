@@ -19,12 +19,17 @@
     border: 1px solid #c3c3c3;
 }
 
+.yo-content tbody tr td {
+    padding: 0;
+}
+
 .yo-calendar {    /* .jrdp_calendar */
     /* main calendar style */
     border: 1px solid #5b5138;
     width: 200px;
     margin: 0;
     padding: 0;
+    border-spacing: 0;
 }
 
 .yo-calendar-title-bar {    /* .jrdp_calendar_month_tbar */
@@ -46,7 +51,7 @@
 .yo-previous-month {    /* .jrdp_calendar_month_prev */
     /* style for the previous button */
     font-family: Verdana, Geneva, sans-serif;
-    font-size: 18px;
+    font-size: 13px;
     font-style: normal;
     font-weight: bold;
     color: #343434;
@@ -60,7 +65,7 @@
 .yo-next-month {    /* .jrdp_calendar_month_next */
     /* style for the next button */
     font-family: Verdana, Geneva, sans-serif;
-    font-size: 18px;
+    font-size: 13px;
     font-style: normal;
     font-weight: bold;
     color: #343434;
