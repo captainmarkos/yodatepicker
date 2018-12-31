@@ -69,3 +69,9 @@ Jshint is being used and can be evoked by running:
 ```
 ~> grunt test
 ```
+
+### Transpile and create one file of all
+```
+~> babel app/js/ --out-file dude.js
+
+```

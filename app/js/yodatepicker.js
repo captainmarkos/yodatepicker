@@ -1,154 +1,16 @@
-'use strict';
+
+/* Uses: yolib.js, yoconfig.js */
 
 /* jshint latedef: false */
-
 /* jshint unused: false */
 var yodatepicker = function(options) {
 /* jshint unused: true */
-    var YoException = function(value) {
-        this.value = value;
-        this.message = 'yoException: something is wrong with ';
-        this.toString = function() {
-            return this.message + this.value;
-        };
-    };
 
     var FA_CURRENCY_ICONS = {
         'USD': '<i class="fa fa-usd"></i>',
         'CAD': '<i class="fa fa-dollar"></i>',
         'EUR': '<i class="fa fa-eur"></i>',
         'MXN': '<i class="fa fa-dollar"></i>'
-    };
-
-    var configure = function(opts) {
-        var conf = {
-            // Max months to display on a multi-month yodatepicker.
-            MAX_CALENDARS: 2,
-
-            // Element id where to display the yodatepicker.
-            dp_id_name: opts.dp_id_name || '',
-
-            // Element id where to populate a selected date.
-            id_name: opts.id_name || '',
-
-            // Localization.
-            locale: opts.locale || 'en',
-
-            // User defined function executed when selecting a date.
-            ondateselected_callback: (opts.onDateSelected instanceof Function) ?
-                                     opts.onDateSelected : null,
-
-            // User defined function to be called when closing yodatepicker.
-            onclose_callback: (opts.onClose instanceof Function) ?
-                                     opts.onClose : null,
-
-            // Number of months to display in multi-month yodatepicker.
-            months_to_display: opts.months_to_display || 1,
-
-            // Boolean triggers yodatepicker to close when user selects a date.
-            close_onselect: opts.close_onselect,
-
-            // Max date user can scroll forward to.
-            max_date: get_max_date((opts.max_date || '1Y')),
-
-            // Min date user can scroll backward to.
-            min_date: get_min_date((opts.min_date || '*')),
-
-            // An array of objects with dates as the key and the content
-            // as the value where the value is the content to be included
-            // for that date.
-            cell_content: opts.cell_content || null,
-
-            // A url to make a request for the cell content.
-            cell_content_url: opts.cell_content_url || null,
-
-            // if set to true will ignore normal price configurations and pass
-             // the data through as is
-             use_custom_content: opts.use_custom_content || false,
-
-            currency_code: opts.currency_code || 'USD',
-
-            // Sets the day of week name: single_name, short_name, full_name.
-            dow_heading: opts.dow_heading || 'single_name',
-
-            // Tells yodatepicker that the user wants to use a date range.
-            // The first date selected will become the begin date and then
-            // the second date selected will become the end date.
-            use_date_range: opts.use_date_range || false,
-
-            // If use_date_range then this is the element id where to
-            // populate the selected start date.
-            begin_id_name: opts.begin_id_name || '',
-
-            // If use_date_range then this is the element id where to
-            // populate the selected end date.
-            end_id_name: opts.end_id_name || '',
-
-            // The current date.
-            currdate: new Date(),
-
-            // CSS class used for previous and next navigation (fontawesome).
-            prev_fa_class: opts.prev_fa_class || '',
-            next_fa_class: opts.next_fa_class || '',
-
-            // Custom colors for certain items.
-            prev_month_nav_color: opts.prev_month_nav_color || '',
-            next_month_nav_color: opts.next_month_nav_color || '',
-
-            // These options go together for hovering.
-            rate_mouseover_fgcolor: opts.rate_mouseover_fgcolor || '',
-            day_mouseover_bgcolor: opts.day_mouseover_bgcolor || '',
-            day_mouseover_fgcolor: opts.day_mouseover_fgcolor || '',
-            selected_rate_color: opts.selected_rate_color || '',
-
-            rate_mouseleave_fgcolor: opts.rate_mouseleave_fgcolor || '',
-            day_mouseleave_bgcolor: opts.day_mouseleave_bgcolor || '',
-            day_mouseleave_fgcolor: opts.day_mouseleave_fgcolor || '',
-
-            current_start_date: opts.current_start_date || '',
-            current_stop_date: opts.current_stop_date || ''
-        };
-
-        // TODO: Clean up this below.
-        conf.today = new Date(conf.currdate.getFullYear(),
-                             conf.currdate.getMonth(),
-                             conf.currdate.getDate());
-
-        // array of month names
-        conf.month_names = get_month_names(conf.locale);
-
-        // array of day of week names
-        conf.day_names = get_dow_names(conf.locale, conf.dow_heading);
-
-        // Keeps track of the month the datepicker is on and will
-        // not go past the min_date month (if set).
-        var dp_display_date = conf.current_start_date ?
-                              conf.current_start_date : conf.currdate;
-        conf.mn = (dp_display_date.getTime() < conf.min_date.getTime()) ?
-                 conf.min_date.getMonth() : dp_display_date.getMonth();
-
-        // Keeps track of the year the datepicker is on and will
-        // not go past the min_date year (if set).
-        conf.yy = (dp_display_date.getTime() < conf.min_date.getTime()) ?
-                 conf.min_date.getFullYear() : dp_display_date.getFullYear();
-
-        // Set flag, tiggers the datepicker to close on selecting a day.
-        conf.close_onselect = (conf.close_onselect === undefined) ?
-                             true : conf.close_onselect;
-
-        // Limit the number of months to display for a multi-month datepicker.
-        conf.months_to_display = (conf.months_to_display > conf.MAX_CALENDARS) ?
-                               conf.MAX_CALENDARS : conf.months_to_display;
-
-        // This feature is only applicable when close_onselect is false and
-        // months_to_display is greater than 1.
-        //conf.use_date_range = (conf.close_onselect === false &&
-        //                  conf.months_to_display > 1) ? conf.use_date_range : false;
-
-        // Indicator for which date is active / set when use_date_range.
-        conf.date_range = conf.use_date_range ? {start: true, stop: false} : null;
-
-        return conf;
     };
 
     var toggle_date_range = function() {
@@ -370,7 +232,7 @@ var yodatepicker = function(options) {
     var select_date = function(_mm, _dd, _yy) {
         try {
             if(_mm === undefined || _dd === undefined || _yy === undefined) {
-                throw new YoException('undefined paramter(s)');
+                throw 'select_date() : undefined paramter(s)';
             }
 
             var js_date = _mm + '_' + _dd + '_' + _yy;
@@ -521,197 +383,7 @@ var yodatepicker = function(options) {
         }
     };
 
-    var leap_year = function(yr) {
-        return(yr % 400 === 0) || (yr % 4 === 0 && yr % 100 !== 0);
-    };
-
-    var get_dow_names = function(locale, dow_heading) {
-        var names = [];
-        switch(dow_heading) {
-            case 'single_name':
-                names = dow_single_names(locale);
-                break;
-            case 'short_name':
-                names = dow_short_names(locale);
-                break;
-            case 'full_name':
-                names = dow_full_names(locale);
-                break;
-            default:
-                names = dow_single_names(locale);
-        }
-        return names;
-    };
-
-    var dow_single_names = function(locale) {
-        var names = [];
-        switch(locale) {
-            case 'es':
-                names = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
-                break;
-            case 'fr':
-                names = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
-                break;
-            case 'de':
-                names = ['S', 'M', 'D', 'M', 'D', 'F', 'S'];
-                break;
-            default:
-                names = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-        }
-        return names;
-    };
-
-    var dow_short_names = function(locale) {
-        var names = [];
-        switch(locale) {
-            case 'es':
-                names = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
-                break;
-            case 'fr':
-                names = ['Dim', 'Lu', 'Ma', 'Me', 'Jeu', 'Vend', 'Sam'];
-                break;
-            case 'de':
-                names = ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'];
-                break;
-            default:
-                names = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        }
-        return names;
-    };
-
-    var dow_full_names = function(locale) {
-        var names = [];
-        switch(locale) {
-            case 'es':
-                names = ['Domingo', 'Lunes', 'Martes', 'Miercoles',
-                         'Jueves', 'Viernes', 'Sabado'];
-                break;
-            case 'fr':
-                names = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi',
-                         'Jeudi', 'Vendredi', 'Samedi'];
-                break;
-            case 'de':
-                names = ['zondag', 'maandag', 'dinsdag', 'woensdag',
-                         'donderdag', 'vrijdag', 'zaterdag'];
-                break;
-            default:
-                names = ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
-                         'Thursday', 'Friday', 'Saturday'];
-        }
-        return names;
-    };
-
-    var get_month_names = function(locale) {
-        if(locale === undefined || locale === null) { locale = 'en'; }
-
-        if(locale === 'es') {
-            return(['Enero', 'Febrero', 'Marzo', 'Abril',
-                    'Mayo', 'Junio', 'Julio', 'Augosto',
-                    'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']);
-        }
-        else if(locale === 'fr') {
-            return(['Janvier', 'Fevrier', 'Mars', 'Avril',
-                    'Mai', 'Juin', 'Juillet', 'Aout',
-                    'Septembre', 'Octobre', 'Novembre', 'Decembre']);
-        }
-        else if(locale === 'de') {
-            return(['Januar', 'Februar', 'Marz', 'April',
-                    'Mai', 'Juni', 'Juli', 'August',
-                    'September', 'Oktober', 'November', 'Dezember']);
-        }
-
-        return(['January', 'February', 'March', 'April', 'May', 'June', 'July',
-                'August', 'September', 'October', 'November', 'December']);
-    };
-
-    var days_in_month = function(month_num, full_year) {
-        // Jan == 0, Feb == 1, Mar == 2, ...
-        if(month_num === 0 || month_num === 2 || month_num === 4 ||
-           month_num === 6 || month_num === 7 || month_num === 9 ||
-           month_num === 11) {
-            return(31);
-        }
-        else if(month_num === 3 || month_num === 5 ||
-           month_num === 8 || month_num === 10) {
-            return(30);
-        }
-
-        return(leap_year(full_year) ? 29 : 28);
-    };
-
-    var get_max_date = function(param_max_date) {
-        // Return a date object set to max_date.
-        // Acceptable parameter formats: 3M, 6M, 9M, 1Y, 2Y, * (infinity)
-        var date = new Date();
-        var month = date.getMonth();
-        var year = date.getFullYear();
-
-        if(param_max_date instanceof Date) { return(param_max_date); }
-
-        switch(param_max_date) {
-            case '3M':
-                if((month + 3) > 11) { month = (month +3) % 12; year++; }
-                else { month += 3; }
-                break;
-            case '6M':
-                if((month + 6) > 11) { month = (month +6) % 12; year++; }
-                else { month += 6; }
-                break;
-            case '9M':
-                if((month + 9) > 11) { month = (month +9) % 12; year++; }
-                else { month += 9; }
-                break;
-            case '2Y':
-                year += 2;
-                break;
-            case '*':  // infinity
-                year = 3125;
-                break;
-            default:   // default to '1Y'
-                year += 1;
-        }
-        return(new Date(year, month, date.getDate()));
-    };
-
-    var get_min_date = function(param_min_date) {
-        // Return a date object set to min_date.
-        // Acceptable parameter formats: 0, 3M, 6M, 9M, 1Y, 2Y, * (infinity)
-        var date = new Date();
-        var month = date.getMonth();
-        var year = date.getFullYear();
-
-        // If a Date object is passed in, use that.
-        if(param_min_date instanceof Date) { return(param_min_date); }
-
-        switch(param_min_date) {
-            case '3M':
-                if((month - 3) < 0) { month = (month -3) % 12; year--; }
-                else { month -= 3; }
-                break;
-            case '6M':
-                if((month - 6) < 0) { month = (month -6) % 12; year--; }
-                else { month -= 6; }
-                break;
-            case '9M':
-                if((month - 9) < 0) { month = (month -9) % 12; year--; }
-                else { month -= 9; }
-                break;
-            case '1Y':
-                year -= 1;
-                break;
-            case '2Y':
-                year -= 2;
-                break;
-            case '*':
-                year = 1900;
-                break;
-            default:
-                break;  // default is the current date
-        }
-        return(new Date(year, month, date.getDate()));
-    };
-
-    var cfg = configure(options);
+    var cfg = yoconfig.prepare(options);
 
     // This object is returned and represents the public properties and methods.
     var _yodatepicker = {
@@ -836,7 +508,7 @@ var yodatepicker = function(options) {
             // Creates the header on the yodatepicker.
             try {
                 if(!params.tbody || !params.month || !params.year) {
-                    throw new YoException(params);
+                    throw 'create_title_header() : bad params';
                 }
 
                 var tr_class = 'yo-calendar-title-bar' + params.multi_cal;
@@ -897,7 +569,9 @@ var yodatepicker = function(options) {
         create_dow_header: function(params) {
             // Creates the day-of-week header for yodatepicker.
             try {
-                if(!params.tbody) { throw new YoException(params.tbody); }
+                if(!params.tbody) {
+                    throw 'create_dow_header() : params.tbody not set';
+                }
                 var tr = params.tbody.appendChild(element('tr'));
                 var td_class = 'yo-calendar-dow-title' + params.multi_cal;
                 for(var i = 0; i < cfg.day_names.length; i++) {
@@ -914,7 +588,9 @@ var yodatepicker = function(options) {
         create_empty_week: function(tbody_node) {
             // Creates an entire week with empty days.
             try {
-                if(!tbody_node) { throw new YoException(tbody_node); }
+                if(!tbody_node) {
+                    throw 'create_empty_week() : tbody_node not set';
+                }
                 var multi_cal = (cfg.months_to_display > 1) ? '-multi' : '';
                 var td_class = 'yo-datepicker-day-empty' + multi_cal;
                 var tr = tbody_node.appendChild(element('tr'));
@@ -974,7 +650,7 @@ var yodatepicker = function(options) {
 
                 citem.offset = 0;
                 citem.first_dow = cfg.currdate.getDay(); // 0 - 6 (sun - sat)
-                citem.total_days = days_in_month(cfg.currdate.getMonth(),
+                citem.total_days = yolib.days_in_month(cfg.currdate.getMonth(),
                                                  cfg.currdate.getFullYear());
 
                 this.create_title_header({
@@ -1142,7 +818,7 @@ var yodatepicker = function(options) {
             var root_node = document.getElementById(cfg.dp_id_name);
             var css_ext = (cfg.months_to_display > 1) ? '-multi' : '';
 
-            if(!root_node) { throw new YoException(root_node); }
+            if(!root_node) { throw 'show() : root_node not set'; }
 
             if(document.getElementById(yo_id)) {
                 remove_element(root_node, yo_id);
@@ -1278,7 +954,7 @@ var yodatepicker = function(options) {
 
             if(!cfg.cell_content && cfg.cell_content_url) {
                 if(typeof(YoJax) === 'undefined') {
-                    throw new YoException('YoJax is required');
+                    throw 'show() : YoJax is required';
                 }
                 /* global YoJax */
                 /* jshint latedef: false */

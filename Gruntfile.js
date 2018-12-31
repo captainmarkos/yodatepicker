@@ -6,6 +6,16 @@ module.exports = function(grunt) {
   // Project configuration.
     grunt.initConfig({
         // Task configuration.
+        concat: {
+          // options: {
+          //   separator: ';'
+          // },
+          dist: {
+            src: ['app/js/yolib.js', 'app/js/yoconfig.js', 'app/js/yodatepicker.js'],
+            dest: 'app/js/built.js'
+          }
+        },
+
         jshint: {
             options: {
                 jshintrc: '.jshintrc',
@@ -14,7 +24,7 @@ module.exports = function(grunt) {
             },
             all: {
                 src: ['Gruntfile.js',
-                      'app/js/{,*/}*.js']
+                      'app/js/built.js'] // 'app/js/{,*/}*.js']
             }
         },
 
@@ -22,8 +32,8 @@ module.exports = function(grunt) {
         uglify: {
             my_target: {
                 files: {
-                   'app/js/yodatepicker.min.js': ['app/js/yodatepicker.js'],
-                   'app/js/yojax.min.js': ['app/js/yojax.js']
+                   'dist/yodatepicker.min.js': ['dist/yodatepicker.js'],
+                   'dist/yojax.min.js': ['dist/yojax.js']
                 }
             }
         },
@@ -45,6 +55,20 @@ module.exports = function(grunt) {
                 files: ['test/unit/*.js'],
                 tasks: ['jshint:all', 'karma']
             }
+        },
+
+        // Copy files
+        copy: {
+            main: {
+                files: [
+                    {
+                        src: 'app/js/built.js', dest: 'dist/yodatepicker.js'
+                    },
+                    {
+                        src: 'app/js/yojax.js', dest: 'dist/yojax.js'
+                    }
+                ]
+            }
         }
     });
 
@@ -53,6 +77,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
     // Default task.
     grunt.registerTask('default', ['jshint']);
@@ -74,6 +100,8 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', 'runs uglify', function() {
         grunt.task.run([
+            'concat',
+            'copy:main',
             'uglify'
         ]);
     });
