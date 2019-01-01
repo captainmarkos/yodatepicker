@@ -12,19 +12,44 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'app/js/built.js',
+      'dist/*.js',
       'test/**/*.js'
     ],
 
 
     // list of files to exclude
+    //    'test/unit/services/*.js',
+    //    'test/unit/controllers/packages_spec.js',
     exclude: [
+      'dist/*.min.js'
     ],
 
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress'],
+    reporters: ['dots', 'coverage'],
+
+    preprocessors: {
+      // source files we want to generate coverage for
+      // do not include tests or libraries
+      // (these files will be instrumented by Istanbul)
+      //'app/js/*.js': ['coverage']
+      'dist/*.js': ['coverage']
+    },
+
+    coverageReporter: {
+        // specify a common output directory
+        dir: 'test/coverage',
+        reporters: [
+            // reporters not supporting the 'file' property
+            { type: 'html', subdir: 'report-html' },
+            { type: 'lcov', subdir: 'report-lcov' },
+            // reporters supporting the 'file' property, use 'subdir' to
+            // directly output them in that directory
+            { type: 'text', subdir: '.', file: 'text.txt' },
+            { type: 'text-summary', subdir: '.', file: 'text-summary.txt' },
+        ]
+    },
 
 
     // web server port
@@ -52,12 +77,20 @@ module.exports = function(config) {
     // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
-    browsers: ['PhantomJS'],
+    browsers: ['ChromeNoSandbox'],
+
+    customLaunchers: {
+      ChromeNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
 
     // Which plugins to enable
     plugins: [
-      'karma-phantomjs-launcher',
-      'karma-jasmine'
+      'karma-jasmine',
+      'karma-coverage',
+      'karma-chrome-launcher'
     ],
 
 

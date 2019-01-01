@@ -14,7 +14,7 @@
   "noempty": true,
   "nonew": true,
   "noarg": true,
-  "quotmark": true,
+  "quotmark": false,
   "regexp": true,
   "undef": true,
   "unused": true,
@@ -29,6 +29,9 @@
   "globals": {
       "JSON": false,
       "_": false,
-      "$": false
+      "$": false,
+      "yolib": false,
+      "yoconfig": false,
+      "yodatepicker": false
   }
 }

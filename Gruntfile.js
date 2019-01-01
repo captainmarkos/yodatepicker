@@ -3,28 +3,44 @@
 /*global module:false*/
 module.exports = function(grunt) {
 
-  // Project configuration.
+    // Project configuration.
     grunt.initConfig({
         // Task configuration.
+
+        babel: {
+            options: {
+              sourceMap: false,
+              sourceType: 'script'
+              //presets: ['@babel/preset-env']
+            },
+            dist: {
+              files: {
+                'app/js/yojax.js': 'app/es6/yojax.es6',
+                'app/js/yolib.js': 'app/es6/yolib.es6',
+                'app/js/yoconfig.js': 'app/es6/yoconfig.es6',
+                'app/js/yodatepicker.js': 'app/es6/yodatepicker.es6'
+              }
+            }
+        },
+
         concat: {
-          // options: {
-          //   separator: ';'
-          // },
+          options: {
+            banner: "'use strict';\n"
+            //separator: ';'
+          },
           dist: {
             src: ['app/js/yolib.js', 'app/js/yoconfig.js', 'app/js/yodatepicker.js'],
-            dest: 'app/js/built.js'
+            dest: 'dist/yodatepicker.js'
           }
         },
 
-        jshint: {
-            options: {
-                jshintrc: '.jshintrc',
-                reporter: require('jshint-stylish'),
-                ignores: 'app/js/*.min.js'
-            },
-            all: {
-                src: ['Gruntfile.js',
-                      'app/js/built.js'] // 'app/js/{,*/}*.js']
+        // Copy files
+        copy: {
+            dist: {
+                files: [
+                    { src: 'app/js/yojax.js', dest: 'dist/yojax.js' },
+                    { src: 'app/js/dom_layout.js', dest: 'dist/dom_layout.js' }
+                ]
             }
         },
 
@@ -35,6 +51,19 @@ module.exports = function(grunt) {
                    'dist/yodatepicker.min.js': ['dist/yodatepicker.js'],
                    'dist/yojax.min.js': ['dist/yojax.js']
                 }
+            }
+        },
+
+        jshint: {
+            options: {
+                jshintrc: '.jshintrc',
+                reporter: require('jshint-stylish'),
+                ignores: 'app/js/*.min.js'
+            },
+            all: {
+                src: [ 'Gruntfile.js',
+                       'app/js/*.js',
+                       'dist/yodatepicker.js' ] // 'app/js/{,*/}*.js'
             }
         },
 
@@ -57,17 +86,18 @@ module.exports = function(grunt) {
             }
         },
 
-        // Copy files
-        copy: {
-            main: {
-                files: [
-                    {
-                        src: 'app/js/built.js', dest: 'dist/yodatepicker.js'
-                    },
-                    {
-                        src: 'app/js/yojax.js', dest: 'dist/yojax.js'
-                    }
-                ]
+        shell: {
+            output_code_coverage: {
+                command: 'cat test/coverage/text.txt',
+                options: {
+                    stderr: false
+                }
+            },
+            output_code_coverage_summary: {
+                command: 'cat test/coverage/text-summary.txt',
+                options: {
+                    stderr: false
+                }
             }
         }
     });
@@ -79,6 +109,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-babel');
+    grunt.loadNpmTasks('grunt-shell');
 
     // Default task.
     grunt.registerTask('default', ['jshint']);
@@ -92,16 +124,23 @@ module.exports = function(grunt) {
             } else {
                 grunt.task.run([
                     'jshint:all',
-                    'karma'
+                    'karma',
+                    'shell:output_code_coverage',
+                    'shell:output_code_coverage_summary'
                 ]);
             }
         }
     );
 
-    grunt.registerTask('build', 'runs uglify', function() {
+    grunt.registerTask('transpile', 'transpile es6 => js', function() {
+        grunt.task.run([ 'babel' ]);
+    });
+
+    grunt.registerTask('build', 'concat -> babel -> uglify', function() {
         grunt.task.run([
+            'babel',
             'concat',
-            'copy:main',
+            'copy:dist',
             'uglify'
         ]);
     });
