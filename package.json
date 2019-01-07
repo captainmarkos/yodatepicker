@@ -1,5 +1,5 @@
 {
-  "name": "jrs-yodatepicker",
+  "name": "yodatepicker",
   "version": "1.2.0",
   "description": "Yet another datepicker with no dependencies.",
   "main": "Gruntfile.js",
@@ -14,7 +14,8 @@
     "url": "git+https://github.com/captainmarkos/yodatepicker.git"
   },
   "keywords": [
-    "datepicker"
+    "datepicker widget",
+    "calendar widget"
   ],
   "author": "Mark Brettin",
   "license": "ISC",
