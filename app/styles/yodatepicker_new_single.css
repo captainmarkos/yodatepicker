@@ -1,0 +1,162 @@
+.yo-previous-month, .yo-next-month {
+  color: #fff!important;
+}
+.yo-previous-month .fa, .yo-previous-month .fa-chevron-left {
+  display: none !important;
+}
+
+.yo-next-month .fa, .yo-next-month .fa-chevron-right {
+  display: none !important;
+}
+
+/* span#yo-dp_activity_calendar-prev-month-0:after { */
+.yo-previous-month span {
+  content: "";
+  background: url('../images/calendar-arrow-prev.png') no-repeat;
+  height: 30px;
+  width: 60px;
+  left: 5px;
+}
+
+/* span#yo-dp_activity_calendar-next-month-0:after { */
+.yo-next-month span {
+    content: "";
+    background: url('../images/calendar-arrow-next.png') no-repeat;
+    height: 30px;
+    width: 60px;
+    right: 5px;
+}
+.yo-calendar-title-bar {
+    background-color: #fff!important;
+    border-bottom: none!important;
+}
+.yo-calendar-month {
+    width: 85px;
+    height: 28px;
+    font-weight: normal!important;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+    color: #333333;
+    font-family: "TTNorms", "TT Norms W01 Regular", sans-serif!important;
+    font-size: 20px!important;
+    text-transform: uppercase;
+}
+.yo-content {
+    width: 320px!important;
+    height: 330px!important;
+    border-radius: 8px!important;
+    background-color: #ffffff!important;
+    box-shadow: 6px 16px 34px 0 rgba(0, 0, 0, 0.12);
+    border:none!important;
+}
+.yo-calendar {
+    border: none;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    border-spacing: 0;
+    width: 320px!important;
+    height: 330px!important;
+    border-radius: 8px!important;
+    background-color: #ffffff!important;
+}
+.yo-content tbody tr td {
+    padding: 5px!important;
+}
+.yo-calendar-dow-title {
+    background-color: #fff!important;
+    vertical-align: middle;
+    border-bottom: none!important;
+    width: 14% !important;
+    height: 17px;
+    font-family: "TTNorms", "TT Norms W01 Regular", sans-serif!important;
+    font-size: 12px!important;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: right;
+    color: #9b9b9b!important;
+}
+.yo-datepicker-day-noselect {
+    font-family: "TTNorms", "TT Norms W01 Regular", sans-serif!important;
+    font-size: 16px!important;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: right!important;
+    color: #9b9b9b!important;
+}
+.yo-datepicker-day-current {r;
+    font-family: "TTNorms", "TT Norms W01 Regular", sans-serif!important;
+    font-size: 16px!important;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: right!important;
+    color: #f26a36!important;
+    background:#fff!important;
+}
+.yo-datepicker-day {
+    font-family: "TTNorms", "TT Norms W01 Regular", sans-serif!important;
+    font-size: 16px!important;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: right!important;
+    color: #333333!important;
+}
+.yo-datepicker-day:hover {
+    background-color: #fff!important;
+    cursor: pointer;
+    font-family: "TTNorms", "TT Norms W01 Regular", sans-serif!important;
+    font-size: 16px!important;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: right!important;
+    color: #f26a36!important;
+}
+
+
+/* ================================== */
+.yo-container {    /* .jrdp_calendar_pos */
+    position: absolute;
+    display: inline-block;
+    z-index: 9999;
+}
+
+.yo-datepicker-day-empty {    /* .jrdp_calendar_day2 */
+    /* style for an empty cell */
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 5px;
+    font-style: normal;
+    font-weight: normal;
+    color: #000000;
+    text-decoration: none;
+    background-color: #ffffff;
+    height: 0px;
+    text-align: center;
+}
+
+.yo-datepicker-day-noselect:hover {    /* .jrdp_calendar_day1_noselect:hover*/
+    background-color: #EAEAEA;
+}
+
+
+.yo-datepicker-day-current:hover {    /* .jrdp_calendar_current_day:hover */
+    background-color: #ffff99;
+    cursor: pointer;
+}
