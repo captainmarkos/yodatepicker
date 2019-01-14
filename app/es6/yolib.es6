@@ -95,9 +95,9 @@ const yolib = {
         if(locale === undefined || locale === null) { locale = 'en'; }
 
         if(locale === 'es') {
-            return(['Enero', 'Febrero', 'Marzo', 'Abril',
-                    'Mayo', 'Junio', 'Julio', 'Augosto',
-                    'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']);
+            return(['enero', 'febrero', 'marzo', 'abril',
+                    'mayo', 'junio', 'julio', 'augosto',
+                    'septiembre', 'octubre', 'noviembre', 'diciembre']);
         }
         else if(locale === 'fr') {
             return(['Janvier', 'Fevrier', 'Mars', 'Avril',
@@ -118,7 +118,7 @@ const yolib = {
         let names = [];
         switch(locale) {
             case 'es':
-                names = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+                names = ['D', 'L', 'M', 'X', 'J', 'V', 'S'];
                 break;
             case 'fr':
                 names = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
@@ -154,8 +154,8 @@ const yolib = {
         let names = [];
         switch(locale) {
             case 'es':
-                names = ['Domingo', 'Lunes', 'Martes', 'Miercoles',
-                         'Jueves', 'Viernes', 'Sabado'];
+                names = ['domingo', 'lunes', 'martes', 'mi\u00E9rcoles',
+                         'jueves', 'viernes', 's\u00E1bado'];
                 break;
             case 'fr':
                 names = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi',

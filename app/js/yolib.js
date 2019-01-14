@@ -149,7 +149,7 @@ var yolib = {
     }
 
     if (locale === 'es') {
-      return ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Augosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      return ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'augosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
     } else if (locale === 'fr') {
       return ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Decembre'];
     } else if (locale === 'de') {
@@ -163,7 +163,7 @@ var yolib = {
 
     switch (locale) {
       case 'es':
-        names = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+        names = ['D', 'L', 'M', 'X', 'J', 'V', 'S'];
         break;
 
       case 'fr':
@@ -207,7 +207,7 @@ var yolib = {
 
     switch (locale) {
       case 'es':
-        names = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
+        names = ['domingo', 'lunes', 'martes', "mi\xE9rcoles", 'jueves', 'viernes', "s\xE1bado"];
         break;
 
       case 'fr':

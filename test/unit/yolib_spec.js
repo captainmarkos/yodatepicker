@@ -161,7 +161,7 @@ describe('yolib', function() {
                     'October', 'November', 'December']
 
       res = yolib.get_month_names('es');
-      expect(res[0]).toEqual('Enero');
+      expect(res[0]).toEqual('enero');
 
       res = yolib.get_month_names('fr');
       expect(res[0]).toEqual('Janvier');
