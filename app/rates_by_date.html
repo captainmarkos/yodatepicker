@@ -6,13 +6,14 @@
 <script type="text/javascript" src="../dist/yodatepicker.js"></script>
 <link type="text/css" rel="stylesheet" href="styles/rates-calendar.css" />
 <link type="text/css" rel="stylesheet" href="vendor/fontawesome/css/font-awesome.css" />
+<link type="text/css" rel="stylesheet" href="styles/rouge_github.css" />
 <script type="text/javascript">
 
     // Some helper functions so I can make an array of dates.
     Date.prototype.addDays = function(days) {
-        var dat = new Date(this.valueOf())
-        dat.setDate(dat.getDate() + days);
-        return dat;
+        var d = new Date(this.valueOf())
+        d.setDate(d.getDate() + days);
+        return d;
     }
 
     function getDates(startDate, stopDate) {
@@ -69,16 +70,23 @@
     var min_date = new Date(current_year, current_month, current_day);
 
     var double_datepicker = yodatepicker({
+        /* DOM settings */
         dp_id_name: 'dp_price_calendar',
-        months_to_display: 2,       // display two months
-        use_date_range: true,
         begin_id_name: 'price_calendar_start',
         end_id_name: 'price_calendar_end',
-        dow_heading: 'short_name',
+
+        /* Calendar settings */
+        locale: 'en',
+        months_to_display: 2,       // display two months
         close_onselect: false,      // display the calendar all the time
+        use_date_range: true,       // provides start / end date selections
+        dow_heading: 'short_name',
         max_date: '1Y',
         min_date: min_date,
-        locale: 'en',
+        current_start_date: start_date,
+        current_stop_date: stop_date,
+
+        /* Display settings */
         prev_fa_class: 'fa fa-chevron-left',
         next_fa_class: 'fa fa-chevron-right',
         cell_content: response,
@@ -93,10 +101,7 @@
 
         rate_mouseleave_fgcolor: '#0000cd', /* same as .yo-rate-item */
         day_mouseleave_bgcolor: '#f3e1a5',  /* same as .yo-datepicker-day-multi */
-        day_mouseleave_fgcolor: '#000000',   /* same as .yo-datepicker-day-multi */
-
-        current_start_date: start_date,
-        current_stop_date: stop_date
+        day_mouseleave_fgcolor: '#000000'   /* same as .yo-datepicker-day-multi */
     });
 
 </script>
@@ -128,7 +133,7 @@ hr { background-color: #cd0000; width: 100%; height: 1px; }
     font-weight: normal;
 }
 
-body { background-color: #f0f0f0; }
+body { background-color: #ffffff; }
 
 </style>
 </head>
@@ -159,56 +164,34 @@ yodatepicker
     <script type="text/javascript">double_datepicker.show();</script>
 </center>
 
-<pre class="prettyprint lang-js" style="background-color: #ffffff;">
-    var double_datepicker = yodatepicker({
-        dp_id_name: 'dp_price_calendar',
-        date_range: true,
-        begin_id_name: 'price_calendar_start',
-        end_id_name: 'price_calendar_end',
-        dow_heading: 'short_name',
-        months_to_display: 2,       // display two months
-        close_onselect: false,      // display the calendar all the time
-        max_date: '1Y',
-        min_date: new Date(),
-        locale: 'en',
-        cell_content: response
-    });
-</pre>
-<br />
+<pre class="highlight-github" style="background-color: #f8f8f8 !important; padding: 20px;">
+  <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"js/yodatepicker.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"styles/yodatepicker.css"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"styles/yodatepicker-multi.css"</span> <span class="nt">/&gt;</span>
 
-<!-- Usage & Options -->
+  <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
 
-<div class="bigtext">Usage &amp; Options</div>
-<pre class="prettyprint lang-js" style="background-color: #ffffff;">
-&lt;script type="text/javascript" src="js/yodatepicker.js"&gt;&lt;/script&gt;
-&lt;link type="text/css" rel="stylesheet" href="styles/yodatepicker.css" /&gt;
-&lt;link type="text/css" rel="stylesheet" href="styles/yodatepicker-multi.css" /&gt;
+  <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">dp_id_name</span><span class="p">:</span> <span class="s1">'div_id'</span><span class="p">,</span>              <span class="c1">// Element id where to display yodatepicker</span>
+      <span class="na">id_name</span><span class="p">:</span> <span class="s1">'input_date'</span><span class="p">,</span>             <span class="c1">// Element id where to put the selected date</span>
+      <span class="na">locale</span><span class="p">:</span> <span class="s1">'en'</span><span class="p">,</span>                      <span class="c1">// Localization supported: en, es, fr</span>
+      <span class="na">months_to_display</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>              <span class="c1">// Defaults to display one month</span>
+      <span class="na">close_onselect</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>             <span class="c1">// Boolean defaults to true; False sets yodatepicker to always display.</span>
+      <span class="na">max_date</span><span class="p">:</span> <span class="s1">'1Y'</span><span class="p">,</span>                    <span class="c1">// Max date that can be selected and scrolled forward to.</span>
+      <span class="na">min_date</span><span class="p">:</span> <span class="s1">'3M'</span><span class="p">,</span>                    <span class="c1">// Min date that can be selected and scrolled backward to.</span>
+      <span class="na">onClose</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="p">},</span>           <span class="c1">// Callback function fired when yodatepicker is closed.</span>
+      <span class="na">onDateSelected</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>     <span class="c1">// Callback function fired when a date is selected.</span>
+  <span class="p">};</span>
 
-&lt;script type="text/javascript"&gt;
+  <span class="kd">var</span> <span class="nx">my_datepicker</span> <span class="o">=</span> <span class="nx">yodatepicker</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
 
-var options = {
-    dp_id_name: 'div_id',              // Element id where to display yodatepicker
-    id_name: 'input_date',             // Element id where to put the selected date
-    locale: 'en',                      // Localization supported: en, es, fr
-    months_to_display: 2,              // Defaults to display one month
-    close_onselect: false,             // Boolean defaults to true; False sets yodatepicker to always display.
-    max_date: '1Y',                    // Max date that can be selected and scrolled forward to.
-    min_date: '3M',                    // Min date that can be selected and scrolled backward to.
-    onClose: function() { },           // Callback function fired when yodatepicker is closed.
-    onDateSelected: function() { }     // Callback function fired when a date is selected.
-};
+  <span class="nt">&lt;/script&gt;</span>
 
-var my_datepicker = yodatepicker(options);
-
-&lt;/script&gt;
-</pre>
-
-<pre class="prettyprint lang-html" style="background-color: #ffffff;">
-&lt;input id="input_date" type="text" onclick="my_datepicker.show();" /&gt;
-&lt;div id="div_id"&gt;&lt;/div&gt;
+  <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">"input_date"</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">onclick=</span><span class="s">"my_datepicker.show();"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"div_id"</span><span class="nt">&gt;&lt;/div&gt;</span>
 </pre>
 
 <br />
-<br />
+
 </body>
 </html>
