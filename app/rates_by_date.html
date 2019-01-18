@@ -10,27 +10,28 @@
 <script type="text/javascript">
 
     // Some helper functions so I can make an array of dates.
-    Date.prototype.addDays = function(days) {
+    function mock_data() {
+      Date.prototype.addDays = function(days) {
         var d = new Date(this.valueOf())
         d.setDate(d.getDate() + days);
         return d;
-    }
+      }
 
-    function getDates(startDate, stopDate) {
+      function getDates(startDate, stopDate) {
         var dateArray = [];
         var currentDate = startDate;
         while(currentDate <= stopDate) {
-            dateArray.push( new Date (currentDate) )
-            currentDate = currentDate.addDays(1);
+          dateArray.push( new Date (currentDate) )
+          currentDate = currentDate.addDays(1);
         }
         return dateArray;
-    }
+      }
 
-    // Create a year's worth of data.
-    var dateArray = getDates(new Date(), (new Date()).addDays(365));
-    var response = [];
-    var price = 1;
-    for(i = 0; i < dateArray.length; i ++ ) {
+      // Create a year's worth of data.
+      var dateArray = getDates(new Date(), (new Date()).addDays(365));
+      var json_data = [];
+      var price = 1;
+      for(i = 0; i < dateArray.length; i ++ ) {
         var d = dateArray[i];
         var year = d.getFullYear();
         var month = d.getMonth() +1;
@@ -39,27 +40,30 @@
         var day = (d.getDate() < 10) ? ('0' + d.getDate()) : d.getDate();
         // create some no availability
         if(i > 10 && i < 20) {
-            response.push({
-                date: year + '-' + month + '-' + day,
-                data: ''
-            });
+          json_data.push({
+              date: year + '-' + month + '-' + day,
+              data: ''
+          });
         } else if(i > 2 && i < 6) {
-            response.push({
-                date: year + '-' + month + '-' + day,
-                data: 'N/A'
-            });
+          json_data.push({
+              date: year + '-' + month + '-' + day,
+              data: 'N/A'
+          });
         } else {
-            response.push({
-                date: year + '-' + month + '-' + day,
-                data: price.toString() + '.99'
-            });
+          json_data.push({
+              date: year + '-' + month + '-' + day,
+              data: price.toString() + '.99'
+          });
         }
 
         price++;
+      }
+      return json_data;
     }
 
-    console.log('--> example response:');
-    console.log(response);
+    var json_data = mock_data();
+    console.log('--> example json_data:');
+    console.log(json_data);
 
     var current_date = new Date();
     var current_year = current_date.getFullYear();
@@ -70,27 +74,28 @@
     var min_date = new Date(current_year, current_month, current_day);
 
     var double_datepicker = yodatepicker({
-        /* DOM settings */
+        /* DOM config */
         dp_id_name: 'dp_price_calendar',
         begin_id_name: 'price_calendar_start',
         end_id_name: 'price_calendar_end',
 
-        /* Calendar settings */
+        /* Calendar config */
         locale: 'en',
-        months_to_display: 2,       // display two months
-        close_onselect: false,      // display the calendar all the time
-        use_date_range: true,       // provides start / end date selections
-        dow_heading: 'short_name',
-        max_date: '1Y',
-        min_date: min_date,
-        current_start_date: start_date,
-        current_stop_date: stop_date,
+        months_to_display: 2,           // display two months
+        close_onselect: false,          // display the calendar all the time
+        use_date_range: true,           // provides start / end date selections
+        dow_heading: 'short_name',      // day of week names
+        max_date: '1Y',                 // max date the calendar will go to
+        min_date: new Date(),           // min date of calendar
+        current_start_date: start_date, // initital highlighted range from
+        current_stop_date: stop_date,   // start_date to stop_date
 
-        /* Display settings */
+        // cell_content must be an array of { date: 'YYYY-MM-DD', data: 'stuff'}
+        cell_content: json_data,
+
+        /* Display config */
         prev_fa_class: 'fa fa-chevron-left',
         next_fa_class: 'fa fa-chevron-right',
-        cell_content: response,
-        //use_custom_content: true,
         prev_month_nav_color: '#00ff00',
         next_month_nav_color: '#00ff00',
 
@@ -112,7 +117,7 @@
 
 <div style="text-align: center;">
     <h2>Yodatepicker</h2>
-    <span>A simple datepicker with *NO* dependancies.</span>
+    <p>Javascript Datepicker / Calendar</p>
 </div>
 <hr />
 <br />
@@ -126,30 +131,53 @@
 </center>
 
 <pre class="highlight-github" style="background-color: #f8f8f8 !important; padding: 20px;">
-  <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"js/yodatepicker.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
-  <span class="nt">&lt;link</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"styles/yodatepicker.css"</span> <span class="nt">/&gt;</span>
-  <span class="nt">&lt;link</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"styles/yodatepicker-multi.css"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"dist/yodatepicker.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"styles/rates-calendar.css"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"vendor/font-awesome.css"</span> <span class="nt">/&gt;</span>
 
-  <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
 
-  <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
-      <span class="na">dp_id_name</span><span class="p">:</span> <span class="s1">'div_id'</span><span class="p">,</span>              <span class="c1">// Element id where to display yodatepicker</span>
-      <span class="na">id_name</span><span class="p">:</span> <span class="s1">'input_date'</span><span class="p">,</span>             <span class="c1">// Element id where to put the selected date</span>
-      <span class="na">locale</span><span class="p">:</span> <span class="s1">'en'</span><span class="p">,</span>                      <span class="c1">// Localization supported: en, es, fr</span>
-      <span class="na">months_to_display</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>              <span class="c1">// Defaults to display one month</span>
-      <span class="na">close_onselect</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>             <span class="c1">// Boolean defaults to true; False sets yodatepicker to always display.</span>
-      <span class="na">max_date</span><span class="p">:</span> <span class="s1">'1Y'</span><span class="p">,</span>                    <span class="c1">// Max date that can be selected and scrolled forward to.</span>
-      <span class="na">min_date</span><span class="p">:</span> <span class="s1">'3M'</span><span class="p">,</span>                    <span class="c1">// Min date that can be selected and scrolled backward to.</span>
-      <span class="na">onClose</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="p">},</span>           <span class="c1">// Callback function fired when yodatepicker is closed.</span>
-      <span class="na">onDateSelected</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>     <span class="c1">// Callback function fired when a date is selected.</span>
-  <span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">double_datepicker</span> <span class="o">=</span> <span class="nx">yodatepicker</span><span class="p">({</span>
+      <span class="cm">/* DOM config */</span>
+      <span class="na">dp_id_name</span><span class="p">:</span> <span class="s1">'dp_price_calendar'</span><span class="p">,</span>
+      <span class="na">begin_id_name</span><span class="p">:</span> <span class="s1">'price_calendar_start'</span><span class="p">,</span>
+      <span class="na">end_id_name</span><span class="p">:</span> <span class="s1">'price_calendar_end'</span><span class="p">,</span>
 
-  <span class="kd">var</span> <span class="nx">my_datepicker</span> <span class="o">=</span> <span class="nx">yodatepicker</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+      <span class="cm">/* Calendar config */</span>
+      <span class="na">locale</span><span class="p">:</span> <span class="s1">'en'</span><span class="p">,</span>
+      <span class="na">months_to_display</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>           <span class="c1">// display two months</span>
+      <span class="na">close_onselect</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>          <span class="c1">// display the calendar all the time</span>
+      <span class="na">use_date_range</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>           <span class="c1">// provides start / end date selections</span>
+      <span class="na">dow_heading</span><span class="p">:</span> <span class="s1">'short_name'</span><span class="p">,</span>      <span class="c1">// day of week names</span>
+      <span class="na">max_date</span><span class="p">:</span> <span class="s1">'1Y'</span><span class="p">,</span>                 <span class="c1">// max date the calendar will go to</span>
+      <span class="na">min_date</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(),</span>           <span class="c1">// min date of calendar</span>
+      <span class="na">current_start_date</span><span class="p">:</span> <span class="nx">start_date</span><span class="p">,</span> <span class="c1">// initital highlighted range from</span>
+      <span class="na">current_stop_date</span><span class="p">:</span> <span class="nx">stop_date</span><span class="p">,</span>   <span class="c1">// start_date to stop_date</span>
 
-  <span class="nt">&lt;/script&gt;</span>
+      <span class="c1">// cell_content must be an array of { date: 'YYYY-MM-DD', data: 'stuff'}</span>
+      <span class="na">cell_content</span><span class="p">:</span> <span class="nx">json_data</span><span class="p">,</span>
 
-  <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">"input_date"</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">onclick=</span><span class="s">"my_datepicker.show();"</span> <span class="nt">/&gt;</span>
-  <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"div_id"</span><span class="nt">&gt;&lt;/div&gt;</span>
+      <span class="cm">/* Display config */</span>
+      <span class="na">prev_fa_class</span><span class="p">:</span> <span class="s1">'fa fa-chevron-left'</span><span class="p">,</span>
+      <span class="na">next_fa_class</span><span class="p">:</span> <span class="s1">'fa fa-chevron-right'</span><span class="p">,</span>
+      <span class="na">prev_month_nav_color</span><span class="p">:</span> <span class="s1">'#00ff00'</span><span class="p">,</span>
+      <span class="na">next_month_nav_color</span><span class="p">:</span> <span class="s1">'#00ff00'</span><span class="p">,</span>
+
+      <span class="c1">// hover</span>
+      <span class="na">rate_mouseover_fgcolor</span><span class="p">:</span> <span class="s1">'#cd0000'</span><span class="p">,</span>  <span class="cm">/* same as .yo-rate-item:hover */</span>
+      <span class="na">day_mouseover_bgcolor</span><span class="p">:</span>  <span class="s1">'#ffffff'</span><span class="p">,</span>
+      <span class="na">day_mouseover_fgcolor</span><span class="p">:</span>  <span class="s1">'#ff00ff'</span><span class="p">,</span>
+
+      <span class="na">rate_mouseleave_fgcolor</span><span class="p">:</span> <span class="s1">'#0000cd'</span><span class="p">,</span> <span class="cm">/* same as .yo-rate-item */</span>
+      <span class="na">day_mouseleave_bgcolor</span><span class="p">:</span> <span class="s1">'#f3e1a5'</span><span class="p">,</span>  <span class="cm">/* same as .yo-datepicker-day-multi */</span>
+      <span class="na">day_mouseleave_fgcolor</span><span class="p">:</span> <span class="s1">'#000000'</span>   <span class="cm">/* same as .yo-datepicker-day-multi */</span>
+  <span class="p">});</span>
+
+
+  <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"dp_price_calendar"</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
+  Check-In: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">id=</span><span class="s">"price_calendar_start"</span> <span class="na">value=</span><span class="s">""</span> <span class="nt">/&gt;</span>
+  Check-Out: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">id=</span><span class="s">"price_calendar_end"</span> <span class="na">value=</span><span class="s">""</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span><span class="nx">double_datepicker</span><span class="p">.</span><span class="nx">show</span><span class="p">();</span><span class="nt">&lt;/script&gt;</span>
 </pre>
 
 <br />
