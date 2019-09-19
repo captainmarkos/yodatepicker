@@ -10,7 +10,8 @@
 <script type="text/javascript">
 
     // Some helper functions so I can make an array of dates.
-    function mock_data() {
+    function mock_data(count) {
+      // count is the number of mock data elements to create.
       Date.prototype.addDays = function(days) {
         var d = new Date(this.valueOf())
         d.setDate(d.getDate() + days);
@@ -31,7 +32,7 @@
       var dateArray = getDates(new Date(), (new Date()).addDays(365));
       var json_data = [];
       var price = 1;
-      for(i = 0; i < dateArray.length; i ++ ) {
+      for(var i = 0; i < dateArray.length; i ++ ) {
         var d = dateArray[i];
         var year = d.getFullYear();
         var month = d.getMonth() +1;
